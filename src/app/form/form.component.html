@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="error">
+  <ng-container *ngSwitchCase="null">
+    <h3>{{struct | formattedLabel: collection}}</h3>
+
+    <hr />
+
+    <ng-container [ngSwitch]="collection">
+      <ng-container *ngSwitchCase="true">
+        <de-re-crud-table-renderer [form]="form" [struct]="struct" [collectionBlock]="collectionBlock" [block]="block" [options]="options"></de-re-crud-table-renderer>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <de-re-crud-form-renderer [form]="form" [struct]="struct" [block]="block" [options]="options"></de-re-crud-form-renderer>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <div class="alert alert-danger">
+      {{error}}
+    </div>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,7 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <de-re-crud-block-renderer [form]="form" [struct]="struct" [block]="block" [options]="options" (addItem)="onAddItem($event)" (removeItem)="onRemoveItem($event)"></de-re-crud-block-renderer>
+
+  <p>
+    <input class="btn btn-default" type="submit" [value]="submitButtonText" [disabled]="!form.valid" />
+  </p>
+</form>

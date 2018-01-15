@@ -1,0 +1,20 @@
+<ng-container *ngIf="block else missingBlock">
+  <fieldset>
+    <legend *ngIf="block.label">{{ block | formattedLabel }}</legend>
+    <ng-container *ngFor="let field of block.fields">
+      <de-re-crud-control-renderer [form]="form" [field]="field" [options]="options" (addItem)="addItem.emit($event)" (removeItem)="removeItem.emit($event)"></de-re-crud-control-renderer>
+    </ng-container>
+  </fieldset>
+</ng-container>
+
+<ng-template #missingBlock>
+  <div *ngIf="blockName else invalidBlockName" class="alert alert-danger">
+    Block '{{blockName}}' is not defined. Available blocks: {{availableBlocks}}.
+  </div>
+</ng-template>
+
+<ng-template #invalidBlockName>
+  <div class="alert alert-danger">
+    Specify a 'block' to display. Available blocks: {{availableBlocks}}.
+  </div>
+</ng-template>

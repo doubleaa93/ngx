@@ -1,0 +1,107 @@
+<ng-container *ngIf="isSimpleField(field) else complexFieldType">
+  <div class="form-group" *ngIf="field.condition(form.value)" [ngClass]="getValidationClass(field)" [formGroup]="form">
+    <label [class.required-label]="field.required">{{field | formattedLabel }}</label>
+    <input class="form-control" [type]="getSimpleFieldType(field)" [placeholder]="field | formattedLabel" [formControlName]="field.name" />
+    <span class="help-block" *ngIf="field.description && isFieldValid(field) else error">
+      {{field.description}}
+    </span>
+  </div>
+</ng-container>
+
+<ng-template #complexFieldType>
+  <ng-container *ngIf="!isReferenceField(field) else referenceFieldType">
+    <div class="form-group" *ngIf="field.condition(form.value)" [ngSwitch]="field.type" [ngClass]="getValidationClass(field)" [formGroup]="form">
+      <ng-container *ngSwitchCase="'list'">
+        <label [class.required-label]="field.required">{{field | formattedLabel }}</label>
+        <select class="form-control" [formControlName]="field.name">
+          <option *ngFor="let option of getFieldOptions(field)" [value]="option.value">
+            {{option.label}}
+          </option>
+        </select>
+        <span class="help-block" *ngIf="field.description && isFieldValid(field) else error">
+          {{field.description}}
+        </span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'boolean'">
+        <div class="checkbox">
+          <label><input type="checkbox" [formControlName]="field.name" /> {{field | formattedLabel }}</label>
+        </div>
+        <span class="help-block" *ngIf="field.description && isFieldValid(field) else error">
+          {{field.description}}
+        </span>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div class="alert alert-danger">
+          Field type '{{field.type}}'' is not mapped to a control.
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #referenceFieldType>
+  <ng-container *ngIf="field.condition(form.value)" [ngSwitch]="field.type" [formGroup]="form">
+    <ng-container *ngSwitchCase="'foreignKey'">
+      <fieldset>
+        <p class="reference-label" [class.required-label]="field.required">{{field | formattedLabel}}</p>
+        <span class="help-block" *ngIf="field.description">
+          {{field.description}}
+        </span>
+
+        <de-re-crud-block-renderer [form]="form.get(field.name)" [struct]="field.reference" [block]="field.reference.reference.block" [options]="options"></de-re-crud-block-renderer>
+      </fieldset>
+    </ng-container>
+    <ng-container *ngSwitchCase="'linkedStruct'">
+      <fieldset>
+        <p class="reference-label" [class.required-label]="field.required">{{field | formattedLabel}}</p>
+        <span class="help-block" *ngIf="field.description">
+          {{field.description}}
+        </span>
+
+        <ng-container [ngSwitch]="options.inlineCollections">
+          <ng-container *ngSwitchCase="true">
+            <div class="list-group" *ngIf="form.get(field.name).controls.length">
+              <div class="list-group-item" [formArrayName]="field.name" *ngFor="let value of form.get(field.name).controls; let i = index">
+                <button type="button" class="close pull-right" (click)="removeItem.emit({field: field, index: i})">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+                <de-re-crud-block-renderer [formGroupName]="i" [form]="value" [struct]="field.reference" [block]="field.reference.reference.block" [options]="options" (addItem)="addItem.emit({form: value, field: $event.field})" (removeItem)="removeItem.emit({form: value, field: $event.field, index: $event.index})"></de-re-crud-block-renderer>
+              </div>
+            </div>
+
+            <p>
+              <button class="btn btn-success" type="button" (click)="addItem.emit({field: field})">Add {{field | formattedLabel}}</button>
+            </p>
+          </ng-container>
+
+          <de-re-crud-table-renderer *ngSwitchDefault [struct]="field.reference" [collectionBlock]="field.reference.reference.collectionBlock" [block]="field.reference.reference.block" [form]="form.get(field.name)" [options]="options"></de-re-crud-table-renderer>
+        </ng-container>
+      </fieldset>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div class="alert alert-danger">
+        Field type '{{field.type}}'' is not mapped to a control.
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #error>
+  <span class="help-block" *ngIf="hasErrorType(field, 'required')">
+    This field is required.
+  </span>
+  <span class="help-block" *ngIf="hasErrorType(field, 'minlength')">
+    This field must have at least {{field.minlength}} characters.
+  </span>
+  <span class="help-block" *ngIf="hasErrorType(field, 'maxlength')">
+    This field can not exceed {{field.maxlength}} characters.
+  </span>
+  <span class="help-block" *ngIf="hasErrorType(field, 'min')">
+    This field must have at least a value of {{field.min}}.
+  </span>
+  <span class="help-block" *ngIf="hasErrorType(field, 'max')">
+    This field must be less than {{field.max}}.
+  </span>
+</ng-template>
