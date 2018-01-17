@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, OnDestroy, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
+import { cloneDeep } from 'lodash-es';
 
 import { FormBuilderService } from '../form-builder.service';
 import Options from '../options';
@@ -71,9 +72,11 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   set schema(json: string | JSON) {
+    let parsedAsJson = false;
     if (typeof(json) === 'string') {
       try {
         json = JSON.parse(json as string);
+        parsedAsJson = true;
       } catch (e) {
       }
     }
@@ -83,7 +86,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const value = json as any[];
+    let value = json as any[];
+    if (!parsedAsJson) {
+      value = cloneDeep(value);
+    }
 
     this.error = null;
 

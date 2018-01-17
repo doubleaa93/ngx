@@ -1,4 +1,4 @@
-import defaults from 'lodash.defaults';
+import { defaults } from 'lodash-es';
 
 import Options from './options';
 

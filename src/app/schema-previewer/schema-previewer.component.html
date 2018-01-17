@@ -1,0 +1,20 @@
+<div [ngStyle]="{ backgroundColor: type === 'json' ? '#000' : '#f9f9f9' }">
+  <div>
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-default" type="button" *ngIf="type === 'json'" ngxClipboard [cbContent]="value | json">Copy</button>
+      </div>
+      <div class="col-md-6">
+        <div class="btn-group pull-right">
+          <button class="active btn btn-default" type="button" [ngClass]="{ active: type === 'json' }" (click)="type = 'json'">JSON</button>
+          <button class="btn btn-default" type="button" [ngClass]="{ active: type === 'html' }" (click)="type = 'html'">HTML</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-container [ngSwitch]="type">
+      <de-re-crud-schema-json-previewer *ngSwitchCase="'json'" [value]="value"></de-re-crud-schema-json-previewer>
+      <de-re-crud-schema-html-previewer *ngSwitchDefault [value]="value"></de-re-crud-schema-html-previewer>
+    </ng-container>
+  </div>
+</div>

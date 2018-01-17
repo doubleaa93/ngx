@@ -1,1 +1,10 @@
-<de-re-crud-form [schema]="schema" [struct]="struct" [block]="block"></de-re-crud-form>
+<div class="container-fill">
+  <div class="row-fill">
+    <div class="col-md-6">
+      <de-re-crud-schema-builder (valueChange)="onValueChange($event)"></de-re-crud-schema-builder>
+    </div>
+    <div class="col-md-6">
+      <de-re-crud-schema-previewer [value]="value"></de-re-crud-schema-previewer>
+    </div>
+  </div>
+</div>

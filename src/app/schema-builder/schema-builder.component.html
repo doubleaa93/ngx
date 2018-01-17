@@ -1,0 +1,8 @@
+<div>
+  <p>
+    <button class="btn btn-default" type="button" (click)="file.click()">Import</button>
+    <input #file style="display: none;" type="file" (change)="onImportFile($event); file.value = null;" />
+  </p>
+
+  <de-re-crud-form [schema]="schema" struct="struct" block="default" [options]="options" [collection]="true" [value]="value" (valueChange)="valueChange.emit($event)"></de-re-crud-form>
+</div>

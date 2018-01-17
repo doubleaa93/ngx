@@ -1,0 +1,7 @@
+:host > div {
+  height: 100%;
+}
+
+:host > div > div  {
+  padding: 15px;
+}

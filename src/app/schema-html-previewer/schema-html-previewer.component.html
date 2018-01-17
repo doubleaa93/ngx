@@ -1,0 +1,30 @@
+<div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="struct">Struct</label>
+        <select id="struct" class="form-control" [(ngModel)]="struct" [disabled]="!structs.length">
+          <option *ngFor="let option of structs" [value]="option.name">
+            {{option.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="struct">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="block">Block</label>
+        {{struct.blocks}}
+        <select id="block" class="form-control" [(ngModel)]="block" [disabled]="!blocks.length">
+          <option *ngFor="let option of blocks" [value]="option.name">
+            {{option.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <de-re-crud-form *ngIf="schema && struct && block" [schema]="schema" [struct]="struct" [block]="block"></de-re-crud-form>
+</div>

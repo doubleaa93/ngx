@@ -1,37 +1,39 @@
-<ng-container [ngSwitch]="editor">
-  <div *ngSwitchCase="null">
-    <table class="table table-bordered table-hovered table-striped table-condensed">
-      <thead>
-        <tr>
-          <th *ngFor="let field of struct.keyFields">
-            {{field | formattedLabel}}
-          </th>
-          <th *ngIf="form.value.length">&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let value of form.value; let i = index">
-          <td *ngFor="let field of struct.keyFields">
-            {{value[field.name]}}
-          </td>
-          <td class="text-center">
-            <i class="glyphicon glyphicon-pencil" style="cursor: pointer;" (click)="onEditItem(i)"></i><span>&nbsp;&nbsp;</span><i class="glyphicon glyphicon-trash" style="cursor: pointer;" (click)="onRemoveItem(i)"></i>
-          </td>
-        </tr>
-        <tr *ngIf="!form.value.length">
-          <td>None</td>
-        </tr>
-      </tbody>
-    </table>
+<div>
+  <p *ngIf="!editor">
+    <button class="btn btn-success" type="button" (click)="onAddItem()">Add {{ struct | formattedLabel }}</button>
+  </p>
 
-    <p>
-      <button class="btn btn-success" type="button" (click)="onAddItem()">Add {{ struct | formattedLabel }}</button>
-    </p>
-  </div>
-  <div *ngSwitchDefault>
-    <p>
-      <button class="btn btn-default" type="button" (click)="editor = null">Back</button>
-    </p>
-    <de-re-crud-form-renderer [form]="editor" [struct]="struct" [block]="block" [options]="options" [submitButtonText]="editorSubmitButtonText"></de-re-crud-form-renderer>
-  </div>
-</ng-container>
+  <ng-container [ngSwitch]="editor">
+    <div *ngSwitchCase="null">
+      <table class="table table-bordered table-hovered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th *ngFor="let field of struct.keyFields">
+              {{field | formattedLabel}}
+            </th>
+            <th *ngIf="form.value.length">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of form.value; let i = index">
+            <td *ngFor="let field of struct.keyFields">
+              {{value[field.name]}}
+            </td>
+            <td class="text-center">
+              <i class="glyphicon glyphicon-pencil" style="cursor: pointer;" (click)="onEditItem(i)"></i><span>&nbsp;&nbsp;</span><i class="glyphicon glyphicon-trash" style="cursor: pointer;" (click)="onRemoveItem(i)"></i>
+            </td>
+          </tr>
+          <tr *ngIf="!form.value.length">
+            <td>None</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngSwitchDefault>
+      <p>
+        <button class="btn btn-default" type="button" (click)="editor = null">Back</button>
+      </p>
+      <de-re-crud-form-renderer [form]="editor" [struct]="struct" [block]="block" [options]="options" [submitButtonText]="editorSubmitButtonText"></de-re-crud-form-renderer>
+    </div>
+  </ng-container>
+</div>
