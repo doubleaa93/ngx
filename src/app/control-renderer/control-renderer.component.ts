@@ -81,8 +81,10 @@ export class ControlRendererComponent {
         }
 
         if (typeof(valueOrFunc) === 'function') {
-          return valueOrFunc(this.formBuilder.getRootValue(this.form))
-            .map(option => ({ label: option[field.listLabelField], value: option }));
+          const result = valueOrFunc(this.formBuilder.getRootValue(this.form));
+          if (Array.isArray(result)) {
+            result.map(option => ({ label: option[field.listLabelField], value: option }));
+          }
         }
 
         return [];

@@ -31,9 +31,9 @@
     </div>
     <div *ngSwitchDefault>
       <p>
-        <button class="btn btn-default" type="button" (click)="editor = null">Back</button>
+        <button class="btn btn-default" type="button" (click)="onCloseEditor(false)">Back</button>
       </p>
-      <de-re-crud-form-renderer [form]="editor" [struct]="struct" [block]="block" [options]="options" [submitButtonText]="editorSubmitButtonText"></de-re-crud-form-renderer>
+      <de-re-crud-form-renderer [form]="editor" [struct]="struct" [block]="block" [options]="options" [submitButtonText]="editorSubmitButtonText" (formSubmit)="onCloseEditor(true)"></de-re-crud-form-renderer>
     </div>
   </ng-container>
 </div>

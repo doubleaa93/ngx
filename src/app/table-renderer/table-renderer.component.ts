@@ -1,7 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
-import { FormGroup } from '@angular/forms/src/model';
 
 import { FormBuilderService } from '../form-builder.service';
 import Options from '../options';
@@ -14,6 +13,8 @@ import { FormattedLabelPipe } from '../formatted-label.pipe';
 })
 export class TableRendererComponent {
   editor?: FormGroup = null;
+  editorIndex?: number = null;
+
   editorSubmitButtonText: string;
 
   @Input() form: FormArray;
@@ -30,19 +31,39 @@ export class TableRendererComponent {
   onAddItem() {
     const item = this.formBuilder.createFormGroup(this.struct, this.block);
 
-    this.form.push(item);
     this.editor = item;
+    this.editorIndex = null;
     this.editorSubmitButtonText = 'Add ' + this.formattedLabelPipe.transform(this.struct);
   }
 
   onEditItem(index: number) {
     const item = this.form.at(index) as FormGroup;
 
-    this.editor = item;
-    this.editorSubmitButtonText = 'Edit ' + this.formattedLabelPipe.transform(this.struct);
+    this.editor = this.formBuilder.createFormGroup(this.struct, this.block, item.value);
+    this.editorIndex = index;
+    this.editorSubmitButtonText = 'Update ' + this.formattedLabelPipe.transform(this.struct);
   }
 
   onRemoveItem(index: number): void {
     this.form.removeAt(index);
+  }
+
+  onCloseEditor(submitted: boolean) {
+    // TODO: Add public API for supporting alerts
+    if (!submitted) {
+      if (!confirm('All values will be discarded. Are you sure you want to proceed?')) {
+        return;
+      }
+    } else {
+      if (this.editorIndex == null) {
+        this.form.push(this.editor);
+      } else {
+        const item = this.form.at(this.editorIndex) as FormGroup;
+        item.setValue(this.editor.value);
+      }
+    }
+
+    this.editor = null;
+    this.editorIndex = null;
   }
 }

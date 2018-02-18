@@ -294,6 +294,7 @@
       {
         "name": "fields",
         "type": "linkedStruct",
+        "required": true,
         "reference": {
           "name": "fieldReference",
           "labelField": "field",

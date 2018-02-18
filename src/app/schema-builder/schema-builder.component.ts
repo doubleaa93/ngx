@@ -19,7 +19,14 @@ export class SchemaBuilderComponent implements OnInit {
     this.options.inlineCollections = false;
     this.options.references = {
       fields: (value) => {
-        return [{name: 'field', value: 'test'}];
+        if (!value.fields) {
+          return null;
+        }
+
+        return value.fields.map(field => ({
+          name: field.name,
+          value: field.name
+        }));
       }
     };
   }
