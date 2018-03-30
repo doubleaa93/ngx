@@ -1,11 +1,14 @@
 {
   "editor.formatOnSave": false,
   "[javascript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
+  "javascript.format.enable": false,
   "[typescript]": {
     "editor.formatOnSave": true
   },
   "typescript.format.enable": false,
-  "javascript.format.enable": false
+  "files.associations": {
+    "*.html": "ng-template"
+  }
 }

@@ -1,0 +1,4 @@
+<de-re-crud-label-renderer [control]="control"></de-re-crud-label-renderer>
+<select [ngClass]="control.cssNames" [id]="control.htmlId" [name]="control.key" [value]="control.value">
+  <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
+</select>
