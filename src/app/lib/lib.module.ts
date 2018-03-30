@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
+import { NgReduxFormModule } from '@angular-redux/form';
 import { createLogger } from 'redux-logger';
 import { FormComponent } from './form/form.component';
 import { InputRendererComponent } from './renderers/input-renderer/input-renderer.component';
@@ -12,18 +14,26 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { SchemaEpics } from './redux/epics/schema-epics';
 import { ControlHostDirective } from './hosts/control-host.directive';
 import { FieldHostComponent } from './hosts/field-host/field-host.component';
+import { FormBuilderService } from './form-builder.service';
+import { ValidationErrorRendererComponent } from './renderers/validation-error-renderer/validation-error-renderer.component';
 
 @NgModule({
-  imports: [CommonModule, NgReduxModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgReduxModule,
+    NgReduxFormModule
+  ],
   declarations: [
     FormComponent,
     InputRendererComponent,
     SelectRendererComponent,
     LabelRendererComponent,
     ControlHostDirective,
-    FieldHostComponent
+    FieldHostComponent,
+    ValidationErrorRendererComponent
   ],
-  providers: [SchemaEpics],
+  providers: [SchemaEpics, FormBuilderService],
   exports: [FormComponent],
   entryComponents: [InputRendererComponent, SelectRendererComponent]
 })

@@ -1,0 +1,8 @@
+<ng-container *ngIf="error(control.key)" [ngSwitch]="error(control.key)">
+  <ng-container *ngSwitchCase="'required'">
+    This field is required.
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    Validation failed with error: {{error(control.key)}}
+  </ng-container>
+</ng-container>

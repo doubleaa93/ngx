@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormGroup } from '@angular/forms';
 
 import { LabelRendererComponent } from './label-renderer.component';
 
@@ -19,6 +20,7 @@ describe('LabelRendererComponent', () => {
     component = fixture.componentInstance;
 
     component.control = {
+      form: new FormGroup({}),
       type: 'text',
       htmlId: 'id',
       key: 'key',

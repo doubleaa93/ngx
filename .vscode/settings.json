@@ -5,7 +5,7 @@
   },
   "javascript.format.enable": false,
   "[typescript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "typescript.format.enable": false,
   "files.associations": {

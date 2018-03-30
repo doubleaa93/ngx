@@ -6,6 +6,7 @@ import {
   ViewChild,
   ComponentFactoryResolver
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { NgRedux } from '@angular-redux/store';
@@ -26,6 +27,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class FieldHostComponent implements OnInit, OnDestroy {
   private fieldSubscription: Subscription;
   @ViewChild(ControlHostDirective) controlHost: ControlHostDirective;
+  @Input() form: FormGroup;
   @Input() struct: string;
   @Input() field: string;
 
@@ -53,6 +55,7 @@ export class FieldHostComponent implements OnInit, OnDestroy {
   refreshControl(field: IField) {
     let component: any;
     const control: IControl = {
+      form: this.form,
       type: field.type,
       htmlId: `${field.name}-${uuid()}`,
       key: field.name,
@@ -76,6 +79,7 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    (<ControlRenderer>componentRef.instance).control = control;
+    const renderer = (<ControlRenderer>componentRef.instance);
+    renderer.control = control;
   }
 }

@@ -13,13 +13,13 @@ export interface IField {
   label: string;
   type: any;
   required: boolean;
-  value?: any;
+  initialValue?: any;
 }
 
 export interface ITextField extends IField {
   struct: string;
   type: 'text';
-  value: string;
+  initialValue?: string;
 }
 
 export interface IBlock {

@@ -1,4 +1,7 @@
+import { FormGroup } from '@angular/forms';
+
 export interface IControl {
+  form: FormGroup;
   type: string;
   htmlId: string;
   key: string;
