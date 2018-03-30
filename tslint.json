@@ -1,4 +1,8 @@
 {
+  "extends": [
+    "tslint-config-airbnb",
+    "tslint-eslint-rules"
+  ],
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
@@ -93,6 +97,7 @@
       true,
       "always"
     ],
+    "trailing-comma": false,
     "triple-equals": [
       true,
       "allow-null-check"
@@ -120,13 +125,14 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
-      "camelCase"
+      [ "app", "de-re-crud" ],
+      "camelCase",
+      ""
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      [ "app", "de-re-crud" ],
       "kebab-case"
     ],
     "no-output-on-prefix": true,

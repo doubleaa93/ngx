@@ -1,7 +1,15 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = function(config) {
+  const isDebug = config.debug;
+
+  const chromeHeadlessFlags = [];
+
+  if (isDebug) {
+    chromeHeadlessFlags.push('--remote-debugging-port=9222');
+  }
+
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular/cli'],
@@ -12,11 +20,18 @@ module.exports = function (config) {
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma')
     ],
-    client:{
+    client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
+    browsers: ['CustomChromeHeadless'],
+    customLaunchers: {
+      CustomChromeHeadless: {
+        base: 'ChromeHeadless',
+        flags: chromeHeadlessFlags
+      }
+    },
     coverageIstanbulReporter: {
-      reports: [ 'html', 'lcovonly' ],
+      reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
     angularCli: {
@@ -27,7 +42,6 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
     singleRun: false
   });
 };
