@@ -1,10 +1,17 @@
 import { Component } from '@angular/core';
+import { DeReCrudOptions } from './lib/models/options';
+import * as schema from './lib/schema.json';
 
 @Component({
   selector: 'app-root',
-  template: `<div></div>`,
+  templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  title = 'DeReCRUD Schema Builder';
+  options: DeReCrudOptions = {
+    schema,
+    struct: 'struct',
+    block: 'default'
+  };
 }

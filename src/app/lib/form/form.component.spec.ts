@@ -27,7 +27,11 @@ describe('FormComponent', () => {
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
 
-    component.options = new DeReCrudOptions();
+    component.options = {
+      schema: {},
+      struct: 'struct',
+      block: 'default'
+    };
 
     fixture.detectChanges();
   });
@@ -35,8 +39,7 @@ describe('FormComponent', () => {
   it('should call init on store', () => {
     expect(ngReduxSpy).toHaveBeenCalledWith({
       type: SchemaActions.INIT,
-      formId: jasmine.any(String),
-      options: component.options
+      payload: { formId: component.formId, options: component.options }
     });
   });
 });

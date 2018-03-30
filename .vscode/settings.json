@@ -10,5 +10,6 @@
   "typescript.format.enable": false,
   "files.associations": {
     "*.html": "ng-template"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
-import { structReducer } from './struct-reducer';
 import { IAppState } from '../state';
-import { fieldReducer } from './field-reducer';
-import { blockReducer } from './block-reducer';
+import { optionsReducer } from './options-reducer';
+import { structsReducer } from './structs-reducer';
+import { fieldsReducer } from './fields-reducer';
+import { blocksReducer } from './blocks-reducer';
 
 export const rootReducer = combineReducers<IAppState>({
-  structs: structReducer,
-  fields: fieldReducer,
-  blocks: blockReducer
+  options: optionsReducer,
+  structs: structsReducer,
+  fields: fieldsReducer,
+  blocks: blocksReducer
 });

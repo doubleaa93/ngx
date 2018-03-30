@@ -1,17 +1,28 @@
 import { DeReCrudOptions } from '../../models/options';
+import { IStruct, IField, IBlock } from '../../models/schema';
 
 export enum SchemaActions {
-  INIT = 'INIT'
+  INIT = 'INIT',
+  INIT_COMPLETE = 'INIT_COMPLETE'
 }
 
 export interface InitAction {
   type: SchemaActions.INIT;
-  formId: string;
-  options: DeReCrudOptions;
+  payload: { formId: string; options: DeReCrudOptions };
+}
+
+export interface InitCompleteAction {
+  type: SchemaActions.INIT_COMPLETE;
+  payload: {
+    formId: string;
+    options: DeReCrudOptions;
+    structs: IStruct[];
+    fields: IField[];
+    blocks: IBlock[];
+  };
 }
 
 export const init = (formId: string, options: DeReCrudOptions): InitAction => ({
-  formId,
-  options,
-  type: SchemaActions.INIT
+  type: SchemaActions.INIT,
+  payload: { formId, options }
 });

@@ -8,6 +8,10 @@ import { SelectRendererComponent } from './renderers/select-renderer/select-rend
 import { LabelRendererComponent } from './renderers/label-renderer/label-renderer.component';
 import { IAppState } from './redux/state';
 import { rootReducer } from './redux/reducers';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { SchemaEpics } from './redux/epics/schema-epics';
+import { ControlHostDirective } from './hosts/control-host.directive';
+import { FieldHostComponent } from './hosts/field-host/field-host.component';
 
 @NgModule({
   imports: [CommonModule, NgReduxModule],
@@ -15,12 +19,29 @@ import { rootReducer } from './redux/reducers';
     FormComponent,
     InputRendererComponent,
     SelectRendererComponent,
-    LabelRendererComponent
+    LabelRendererComponent,
+    ControlHostDirective,
+    FieldHostComponent
   ],
-  exports: [FormComponent]
+  providers: [SchemaEpics],
+  exports: [FormComponent],
+  entryComponents: [InputRendererComponent, SelectRendererComponent]
 })
 export class LibModule {
-  constructor(ngRedux: NgRedux<IAppState>) {
-    ngRedux.configureStore(rootReducer, null, [createLogger()]);
+  constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private schemaEpics: SchemaEpics
+  ) {
+    const rootEpic = combineEpics(this.schemaEpics.init);
+
+    const middleware = [createEpicMiddleware(rootEpic), createLogger()];
+    const initialState: IAppState = {
+      structs: {},
+      blocks: {},
+      fields: {},
+      options: {}
+    };
+
+    ngRedux.configureStore(rootReducer, initialState, middleware);
   }
 }

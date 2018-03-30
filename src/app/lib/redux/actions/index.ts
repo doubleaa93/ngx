@@ -1,3 +1,3 @@
-import { InitAction } from './schema-actions';
+import { InitAction, InitCompleteAction } from './schema-actions';
 
-export type Actions = InitAction;
+export type Actions = InitAction | InitCompleteAction;

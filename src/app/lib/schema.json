@@ -6,22 +6,26 @@
     "fields": [
       {
         "name": "name",
+        "label": "Name",
         "keyField": true,
         "type": "text",
         "required": true
       },
       {
         "name": "label",
+        "label": "Label",
         "type": "text",
         "required": true
       },
       {
         "name": "collectionLabel",
+        "label": "Collection Label",
         "type": "text",
         "required": true
       },
       {
         "name": "fields",
+        "label": "Fields",
         "type": "linkedStruct",
         "required": true,
         "reference": {
@@ -32,6 +36,7 @@
       },
       {
         "name": "blocks",
+        "label": "Blocks",
         "type": "linkedStruct",
         "required": true,
         "reference": {
@@ -61,22 +66,26 @@
     "fields": [
       {
         "name": "name",
+        "label": "Name",
         "keyField": true,
         "type": "text",
         "required": true
       },
       {
         "name": "label",
+        "label": "Label",
         "type": "text",
         "description": "Name is converted to sentence case and used if not specified."
       },
       {
         "name": "placeholder",
+        "label": "Placeholder",
         "type": "text",
-        "description": "Name is converted to sentence case and used if not specified."
+        "description": "Label is used if not specified."
       },
       {
         "name": "description",
+        "label": "Description",
         "type": "text",
         "description": "Shown under a control, like this!"
       },
@@ -100,6 +109,7 @@
       },
       {
         "name": "type",
+        "label": "Type",
         "type": "list",
         "required": true,
         "options": [
@@ -168,6 +178,7 @@
       },
       {
         "name": "listValues",
+        "label": "List Values",
         "type":"linkedStruct",
         "required": true,
         "reference": {
@@ -211,10 +222,12 @@
       },
       {
         "name": "pattern",
+        "label": "Pattern",
         "type": "text"
       },
       {
         "name": "reference",
+        "label": "Reference",
         "type": "foreignKey",
         "reference": {
           "name": "structReference",
@@ -286,12 +299,14 @@
     "fields": [
       {
         "name": "name",
+        "label": "Name",
         "keyField": true,
         "type": "text",
         "required": true
       },
       {
         "name": "fields",
+        "label": "Fields",
         "type": "linkedStruct",
         "required": true,
         "reference": {
@@ -318,6 +333,7 @@
     "fields": [
       {
         "name": "field",
+        "label": "Field",
         "keyField": true,
         "type": "list",
         "listType": "inMemory",
@@ -327,6 +343,7 @@
       },
       {
         "name": "condition",
+        "label": "Condition",
         "type": "text"
       }
     ],
@@ -347,12 +364,14 @@
     "fields": [
       {
         "name": "name",
+        "label": "Name",
         "keyField": true,
         "type": "text",
         "required": true
       },
       {
         "name": "labelField",
+        "label": "Label Field",
         "type": "text",
         "required": true
       }
@@ -374,12 +393,14 @@
     "fields": [
       {
         "name": "value",
+        "label": "Value",
         "keyField": true,
         "type": "text",
         "required": true
       },
       {
         "name": "label",
+        "label": "Label",
         "type": "text",
         "required": true
       }

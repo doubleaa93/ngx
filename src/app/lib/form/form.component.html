@@ -1,0 +1,4 @@
+<form>
+  <de-re-crud-field-host *ngFor="let field of fields$ | async" [struct]="options.struct" [field]="field" ></de-re-crud-field-host>
+  <button type="submit">Submit</button>
+</form>
