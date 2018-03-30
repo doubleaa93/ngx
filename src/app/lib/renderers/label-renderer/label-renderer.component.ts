@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Control } from '../../models/control';
+import { IControl } from '../../models/control';
 
 @Component({
   selector: 'de-re-crud-label-renderer',
@@ -7,5 +7,5 @@ import { Control } from '../../models/control';
   styleUrls: ['./label-renderer.component.css']
 })
 export class LabelRendererComponent {
-  @Input() control: Control;
+  @Input() control: IControl;
 }

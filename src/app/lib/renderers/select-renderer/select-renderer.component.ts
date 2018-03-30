@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SelectControl } from '../../models/control';
+import { ISelectControl } from '../../models/control';
 
 @Component({
   selector: 'de-re-crud-select-renderer',
@@ -7,5 +7,5 @@ import { SelectControl } from '../../models/control';
   styleUrls: ['./select-renderer.component.css']
 })
 export class SelectRendererComponent {
-  @Input() control: SelectControl;
+  @Input() control: ISelectControl;
 }

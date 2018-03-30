@@ -1,4 +1,4 @@
-export interface Control {
+export interface IControl {
   type: string;
   htmlId: string;
   key: string;
@@ -8,11 +8,11 @@ export interface Control {
   value?: any;
 }
 
-interface SelectControlOption {
+interface ISelectControlOption {
   label: string;
   value: any;
 }
 
-export interface SelectControl extends Control {
-  options: SelectControlOption[];
+export interface ISelectControl extends IControl {
+  options: ISelectControlOption[];
 }
