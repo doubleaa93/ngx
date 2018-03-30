@@ -1,6 +1,6 @@
 {
   "name": "@de-re-crud/ngx",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -15,6 +15,7 @@
     "@angular/core": ">= 4"
   },
   "dependencies": {
+    "@angular-redux/form": "^6.7.0",
     "@angular-redux/store": "6",
     "@angular/animations": "^4.4.6",
     "@angular/common": "^4.4.6",
@@ -54,6 +55,6 @@
     "tslint": "~5.9.1",
     "tslint-config-airbnb": "^5.8.0",
     "tslint-eslint-rules": "^5.1.0",
-    "typescript": "~2.5.3"
+    "typescript": "^2.3.4"
   }
 }

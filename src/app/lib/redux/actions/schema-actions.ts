@@ -2,8 +2,8 @@ import { DeReCrudOptions } from '../../models/options';
 import { IStruct, IField, IBlock } from '../../models/schema';
 
 export enum SchemaActions {
-  INIT = 'INIT',
-  INIT_COMPLETE = 'INIT_COMPLETE'
+  INIT,
+  INIT_COMPLETE
 }
 
 export interface InitAction {
