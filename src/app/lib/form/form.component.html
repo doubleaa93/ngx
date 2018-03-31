@@ -1,4 +1,4 @@
-<form *ngIf="form" [connect]="formId" [formGroup]="form">
+<form *ngIf="form" [connect]="['forms', 'values', formId]" [formGroup]="form">
   <de-re-crud-field-host *ngFor="let field of fields" [options]="options" [form]="form" [field]="field"></de-re-crud-field-host>
-  <button type="submit" [disabled]="form.invalid">Submit</button>
+  <de-re-crud-button-host [options]="options" type="submit" [disabled]="form.invalid" text="Submit"></de-re-crud-button-host>
 </form>

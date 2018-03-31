@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validator, Validators } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
-import { IAppState } from './redux/state';
-import { IField } from './models/schema';
+import { IAppState } from '../redux/state';
+import { IField } from '../schema';
 
 @Injectable()
 export class FormBuilderService {

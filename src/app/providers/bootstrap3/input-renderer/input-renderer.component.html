@@ -1,0 +1,5 @@
+<ng-container [formGroup]="control.form">
+  <de-re-crud-bootstrap3-label-renderer [control]="control"></de-re-crud-bootstrap3-label-renderer>
+  <input class="form-control" [type]="control.type" [id]="control.htmlId" [name]="control.key" [formControlName]="control.key" />
+  <de-re-crud-bootstrap3-validation-error-renderer [control]="control"></de-re-crud-bootstrap3-validation-error-renderer>
+</ng-container>

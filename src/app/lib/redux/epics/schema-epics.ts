@@ -3,13 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import { ActionsObservable } from 'redux-observable';
-import { IStruct, IField, IBlock } from '../../models/schema';
 import { Actions } from '../actions';
 import {
   SchemaActions,
   InitAction,
   InitCompleteAction
 } from '../actions/schema-actions';
+import { IStruct, IField, IBlock } from '../../schema';
 
 @Injectable()
 export class SchemaEpics {

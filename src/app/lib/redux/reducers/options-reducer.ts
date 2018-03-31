@@ -1,7 +1,7 @@
-import { IStruct } from '../../models/schema';
 import { Actions } from '../actions';
 import { SchemaActions } from '../actions/schema-actions';
-import { DeReCrudOptions } from '../../models/options';
+import { IStruct } from '../../schema';
+import { DeReCrudOptions } from '../../options';
 
 export interface State {
   [formId: string]: DeReCrudOptions;

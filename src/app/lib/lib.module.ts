@@ -5,41 +5,34 @@ import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { NgReduxFormModule } from '@angular-redux/form';
 import { createLogger } from 'redux-logger';
 import { FormComponent } from './form/form.component';
-import { InputRendererComponent } from './renderers/input-renderer/input-renderer.component';
-import { SelectRendererComponent } from './renderers/select-renderer/select-renderer.component';
-import { LabelRendererComponent } from './renderers/label-renderer/label-renderer.component';
-import { ControlContainerRendererComponent } from './renderers/control-container-renderer/control-container-renderer.component';
 import { IAppState } from './redux/state';
 import { rootReducer } from './redux/reducers';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { SchemaEpics } from './redux/epics/schema-epics';
 import { FieldHostComponent } from './hosts/field-host.component';
-import { FormBuilderService } from './form-builder.service';
-import { ValidationErrorRendererComponent } from './renderers/validation-error-renderer/validation-error-renderer.component';
+import { ButtonHostComponent } from './hosts/button-host.component';
+import { FormBuilderService } from './services/form-builder.service';
 import { ComponentHostDirective } from './hosts/component-host.directive';
+import { DeReCrudProviderModule } from '../providers/provider/provider.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     NgReduxModule,
-    NgReduxFormModule
+    NgReduxFormModule,
+    DeReCrudProviderModule
   ],
   declarations: [
     FormComponent,
-    InputRendererComponent,
-    SelectRendererComponent,
-    LabelRendererComponent,
-    ControlContainerRendererComponent,
     FieldHostComponent,
-    ValidationErrorRendererComponent,
+    ButtonHostComponent,
     ComponentHostDirective
   ],
   providers: [SchemaEpics, FormBuilderService],
-  exports: [FormComponent],
-  entryComponents: [InputRendererComponent, SelectRendererComponent, ControlContainerRendererComponent]
+  exports: [FormComponent]
 })
-export class LibModule {
+export class DeReCrudModule {
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private schemaEpics: SchemaEpics
@@ -51,7 +44,8 @@ export class LibModule {
       structs: {},
       blocks: {},
       fields: {},
-      options: {}
+      options: {},
+      forms: { instances: {}, values: {} }
     };
 
     ngRedux.configureStore(rootReducer, initialState, middleware);

@@ -1,7 +1,0 @@
-<ng-container [formGroup]="control.form">
-  <de-re-crud-label-renderer [control]="control"></de-re-crud-label-renderer>
-  <select [ngClass]="control.cssNames" [id]="control.htmlId" [name]="control.key" [formControlName]="control.key">
-    <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
-  </select>
-  <de-re-crud-validation-error-renderer [control]="control"></de-re-crud-validation-error-renderer>
-</ng-container>

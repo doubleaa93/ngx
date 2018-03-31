@@ -14,22 +14,21 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { NgRedux } from '@angular-redux/store';
 import { v4 as uuid } from 'uuid';
+import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { IAppState } from '../redux/state';
-import { IField } from '../models/schema';
-import { IControl } from '../models/control';
+import { IField } from '../schema';
+import { IControl } from '../renderers/control';
 import { ControlRenderer } from '../renderers/control.renderer';
-import { InputRendererComponent } from '../renderers/input-renderer/input-renderer.component';
-import { ControlContainerRendererComponent } from '../renderers/control-container-renderer/control-container-renderer.component';
+import { DeReCrudOptions } from '../options';
 import { ComponentHostDirective } from './component-host.directive';
-import { DeReCrudOptions } from '../models/options';
 
 @Component({
   selector: 'de-re-crud-field-host',
   template: `<ng-template deReCrudComponentHost></ng-template>`
 })
 export class FieldHostComponent implements OnInit, OnDestroy {
-  private fieldSubscription: Subscription;
-  private componentRefs: ComponentRef<any>[] = [];
+  private _fieldSubscription: Subscription;
+  private _componentRefs: ComponentRef<any>[] = [];
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() options: DeReCrudOptions;
   @Input() form: FormGroup;
@@ -37,11 +36,12 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private providerService: DeReCrudProviderService
   ) {}
 
   ngOnInit() {
-    this.fieldSubscription = this.ngRedux
+    this._fieldSubscription = this.ngRedux
       .select('fields')
       .map(fields => fields[`${this.options.struct}-${this.field}`])
       .do((field) => {
@@ -51,19 +51,21 @@ export class FieldHostComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.fieldSubscription) {
-      this.fieldSubscription.unsubscribe();
+    if (this._fieldSubscription) {
+      this._fieldSubscription.unsubscribe();
     }
 
-    this.componentRefs.forEach(x => x.destroy());
+    this._componentRefs.forEach(x => x.destroy());
   }
 
   renderControl(field: IField) {
     let controlComponent: any;
 
+    const providerOptions = this.providerService.get(this.options.provider);
+
     switch (field.type) {
       case 'text':
-        controlComponent = InputRendererComponent;
+        controlComponent = providerOptions.inputComponent;
         break;
       default:
         console.error(
@@ -84,9 +86,8 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     const viewContainerRef = this.componentHost.viewContainerRef;
     viewContainerRef.clear();
 
-    const containerComponent = this.options.containerComponent || ControlContainerRendererComponent;
     const containerComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
-      containerComponent
+      providerOptions.containerComponent
     );
 
     const controlComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
@@ -109,6 +110,6 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     const containerComponentRenderer = <ControlRenderer>containerComponentRef.instance;
     containerComponentRenderer.control = control;
 
-    this.componentRefs.push(controlComponentRef, containerComponentRef);
+    this._componentRefs.push(controlComponentRef, containerComponentRef);
   }
 }

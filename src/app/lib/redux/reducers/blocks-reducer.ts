@@ -1,6 +1,6 @@
-import { IBlock } from '../../models/schema';
 import { Actions } from '../actions';
 import { SchemaActions } from '../actions/schema-actions';
+import { IBlock } from '../../schema';
 
 export interface State {
   [key: string]: IBlock;

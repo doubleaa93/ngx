@@ -1,5 +1,5 @@
-import { DeReCrudOptions } from '../../models/options';
-import { IStruct, IField, IBlock } from '../../models/schema';
+import { DeReCrudOptions } from '../../options';
+import { IStruct, IField, IBlock } from '../../schema';
 
 export enum SchemaActions {
   INIT,

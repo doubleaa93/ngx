@@ -5,11 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { Subscription } from 'rxjs/Subscription';
 import { v4 as uuid } from 'uuid';
+import { FormBuilderService } from '../services/form-builder.service';
 import { IAppState } from '../redux/state';
 import { init } from '../redux/actions/schema-actions';
-import { DeReCrudOptions } from '../models/options';
-import { IField, IBlock } from '../models/schema';
-import { FormBuilderService } from '../form-builder.service';
+import { DeReCrudOptions } from '../options';
+import { IField, IBlock } from '../schema';
 
 @Component({
   selector: 'de-re-crud-form',

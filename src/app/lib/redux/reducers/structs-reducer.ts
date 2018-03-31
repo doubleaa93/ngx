@@ -1,6 +1,6 @@
-import { IStruct } from '../../models/schema';
 import { Actions } from '../actions';
 import { SchemaActions } from '../actions/schema-actions';
+import { IStruct } from '../../schema';
 
 export interface State {
   [key: string]: IStruct;

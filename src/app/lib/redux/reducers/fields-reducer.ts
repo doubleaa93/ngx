@@ -1,6 +1,6 @@
-import { IField } from '../../models/schema';
 import { Actions } from '../actions';
 import { SchemaActions } from '../actions/schema-actions';
+import { IField } from '../../schema';
 
 export interface State {
   [key: string]: IField;

@@ -1,12 +1,12 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { LibModule } from './lib/lib.module';
+import { DeReCrudModule } from './lib/lib.module';
 import { AppComponent } from './app.component';
-import { Bootstrap3Module } from './providers/bootstrap3/bootstrap3.module';
+import { Bootstrap3DeReCrudProviderModule } from './providers/bootstrap3/bootstrap3.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, LibModule, Bootstrap3Module],
+  imports: [BrowserModule, Bootstrap3DeReCrudProviderModule, DeReCrudModule],
   providers: [Title],
   bootstrap: [AppComponent]
 })
