@@ -15,7 +15,21 @@ import { IButton } from '../../../lib/renderers/button';
 export class Bootstrap3ButtonRendererComponent
   implements OnInit, OnChanges, ButtonRenderer {
   @Input() button: IButton;
-  classes: string[];
+  _classes: string[];
+
+  get classes() {
+    let classes: string[];
+
+    if (this._classes) {
+      classes = this._classes;
+    }
+
+    if (this.button.extraClasses) {
+      classes = (classes || []).concat(this.button.extraClasses);
+    }
+
+    return classes;
+  }
 
   ngOnInit() {
     this.updateClasses();
@@ -35,10 +49,10 @@ export class Bootstrap3ButtonRendererComponent
   updateClasses() {
     switch (this.button.type) {
       case 'submit':
-        this.classes = ['btn-primary'];
+        this._classes = ['btn-primary'];
         break;
       default:
-        this.classes = ['btn-default'];
+        this._classes = ['btn-default'];
         break;
     }
   }

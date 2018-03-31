@@ -77,7 +77,8 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
       type: this.type,
       text: this.text,
       disabled: this.disabled,
-      onClick: this.onClick
+      onClick: this.onClick,
+      extraClasses: this.options.extraButtonClasses
     };
   }
 

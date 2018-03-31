@@ -3,4 +3,5 @@ export interface IButton {
   text: string;
   disabled: boolean;
   onClick: Function;
+  extraClasses?: string[];
 }
