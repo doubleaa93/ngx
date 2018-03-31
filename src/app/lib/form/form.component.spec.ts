@@ -1,14 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   NgReduxTestingModule,
   MockNgRedux
 } from '@angular-redux/store/testing';
-import { MockComponent } from 'ng2-mock-component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgReduxFormModule } from '@angular-redux/form';
 import { FormComponent } from './form.component';
 import { SchemaActions } from '../redux/actions/schema-actions';
 import { FormBuilderService } from '../services/form-builder.service';
+import { FieldHostComponent } from '../hosts/field-host.component';
+import { ButtonHostComponent } from '../hosts/button-host.component';
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -26,14 +27,8 @@ describe('FormComponent', () => {
       providers: [FormBuilderService],
       declarations: [
         FormComponent,
-        MockComponent({
-          selector: 'de-re-crud-field-host',
-          inputs: ['options', 'form', 'field']
-        }),
-        MockComponent({
-          selector: 'de-re-crud-button-host',
-          inputs: ['options', 'type', 'text', 'disabled']
-        })
+        FieldHostComponent,
+        ButtonHostComponent
       ]
     }).compileComponents();
 
