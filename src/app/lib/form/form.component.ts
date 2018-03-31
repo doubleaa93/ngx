@@ -19,7 +19,9 @@ export class FormComponent implements OnInit, OnDestroy {
 
   readonly formId: string = uuid();
   @Input() options: DeReCrudOptions;
+  @Input() cancelVisible: boolean;
   @Output() submit = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<any>();
   fields: string[];
   form: FormGroup;
 
@@ -54,6 +56,10 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.fieldsSubscription) {
       this.fieldsSubscription.unsubscribe();
     }
+  }
+
+  onCancel() {
+    this.cancel.emit();
   }
 
   onSubmit() {
