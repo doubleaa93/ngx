@@ -1,4 +1,4 @@
-import { IButton } from '../renderers/button';
+import { IButton } from './button';
 
 export interface ButtonRenderer {
   button: IButton;

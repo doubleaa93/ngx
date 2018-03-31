@@ -1,4 +1,4 @@
-import { IControl } from '../renderers/control';
+import { IControl } from './control';
 
 export interface ControlRenderer {
   control: IControl;
