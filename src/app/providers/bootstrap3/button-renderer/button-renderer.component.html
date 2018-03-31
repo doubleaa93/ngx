@@ -1,1 +1,6 @@
-<button class="btn" [ngClass]="classes" [type]="button.type" [disabled]="button.disabled">{{button.text}}</button>
+<button class="btn" [ngClass]="classes"
+        [type]="button.type"
+        [disabled]="button.disabled"
+        (click)="button.onClick">
+  {{button.text}}
+</button>

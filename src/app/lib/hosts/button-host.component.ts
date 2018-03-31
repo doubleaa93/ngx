@@ -6,12 +6,12 @@ import {
   OnDestroy,
   ViewChild,
   ComponentFactoryResolver,
-  ViewContainerRef,
   ComponentRef,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { IButton } from '../renderers/button';
 import { ButtonRenderer } from '../renderers/button.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { DeReCrudOptions } from '../options';
@@ -21,13 +21,13 @@ import { DeReCrudOptions } from '../options';
   template: `<ng-template deReCrudComponentHost></ng-template>`
 })
 export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
-
   private _componentRef: ComponentRef<any>;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() options: DeReCrudOptions;
   @Input() type: 'button' | 'submit';
   @Input() text: string;
   @Input() disabled: boolean;
+  @Output() click = new EventEmitter<any>();
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -62,11 +62,8 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
       providerOptions.buttonComponent
     );
 
-    const componentRef = viewContainerRef.createComponent(
-      componentFactory
-    );
+    this._componentRef = viewContainerRef.createComponent(componentFactory);
 
-    this._componentRef = componentRef;
     this.updateButtonInputs();
   }
 
@@ -79,8 +76,12 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
     componentRenderer.button = {
       type: this.type,
       text: this.text,
-      disabled: this.disabled
+      disabled: this.disabled,
+      onClick: this.onClick
     };
   }
 
+  onClick() {
+    this.click.emit();
+  }
 }

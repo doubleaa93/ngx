@@ -13,7 +13,7 @@ import { IStruct, IField, IBlock } from '../../schema';
 
 @Injectable()
 export class SchemaEpics {
-  init(action$: ActionsObservable<Actions>): Observable<Actions> {
+  init(action$: ActionsObservable<InitAction>): Observable<Actions> {
     // TODO: Validate schema
 
     return action$

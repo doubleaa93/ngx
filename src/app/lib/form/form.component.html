@@ -1,4 +1,13 @@
 <form *ngIf="form" [connect]="['forms', 'values', formId]" [formGroup]="form">
-  <de-re-crud-field-host *ngFor="let field of fields" [options]="options" [form]="form" [field]="field"></de-re-crud-field-host>
-  <de-re-crud-button-host [options]="options" type="submit" [disabled]="form.invalid" text="Submit"></de-re-crud-button-host>
+  <de-re-crud-field-host *ngFor="let field of fields"
+                         [options]="options"
+                         [form]="form"
+                         [field]="field">
+  </de-re-crud-field-host>
+  <de-re-crud-button-host [options]="options"
+                          type="submit"
+                          [disabled]="form.invalid"
+                          text="Submit"
+                          (click)="onSubmit()">
+  </de-re-crud-button-host>
 </form>

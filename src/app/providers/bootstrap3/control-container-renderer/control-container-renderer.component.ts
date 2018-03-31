@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ControlRenderer } from '../../../lib/renderers/control.renderer';
 import { IControl } from '../../../lib/renderers/control';
 import { ValidationErrorHelper } from '../../../lib/validation-error-helper';

@@ -5,12 +5,10 @@ import {
   OnDestroy,
   ViewChild,
   ComponentFactoryResolver,
-  ViewContainerRef,
   ComponentRef
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { NgRedux } from '@angular-redux/store';
 import { v4 as uuid } from 'uuid';

@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import { Subscription } from 'rxjs/Subscription';
 import { v4 as uuid } from 'uuid';
@@ -9,7 +8,6 @@ import { FormBuilderService } from '../services/form-builder.service';
 import { IAppState } from '../redux/state';
 import { init } from '../redux/actions/schema-actions';
 import { DeReCrudOptions } from '../options';
-import { IField, IBlock } from '../schema';
 
 @Component({
   selector: 'de-re-crud-form',
@@ -20,8 +18,8 @@ export class FormComponent implements OnInit, OnDestroy {
   private fieldsSubscription: Subscription;
 
   readonly formId: string = uuid();
-
   @Input() options: DeReCrudOptions;
+  @Output() submit = new EventEmitter<any>();
   fields: string[];
   form: FormGroup;
 
@@ -56,5 +54,13 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.fieldsSubscription) {
       this.fieldsSubscription.unsubscribe();
     }
+  }
+
+  onSubmit() {
+    if (!this.form.valid) {
+      return;
+    }
+
+    this.submit.emit(this.form.value);
   }
 }

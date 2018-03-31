@@ -7,9 +7,8 @@ import { MockComponent } from 'ng2-mock-component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgReduxFormModule } from '@angular-redux/form';
 import { FormComponent } from './form.component';
-import { DeReCrudOptions } from '../models/options';
 import { SchemaActions } from '../redux/actions/schema-actions';
-import { FormBuilderService } from '../form-builder.service';
+import { FormBuilderService } from '../services/form-builder.service';
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -29,7 +28,11 @@ describe('FormComponent', () => {
         FormComponent,
         MockComponent({
           selector: 'de-re-crud-field-host',
-          inputs: ['form', 'struct', 'field']
+          inputs: ['options', 'form', 'field']
+        }),
+        MockComponent({
+          selector: 'de-re-crud-button-host',
+          inputs: ['options', 'type', 'text', 'disabled']
         })
       ]
     }).compileComponents();
@@ -38,11 +41,12 @@ describe('FormComponent', () => {
   });
 
   beforeEach(() => {
-    ngReduxSpy = spyOn(MockNgRedux.mockInstance, 'dispatch');
+    ngReduxSpy = spyOn(MockNgRedux.getInstance(), 'dispatch');
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
 
     component.options = {
+      provider: 'provider',
       schema: {},
       struct: 'struct',
       block: 'default'
