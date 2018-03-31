@@ -25,6 +25,7 @@
     "@angular/platform-browser": "^4.4.6",
     "@angular/platform-browser-dynamic": "^4.4.6",
     "@angular/router": "^4.4.6",
+    "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",

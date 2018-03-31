@@ -1,8 +1,10 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[deReCrudControlHost]'
+  // tslint:disable-next-line:directive-selector
+  selector: '[deReCrudComponentHost]'
 })
-export class ControlHostDirective {
+export class ComponentHostDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
+

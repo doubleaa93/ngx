@@ -4,8 +4,7 @@ import { ControlRenderer } from '../control.renderer';
 
 @Component({
   selector: 'de-re-crud-label-renderer',
-  templateUrl: './label-renderer.component.html',
-  styleUrls: ['./label-renderer.component.css']
+  templateUrl: './label-renderer.component.html'
 })
 export class LabelRendererComponent implements ControlRenderer {
   @Input() control: IControl;

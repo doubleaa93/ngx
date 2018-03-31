@@ -4,8 +4,7 @@ import { ControlRenderer } from '../control.renderer';
 
 @Component({
   selector: 'de-re-crud-input-renderer',
-  templateUrl: './input-renderer.component.html',
-  styleUrls: ['./input-renderer.component.css']
+  templateUrl: './input-renderer.component.html'
 })
 export class InputRendererComponent implements ControlRenderer {
   @Input() control: IControl;

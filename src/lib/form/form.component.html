@@ -1,4 +1,0 @@
-<form *ngIf="form" [connect]="formId" [formGroup]="form">
-  <de-re-crud-field-host *ngFor="let field of fields" [form]="form" [struct]="options.struct" [field]="field"></de-re-crud-field-host>
-  <button type="submit" [disabled]="form.invalid">Submit</button>
-</form>

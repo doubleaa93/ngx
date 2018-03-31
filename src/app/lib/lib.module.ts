@@ -8,14 +8,15 @@ import { FormComponent } from './form/form.component';
 import { InputRendererComponent } from './renderers/input-renderer/input-renderer.component';
 import { SelectRendererComponent } from './renderers/select-renderer/select-renderer.component';
 import { LabelRendererComponent } from './renderers/label-renderer/label-renderer.component';
+import { ControlContainerRendererComponent } from './renderers/control-container-renderer/control-container-renderer.component';
 import { IAppState } from './redux/state';
 import { rootReducer } from './redux/reducers';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { SchemaEpics } from './redux/epics/schema-epics';
-import { ControlHostDirective } from './hosts/control-host.directive';
-import { FieldHostComponent } from './hosts/field-host/field-host.component';
+import { FieldHostComponent } from './hosts/field-host.component';
 import { FormBuilderService } from './form-builder.service';
 import { ValidationErrorRendererComponent } from './renderers/validation-error-renderer/validation-error-renderer.component';
+import { ComponentHostDirective } from './hosts/component-host.directive';
 
 @NgModule({
   imports: [
@@ -29,13 +30,14 @@ import { ValidationErrorRendererComponent } from './renderers/validation-error-r
     InputRendererComponent,
     SelectRendererComponent,
     LabelRendererComponent,
-    ControlHostDirective,
+    ControlContainerRendererComponent,
     FieldHostComponent,
-    ValidationErrorRendererComponent
+    ValidationErrorRendererComponent,
+    ComponentHostDirective
   ],
   providers: [SchemaEpics, FormBuilderService],
   exports: [FormComponent],
-  entryComponents: [InputRendererComponent, SelectRendererComponent]
+  entryComponents: [InputRendererComponent, SelectRendererComponent, ControlContainerRendererComponent]
 })
 export class LibModule {
   constructor(

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DeReCrudOptions } from '../lib/models/options';
-import * as schema from '../lib/schema.json';
+import { DeReCrudOptions } from './lib/models/options';
+import * as schema from './lib/schema.json';
+import { ControlContainerRendererComponent } from './providers/bootstrap3/control-container-renderer/control-container-renderer.component';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent {
   options: DeReCrudOptions = {
     schema,
     struct: 'struct',
-    block: 'default'
+    block: 'default',
+    containerComponent: ControlContainerRendererComponent
   };
 
   constructor(private titleService: Title) {
