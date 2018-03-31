@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DeReCrudOptions } from './lib/models/options';
-import * as schema from './lib/schema.json';
+import { DeReCrudOptions } from '../lib/models/options';
+import * as schema from '../lib/schema.json';
 
 @Component({
   selector: 'app-root',

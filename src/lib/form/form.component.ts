@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/do';
 import { Subscription } from 'rxjs/Subscription';
 import { v4 as uuid } from 'uuid';
 import { IAppState } from '../redux/state';

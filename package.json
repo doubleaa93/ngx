@@ -7,8 +7,7 @@
     "start": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "lint": "ng lint"
   },
   "private": true,
   "peerDependencies": {
@@ -35,7 +34,8 @@
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "@angular/cli": "^1.7.3",
+    "@angular-devkit/core": "0.0.29",
+    "@angular/cli": "1.6.1",
     "@angular/compiler-cli": "^4.4.6",
     "@angular/language-service": "^4.4.6",
     "@types/jasmine": "~2.8.3",
@@ -49,8 +49,8 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng2-mock-component": "^0.1.1",
     "prettier": "^1.11.1",
-    "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
     "tslint-config-airbnb": "^5.8.0",

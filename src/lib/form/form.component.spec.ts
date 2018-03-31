@@ -3,10 +3,13 @@ import {
   NgReduxTestingModule,
   MockNgRedux
 } from '@angular-redux/store/testing';
-
+import { MockComponent } from 'ng2-mock-component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgReduxFormModule } from '@angular-redux/form';
 import { FormComponent } from './form.component';
 import { DeReCrudOptions } from '../models/options';
 import { SchemaActions } from '../redux/actions/schema-actions';
+import { FormBuilderService } from '../form-builder.service';
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -15,8 +18,20 @@ describe('FormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FormComponent],
-      imports: [NgReduxTestingModule]
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NgReduxTestingModule,
+        NgReduxFormModule
+      ],
+      providers: [FormBuilderService],
+      declarations: [
+        FormComponent,
+        MockComponent({
+          selector: 'de-re-crud-field-host',
+          inputs: ['form', 'struct', 'field']
+        })
+      ]
     }).compileComponents();
 
     MockNgRedux.reset();
