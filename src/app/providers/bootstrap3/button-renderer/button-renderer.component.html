@@ -1,6 +1,6 @@
 <button class="btn" [ngClass]="classes"
         [type]="button.type"
         [disabled]="button.disabled"
-        (click)="button.onClick">
+        (click)="button.onClick($event)">
   {{button.text}}
 </button>

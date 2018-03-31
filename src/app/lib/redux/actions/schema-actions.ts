@@ -2,13 +2,13 @@ import { DeReCrudOptions } from '../../options';
 import { IStruct, IField, IBlock } from '../../schema';
 
 export enum SchemaActions {
-  INIT,
-  INIT_COMPLETE
+  INIT = 0,
+  INIT_COMPLETE = 1
 }
 
 export interface InitAction {
   type: SchemaActions.INIT;
-  payload: { formId: string; options: DeReCrudOptions; value: object };
+  payload: { formId: string; options: DeReCrudOptions };
 }
 
 export interface InitCompleteAction {
@@ -19,15 +19,10 @@ export interface InitCompleteAction {
     structs: IStruct[];
     fields: IField[];
     blocks: IBlock[];
-    value: object;
   };
 }
 
-export const init = (
-  formId: string,
-  options: DeReCrudOptions,
-  value: object
-): InitAction => ({
+export const init = (formId: string, options: DeReCrudOptions): InitAction => ({
   type: SchemaActions.INIT,
-  payload: { formId, options, value }
+  payload: { formId, options }
 });

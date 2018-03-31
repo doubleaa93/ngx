@@ -45,7 +45,7 @@ export class DeReCrudModule {
       blocks: {},
       fields: {},
       options: {},
-      forms: { instances: {}, values: {} }
+      forms: { instances: {}, values: {}, customErrors: {} }
     };
 
     ngRedux.configureStore(rootReducer, initialState, middleware);

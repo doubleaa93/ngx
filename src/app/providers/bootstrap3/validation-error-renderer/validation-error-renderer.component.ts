@@ -11,7 +11,7 @@ import { ValidationErrorHelper } from '../../../lib/validation-error-helper';
 export class Bootstrap3ValidationErrorRendererComponent implements ControlRenderer {
   @Input() control: IControl;
 
-  getError() {
-    return ValidationErrorHelper.getError(this.control);
+  getErrors() {
+    return ValidationErrorHelper.getErrors(this.control);
   }
 }

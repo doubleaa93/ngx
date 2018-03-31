@@ -1,14 +1,9 @@
-<ng-template #error let-error="error">
-  <ng-container *ngIf="error" [ngSwitch]="error">
-    <span class="help-block">
-      <ng-container *ngSwitchCase="'required'">
-        This field is required.
-      </ng-container>
-      <ng-container *ngSwitchDefault>
-        Validation failed with error: {{error}}
-      </ng-container>
+<ng-template #error let-errors="errors">
+  <ng-container *ngIf="errors?.length">
+    <span *ngFor="let error of errors" class="help-block">
+      {{error}}
     </span>
   </ng-container>
 </ng-template>
 
-<ng-container [ngTemplateOutlet]="error" [ngTemplateOutletContext]="{ error: getError() }"></ng-container>
+<ng-container [ngTemplateOutlet]="error" [ngTemplateOutletContext]="{ errors: getErrors() }"></ng-container>

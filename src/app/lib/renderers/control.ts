@@ -6,6 +6,8 @@ export interface IControl {
   htmlId: string;
   key: string;
   label: string;
+  onBlur: (e: any) => void;
+  customErrors: string[] | undefined;
 }
 
 interface ISelectControlOption {

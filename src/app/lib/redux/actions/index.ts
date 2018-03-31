@@ -1,4 +1,5 @@
 import { InitAction, InitCompleteAction } from './schema-actions';
+import { ResetAction, SetCustomErrorsAction, SubmitAction, ClearCustomErrorsAction } from './form-actions';
 
 export const FORM_CHANGED = '@@angular-redux/form/FORM_CHANGED';
 
@@ -7,9 +8,15 @@ export interface FormChangeAction {
   payload: {
     path: string[];
     form: string;
-    valid: boolean;
     value: any;
   };
 }
 
-export type Actions = InitAction | InitCompleteAction | FormChangeAction;
+export type Actions =
+  | InitAction
+  | InitCompleteAction
+  | SubmitAction
+  | ResetAction
+  | SetCustomErrorsAction
+  | ClearCustomErrorsAction
+  | FormChangeAction;

@@ -15,20 +15,24 @@ import { v4 as uuid } from 'uuid';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { IAppState } from '../redux/state';
 import { IField } from '../schema';
-import { IControl } from '../renderers/control';
 import { ControlRenderer } from '../renderers/control.renderer';
 import { DeReCrudOptions } from '../options';
 import { ComponentHostDirective } from './component-host.directive';
+import { clearCustomErrors } from '../redux/actions/form-actions';
 
 @Component({
   selector: 'de-re-crud-field-host',
-  template: `<ng-template deReCrudComponentHost></ng-template>`
+  template: `
+    <ng-template deReCrudComponentHost></ng-template>`
 })
 export class FieldHostComponent implements OnInit, OnDestroy {
+  private _customErrorsSubscription: Subscription;
   private _fieldSubscription: Subscription;
   private _componentRefs: ComponentRef<any>[] = [];
+  private _field: IField;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() options: DeReCrudOptions;
+  @Input() formId: string;
   @Input() form: FormGroup;
   @Input() field: string;
 
@@ -39,11 +43,20 @@ export class FieldHostComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this._customErrorsSubscription = this.ngRedux
+      .select('forms')
+      .map(forms => forms['customErrors'])
+      .map(customErrors => customErrors[this.formId])
+      .subscribe(() => {
+        this.updateControlInputs();
+      });
+
     this._fieldSubscription = this.ngRedux
       .select('fields')
       .map(fields => fields[`${this.options.struct}-${this.field}`])
       .do((field) => {
-        this.renderControl(field);
+        this._field = field;
+        this.renderControl();
       })
       .subscribe();
   }
@@ -56,30 +69,22 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     this._componentRefs.forEach(x => x.destroy());
   }
 
-  renderControl(field: IField) {
+  renderControl() {
     let controlComponent: any;
 
     const providerOptions = this.providerService.get(this.options.provider);
 
-    switch (field.type) {
+    switch (this._field.type) {
       case 'text':
         controlComponent = providerOptions.inputComponent;
         break;
       default:
         console.error(
-          `${field.type} control is not supported.`,
-          JSON.stringify(field)
+          `${this._field.type} control is not supported.`,
+          JSON.stringify(this._field)
         );
         return;
     }
-
-    const control: IControl = {
-      form: this.form,
-      type: field.type,
-      htmlId: `${field.name}-${uuid()}`,
-      key: field.name,
-      label: field.label
-    };
 
     const viewContainerRef = this.componentHost.viewContainerRef;
     viewContainerRef.clear();
@@ -95,8 +100,6 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     const controlComponentRef = viewContainerRef.createComponent(
       controlComponentFactory
     );
-    const controlComponentRenderer = <ControlRenderer>controlComponentRef.instance;
-    controlComponentRenderer.control = control;
 
     const containerComponentRef = viewContainerRef.createComponent(
       containerComponentFactory,
@@ -105,9 +108,36 @@ export class FieldHostComponent implements OnInit, OnDestroy {
       [[controlComponentRef.location.nativeElement]]
     );
 
-    const containerComponentRenderer = <ControlRenderer>containerComponentRef.instance;
-    containerComponentRenderer.control = control;
-
     this._componentRefs.push(controlComponentRef, containerComponentRef);
+
+    this.updateControlInputs();
+  }
+
+  updateControlInputs() {
+    if (!this._componentRefs.length) {
+      return;
+    }
+
+    const customErrors = this.ngRedux.getState().forms.customErrors[
+      this.formId
+    ];
+
+    for (const componentRef of this._componentRefs) {
+      const componentRenderer = <ControlRenderer>componentRef.instance;
+      componentRenderer.control = {
+        form: this.form,
+        type: this._field.type,
+        htmlId: `${this._field.name}-${uuid()}`,
+        key: this._field.name,
+        label: this._field.label,
+        onBlur: this.onBlur,
+        customErrors:
+          customErrors && (customErrors[this._field.name] as string[])
+      };
+    }
+  }
+
+  onBlur = () => {
+    this.ngRedux.dispatch(clearCustomErrors(this.formId, this.field));
   }
 }

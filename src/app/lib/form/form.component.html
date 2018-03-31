@@ -1,14 +1,15 @@
 <form *ngIf="form" [connect]="['forms', 'values', formId]" [formGroup]="form">
   <de-re-crud-field-host *ngFor="let field of fields"
                          [options]="options"
+                         [formId]="formId"
                          [form]="form"
                          [field]="field">
   </de-re-crud-field-host>
   <de-re-crud-button-host [options]="options"
                           type="submit"
-                          [disabled]="form.invalid"
+                          [disabled]="!submitEnabled"
                           text="Submit"
-                          (click)="onSubmit()">
+                          (click)="onSubmit($event)">
   </de-re-crud-button-host>
   <de-re-crud-button-host *ngIf="cancelVisible"
                           [options]="options"

@@ -82,7 +82,7 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  onClick() {
-    this.click.emit();
+  onClick = (e) => {
+    this.click.emit(e);
   }
 }
