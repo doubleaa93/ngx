@@ -8,7 +8,7 @@ export enum SchemaActions {
 
 export interface InitAction {
   type: SchemaActions.INIT;
-  payload: { formId: string; options: DeReCrudOptions };
+  payload: { formId: string; options: DeReCrudOptions; value: object };
 }
 
 export interface InitCompleteAction {
@@ -19,10 +19,15 @@ export interface InitCompleteAction {
     structs: IStruct[];
     fields: IField[];
     blocks: IBlock[];
+    value: object;
   };
 }
 
-export const init = (formId: string, options: DeReCrudOptions): InitAction => ({
+export const init = (
+  formId: string,
+  options: DeReCrudOptions,
+  value: object
+): InitAction => ({
   type: SchemaActions.INIT,
-  payload: { formId, options }
+  payload: { formId, options, value }
 });

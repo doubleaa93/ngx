@@ -18,7 +18,7 @@ export class SchemaEpics {
 
     return action$
       .ofType(SchemaActions.INIT)
-      .map(({ payload: { formId, options } }) => {
+      .map(({ payload: { formId, options, value } }) => {
         const structs: IStruct[] = [];
         const fields: IField[] = [];
         const blocks: IBlock[] = [];
@@ -62,7 +62,7 @@ export class SchemaEpics {
 
         return {
           type: SchemaActions.INIT_COMPLETE,
-          payload: { formId, options, structs, fields, blocks }
+          payload: { formId, options, structs, fields, blocks, value }
         } as InitCompleteAction;
       });
   }

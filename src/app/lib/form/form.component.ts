@@ -20,6 +20,7 @@ export class FormComponent implements OnInit, OnDestroy {
   readonly formId: string = uuid();
   @Input() options: DeReCrudOptions;
   @Input() cancelVisible: boolean;
+  @Input() initialValue: object;
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<any>();
   fields: string[];
@@ -49,7 +50,7 @@ export class FormComponent implements OnInit, OnDestroy {
         this.fields = fields;
       });
 
-    this.ngRedux.dispatch(init(this.formId, this.options));
+    this.ngRedux.dispatch(init(this.formId, this.options, this.initialValue));
   }
 
   ngOnDestroy() {

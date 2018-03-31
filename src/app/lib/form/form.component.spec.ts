@@ -46,7 +46,7 @@ describe('FormComponent', () => {
     component = fixture.componentInstance;
 
     component.options = {
-      provider: 'provider',
+      provider: 'bootstrap3',
       schema: {},
       struct: 'struct',
       block: 'default'
