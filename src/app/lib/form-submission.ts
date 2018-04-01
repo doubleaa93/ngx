@@ -1,8 +1,6 @@
-import { CustomErrors } from './services/form-state.service';
-
-export type FormSubmissionCompletionParams = CustomErrors | undefined;
+import { FormSubmissionErrors } from './services/form-state.service';
 
 export interface FormSubmission {
   value: any;
-  onComplete: (params: FormSubmissionCompletionParams) => void;
+  onComplete: (errors?: FormSubmissionErrors) => void;
 }

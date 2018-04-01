@@ -12,10 +12,10 @@ export interface FormState {
   fields: Map<IField>;
   blocks: Map<IBlock>;
   blockFields: IField[];
-  errors: CustomErrors;
+  submissionErrors: FormSubmissionErrors;
 }
 
-export interface CustomErrors {
+export interface FormSubmissionErrors {
   [formPath: string]: string[];
 }
 
@@ -123,7 +123,7 @@ export class FormStateService {
       fields,
       blocks,
       blockFields,
-      errors: {}
+      submissionErrors: {}
     };
 
     this._cache[id] = state;
@@ -150,15 +150,15 @@ export class FormStateService {
       return;
     }
 
-    this._cache[id].errors = {};
+    this._cache[id].submissionErrors = {};
   }
 
-  setErrors(id: number, errors: CustomErrors) {
+  setErrors(id: number, errors: FormSubmissionErrors) {
     if (!this._cache[id]) {
       return;
     }
 
-    this._cache[id].errors = errors;
+    this._cache[id].submissionErrors = errors;
   }
 
   private arrayToMap<T>(getKey: GetKeyFunction<T>, array: T[]) {

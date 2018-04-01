@@ -7,7 +7,7 @@ export interface IControl {
   htmlId: string;
   key: string;
   label: string;
-  errors: string[];
+  submissionErrors: string[];
   onBlur: (e: any) => void;
   onChange: (e: any) => void;
 }

@@ -8,7 +8,7 @@ export class ValidationErrorHelper {
 
     if (
       (!formControl.errors || !formControl.touched) &&
-      !control.errors.length
+      !control.submissionErrors.length
     ) {
       return null;
     }
@@ -46,7 +46,7 @@ export class ValidationErrorHelper {
       .sort(x => x.sort)
       .concat(unsortedErrors)
       .map(this.getErrorMessage)
-      .concat(control.errors);
+      .concat(control.submissionErrors);
   }
 
   static getErrorMessage(error: {  key: string, metadata: any }) {
