@@ -1,127 +1,77 @@
 import {
   Component,
+  EventEmitter,
   Input,
-  OnInit,
+  OnChanges,
   OnDestroy,
+  OnInit,
   Output,
-  EventEmitter
+  SimpleChanges
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/operator/do';
-import { Subscription } from 'rxjs/Subscription';
-import { v4 as uuid } from 'uuid';
-import { FormBuilderService } from '../services/form-builder.service';
-import { IAppState } from '../redux/state';
-import { init } from '../redux/actions/schema-actions';
 import { DeReCrudOptions } from '../options';
 import { FormSubmission } from '../form-submission';
-import {
-  submit,
-  reset,
-  setCustomErrors
-} from '../redux/actions/form-actions';
+import { FormState, FormStateService } from '../services/form-state.service';
 
 @Component({
   selector: 'de-re-crud-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
-export class FormComponent implements OnInit, OnDestroy {
-  private _formInstanceSubscription: Subscription;
-  private _fieldsSubscription: Subscription;
-  readonly formId: string = uuid();
+export class FormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() options: DeReCrudOptions;
   @Input() cancelVisible: boolean;
-  @Input() initialValue: object;
+  @Input() value: object;
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
-  fields: string[];
-  form: FormGroup;
+  state: FormState;
   submitting: boolean;
 
-  constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private fb: FormBuilderService
-  ) {
-  }
+  constructor(private stateService: FormStateService) {}
 
   get submitEnabled() {
-    return !this.submitting && this.form.valid;
+    return !this.submitting && this.state.form.valid;
   }
 
   ngOnInit() {
-    this._formInstanceSubscription = this.ngRedux
-      .select('forms')
-      .map(forms => forms['instances'])
-      .map(instances => instances[this.formId])
-      .subscribe((instance) => {
-        if (!instance) {
-          return;
-        }
+    this.state = this.stateService.create(this.options, this.value);
+  }
 
-        this.submitting = instance.submitting;
-      });
-
-    this._fieldsSubscription = this.ngRedux
-      .select('blocks')
-      .map((blocks) => {
-        const block = blocks[`${this.options.struct}-${this.options.block}`];
-
-        return block && block.fields;
-      })
-      .do<string[]>((fields) => {
-        if (!fields) {
-          return;
-        }
-
-        this.form = this.fb.group(this.formId, this.options.struct, fields);
-
-        if (this.initialValue) {
-          this.form.patchValue(this.initialValue);
-        }
-      })
-      .subscribe((fields) => {
-        this.fields = fields;
-      });
-
-    this.ngRedux.dispatch(init(this.formId, this.options));
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.value && !changes.value.firstChange) {
+      this.stateService.update(this.state.id, changes.value.currentValue);
+    }
   }
 
   ngOnDestroy() {
-    if (this._formInstanceSubscription) {
-      this._formInstanceSubscription.unsubscribe();
-    }
-
-    if (this._fieldsSubscription) {
-      this._fieldsSubscription.unsubscribe();
-    }
+    this.stateService.remove(this.state.id);
   }
 
   onCancel() {
     this.cancel.emit();
-    this.ngRedux.dispatch(reset(this.formId));
+    this.state.form.reset();
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    if (!this.form.valid) {
+    if (!this.state.form.valid) {
       return;
     }
 
-    this.ngRedux.dispatch(submit(this.formId));
+    this.submitting = true;
 
     this.submit.emit({
-      value: this.form.value,
+      value: this.state.form.value,
       onComplete: (errors) => {
         if (!errors) {
-          this.ngRedux.dispatch(reset(this.formId));
-          this.form.reset();
-          return;
+          this.stateService.clearErrors(this.state.id);
+          this.state.form.reset();
+        } else {
+          this.stateService.setErrors(this.state.id, errors);
         }
 
-        this.ngRedux.dispatch(setCustomErrors(this.formId, errors));
+        this.submitting = false;
       }
     });
   }

@@ -1,21 +1,27 @@
 {
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@de-re-crud/ngx",
   "version": "0.0.1",
   "license": "MIT",
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public-api.ts"
+    }
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "package": "ng-packagr -p package.json"
   },
   "private": true,
   "peerDependencies": {
-    "@angular/core": ">= 4"
+    "@angular/core": ">= 4",
+    "boostrap": ">= 3 < 4"
   },
   "dependencies": {
-    "@angular-redux/form": "^6.7.0",
-    "@angular-redux/store": "6",
     "@angular/animations": "^4.4.6",
     "@angular/common": "^4.4.6",
     "@angular/compiler": "^4.4.6",
@@ -27,11 +33,7 @@
     "@angular/router": "^4.4.6",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "redux-observable": "^0.18.0",
     "rxjs": "^5.5.6",
-    "uuid": "^3.2.1",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
@@ -50,6 +52,7 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "1.6.0",
     "ng2-mock-component": "^0.1.1",
     "prettier": "^1.11.1",
     "ts-node": "~4.1.0",

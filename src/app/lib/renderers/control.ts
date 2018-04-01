@@ -10,7 +10,7 @@ export interface IControl {
   customErrors: string[] | undefined;
 }
 
-interface ISelectControlOption {
+export interface ISelectControlOption {
   label: string;
   value: any;
 }

@@ -6,10 +6,9 @@ export interface IStruct {
 }
 
 export interface IField {
-  id: string;
+  name: string;
   struct: string;
   keyField: boolean;
-  name: string;
   label: string;
   type: any;
   required: boolean;
@@ -23,7 +22,7 @@ export interface ITextField extends IField {
 }
 
 export interface IBlock {
-  id: string;
   name: string;
+  struct: string;
   fields: string[];
 }

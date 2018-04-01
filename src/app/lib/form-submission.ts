@@ -1,4 +1,4 @@
-import { CustomErrors } from './redux/reducers/forms-reducer';
+import { CustomErrors } from './services/form-state.service';
 
 export type FormSubmissionCompletionParams = CustomErrors | undefined;
 
