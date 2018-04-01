@@ -13,6 +13,8 @@ export interface IField {
   type: any;
   required: boolean;
   initialValue?: any;
+  minLength?: number;
+  maxLength?: number;
 }
 
 export interface ITextField extends IField {

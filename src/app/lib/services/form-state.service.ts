@@ -42,21 +42,16 @@ export class FormStateService {
 
     for (const structSchema of options.schema) {
       const struct = {
-        name: structSchema.name,
-        label: structSchema.label,
+        ...structSchema,
         fields: [],
         blocks: []
       };
 
       for (const fieldSchema of structSchema.fields) {
         const field = {
-          type: fieldSchema.type,
-          keyField: fieldSchema.keyField,
-          required: fieldSchema.required,
-          name: fieldSchema.name,
-          label: fieldSchema.label,
+          ...fieldSchema,
           placeholder: fieldSchema.placeholder || fieldSchema.label,
-          struct: structSchema.name
+          struct: structSchema.name,
         };
 
         fields.push(field);
@@ -65,8 +60,7 @@ export class FormStateService {
 
       for (const blockSchema of structSchema.blocks) {
         const block = {
-          name: blockSchema.name,
-          fields: blockSchema.fields,
+          ...blockSchema,
           struct: structSchema.name
         };
 

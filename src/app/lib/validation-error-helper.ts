@@ -30,28 +30,34 @@ export class ValidationErrorHelper {
     const unsortedErrors = [];
 
     if (formControl.errors) {
-      for (const error of Object.keys(formControl.errors)) {
-        const sort = this._errorSort[error];
+      for (const key of Object.keys(formControl.errors)) {
+        const sort = this._errorSort[key];
+        const metadata = formControl.errors[key];
+
         if (typeof sort === 'undefined') {
-          unsortedErrors.push(error);
+          unsortedErrors.push({ key, metadata });
         } else {
-          sortedErrors.push({ error, sort });
+          sortedErrors.push({ key, metadata, sort });
         }
       }
     }
 
     return sortedErrors
       .sort(x => x.sort)
-      .map(x => x.error)
       .concat(unsortedErrors)
       .map(this.getErrorMessage)
       .concat(control.errors);
   }
 
-  static getErrorMessage(error: string) {
-    switch (error) {
+  static getErrorMessage(error: {  key: string, metadata: any }) {
+    console.log(error.key);
+    switch (error.key) {
       case 'required':
         return 'This field is required.';
+      case 'minlength':
+        return `This field must have at least ${error.metadata.requiredLength} characters.`;
+      case 'maxlength':
+        return `This field can not exceed ${error.metadata.requiredLength} characters.`;
       default:
         return `Validation failed with error: ${error}`;
     }

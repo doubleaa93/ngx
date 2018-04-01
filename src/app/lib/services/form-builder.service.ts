@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IField } from '../schema';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import { IField, ITextField } from '../schema';
 
 @Injectable()
 export class FormBuilderService {
@@ -18,13 +23,27 @@ export class FormBuilderService {
     return this.fb.group(form);
   }
 
-  private getValidators(field: IField): Function[] {
-    const validators: Function[] = [];
+  private getValidators(field: IField) {
+    return (control: AbstractControl) => {
+      const validators = [];
 
-    if (field.required) {
-      validators.push(Validators.required);
-    }
+      if (field.required) {
+        validators.push(Validators.required);
+      }
 
-    return validators;
+      if ((<ITextField>field).minLength) {
+        validators.push(Validators.minLength((<ITextField>field).minLength));
+      }
+
+      if ((<ITextField>field).maxLength) {
+        validators.push(Validators.maxLength((<ITextField>field).maxLength));
+      }
+
+      if (!validators.length) {
+        return null;
+      }
+
+      return Validators.compose(validators)(control);
+    };
   }
 }
