@@ -41,7 +41,7 @@ export class AppComponent {
 ```
 
 ```html
-<de-re-crud-form [options]="options">
+<de-re-crud-form [options]="options"></de-re-crud-form>
 ```
 
 ## API
