@@ -2,8 +2,7 @@ export interface DeReCrudOptions extends DeReCrudStyleOptions {
   provider: 'bootstrap3';
   schema: any;
   struct: string;
-  block: any;
-  value?: any;
+  block: string;
 }
 
 export interface DeReCrudStyleOptions {
