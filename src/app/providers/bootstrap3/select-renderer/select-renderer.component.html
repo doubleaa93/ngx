@@ -4,7 +4,8 @@
           [id]="control.htmlId"
           [name]="control.key"
           [formControlName]="control.key"
-          (blur)="control.onBlur($event)">
+          (blur)="control.onBlur($event)"
+          (change)="control.onChange($event)">
     <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
   </select>
   <de-re-crud-bootstrap3-validation-error-renderer [control]="control">

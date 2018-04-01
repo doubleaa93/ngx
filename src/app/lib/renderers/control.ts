@@ -2,12 +2,14 @@ import { FormGroup } from '@angular/forms';
 
 export interface IControl {
   form: FormGroup;
+  formPath: string;
   type: string;
   htmlId: string;
   key: string;
   label: string;
+  errors: string[];
   onBlur: (e: any) => void;
-  customErrors: string[] | undefined;
+  onChange: (e: any) => void;
 }
 
 export interface ISelectControlOption {

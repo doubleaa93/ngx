@@ -8,7 +8,7 @@ export class ValidationErrorHelper {
 
     if (
       (!formControl.errors || !formControl.touched) &&
-      !control.customErrors
+      !control.errors.length
     ) {
       return null;
     }
@@ -40,17 +40,12 @@ export class ValidationErrorHelper {
       }
     }
 
-    const errors = sortedErrors
+    return sortedErrors
       .sort(x => x.sort)
       .map(x => x.error)
       .concat(unsortedErrors)
-      .map(this.getErrorMessage);
-
-    if (errors.length) {
-      return errors;
-    }
-
-    return control.customErrors;
+      .map(this.getErrorMessage)
+      .concat(control.errors);
   }
 
   static getErrorMessage(error: string) {

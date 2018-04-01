@@ -89,23 +89,31 @@ export class FieldHostComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const errors = this.state.errors[this.formId];
+    const formErrors = this.state.errors[this.formId];
+    const formPath = this.field.name; // TODO: Support nested fields and arrays
+    const errors = (formErrors && formErrors[formPath]) || [];
 
     for (const componentRef of this._componentRefs) {
       const componentRenderer = <ControlRenderer>componentRef.instance;
       componentRenderer.control = {
+        errors,
+        formPath,
         form: this.state.form,
         type: this.field.type,
         htmlId: `${this.field.name}-${Math.random()}`,
         key: this.field.name,
         label: this.field.label,
         onBlur: this.onBlur,
-        customErrors: errors && (errors[this.field.name] as string[])
+        onChange: this.onChange
       };
     }
   }
 
   onBlur = () => {
+    this.stateService.clearErrors(this.formId);
+  }
+
+  onChange = () => {
     this.stateService.clearErrors(this.formId);
   }
 }

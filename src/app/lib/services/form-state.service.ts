@@ -16,7 +16,7 @@ export interface FormState {
 }
 
 export interface CustomErrors {
-  [fieldPath: string]: string[] | CustomErrors;
+  [formPath: string]: string[];
 }
 
 export interface Map<T> {
