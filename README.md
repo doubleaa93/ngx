@@ -57,7 +57,8 @@ export class AppComponent {
   provider: 'bootstrap3', // Provider used to render components. Currently the only supported option.
   schema: { /* ... */ }, // Schema definition for the form. See main documentation repo for more details. Not all options are currently supported.
   struct: 'struct', // Struct to render from the schema definition
-  block: 'default' // Block to render from the struct definition
+  block: 'default', // Block to render from the struct definition,
+  extraButtonClasses: [/* ... */] // Additional classes to append to all buttons
 }
 ```
 
