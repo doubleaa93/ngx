@@ -16,7 +16,6 @@
     "lint": "ng lint",
     "package": "ng-packagr -p package.json"
   },
-  "private": true,
   "peerDependencies": {
     "@angular/core": ">= 4",
     "boostrap": ">= 3 < 4"

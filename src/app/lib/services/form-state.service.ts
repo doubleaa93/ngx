@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { DeReCrudOptions } from '../options';
 import { IStruct, IField, IBlock } from '../schema';
 import { FormBuilderService } from './form-builder.service';
+import { FormSubmissionErrors } from '../form-submission';
 
 export interface FormState {
   id: number;
@@ -13,10 +14,6 @@ export interface FormState {
   blocks: Map<IBlock>;
   blockFields: IField[];
   submissionErrors: FormSubmissionErrors;
-}
-
-export interface FormSubmissionErrors {
-  [formPath: string]: string[];
 }
 
 export interface Map<T> {
