@@ -64,6 +64,8 @@ export class FormStateService {
         blocks.push(block);
         struct.blocks.push(block.name);
       }
+
+      structs.push(struct);
     }
 
     return {
