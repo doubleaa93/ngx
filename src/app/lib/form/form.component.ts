@@ -47,12 +47,16 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     this.stateService.remove(this.state.id);
   }
 
-  onCancel() {
+  onCancel(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
     this.cancel.emit();
     this.state.form.reset();
   }
 
   onSubmit(e) {
+    e.stopPropagation();
     e.preventDefault();
 
     if (!this.state.form.valid) {
