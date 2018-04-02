@@ -7,6 +7,7 @@ import {
   ComponentFactoryResolver,
   ComponentRef
 } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { IField } from '../schema';
 import { ControlRenderer } from '../renderers/control.renderer';
@@ -20,6 +21,7 @@ import { FormStateService, FormState } from '../services/form-state.service';
 })
 export class FieldHostComponent implements OnInit, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
+  private _submissionErrorsChangeSubscription: Subscription;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
   @Input() field: IField;
@@ -33,17 +35,27 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
+
+    this._submissionErrorsChangeSubscription = this.state.onSubmissionErrorsChange.subscribe(
+      () => {
+        this.updateControlInputs();
+      }
+    );
+
     this.renderControl();
   }
 
   ngOnDestroy() {
+    this._submissionErrorsChangeSubscription.unsubscribe();
     this._componentRefs.forEach(x => x.destroy());
   }
 
   renderControl() {
     let controlComponent: any;
 
-    const providerOptions = this.providerService.get(this.state.options.provider);
+    const providerOptions = this.providerService.get(
+      this.state.options.provider
+    );
 
     switch (this.field.type) {
       case 'text':
@@ -95,7 +107,10 @@ export class FieldHostComponent implements OnInit, OnDestroy {
       const componentRenderer = <ControlRenderer>componentRef.instance;
       componentRenderer.control = {
         formPath,
-        submissionErrors: (this.state.submissionErrors && this.state.submissionErrors[formPath]) || [],
+        submissionErrors:
+          (this.state.submissionErrors &&
+            this.state.submissionErrors[formPath]) ||
+          [],
         form: this.state.form,
         type: this.field.type,
         htmlId: `${this.field.name}-${Math.random()}`,

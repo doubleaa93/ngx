@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import { DeReCrudOptions } from '../options';
 import { IStruct, IField, IBlock } from '../schema';
 import { FormBuilderService } from './form-builder.service';
@@ -14,6 +16,7 @@ export interface FormState {
   blocks: Map<IBlock>;
   blockFields: IField[];
   submissionErrors: FormSubmissionErrors;
+  onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
 }
 
 export interface Map<T> {
@@ -48,7 +51,7 @@ export class FormStateService {
         const field = {
           ...fieldSchema,
           placeholder: fieldSchema.placeholder || fieldSchema.label,
-          struct: structSchema.name,
+          struct: structSchema.name
         };
 
         fields.push(field);
@@ -122,7 +125,8 @@ export class FormStateService {
       fields,
       blocks,
       blockFields,
-      submissionErrors: {}
+      submissionErrors: {},
+      onSubmissionErrorsChange: new Subject<FormSubmissionErrors>()
     };
 
     this._cache[id] = state;
@@ -150,6 +154,7 @@ export class FormStateService {
     }
 
     this._cache[id].submissionErrors = {};
+    this.pushSubmissionErrorsChange(id);
   }
 
   setErrors(id: number, errors: FormSubmissionErrors) {
@@ -158,6 +163,12 @@ export class FormStateService {
     }
 
     this._cache[id].submissionErrors = errors;
+    this.pushSubmissionErrorsChange(id);
+  }
+
+  private pushSubmissionErrorsChange(id: number) {
+    const state = this._cache[id];
+    (<Subject<FormSubmissionErrors>>state.onSubmissionErrorsChange).next(state.submissionErrors);
   }
 
   private arrayToMap<T>(getKey: GetKeyFunction<T>, array: T[]) {
