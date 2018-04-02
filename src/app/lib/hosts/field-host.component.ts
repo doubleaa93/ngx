@@ -89,14 +89,13 @@ export class FieldHostComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const submissionErrors = this.state.submissionErrors[this.formId];
     const formPath = this.field.name; // TODO: Support nested fields and arrays
 
     for (const componentRef of this._componentRefs) {
       const componentRenderer = <ControlRenderer>componentRef.instance;
       componentRenderer.control = {
         formPath,
-        submissionErrors: (submissionErrors && submissionErrors[formPath]) || [],
+        submissionErrors: (this.state.submissionErrors && this.state.submissionErrors[formPath]) || [],
         form: this.state.form,
         type: this.field.type,
         htmlId: `${this.field.name}-${Math.random()}`,
