@@ -33,6 +33,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     return !this.submitting && this.state.form.valid;
   }
 
+  get cancelEnabled() {
+    return !this.submitting;
+  }
+
   ngOnInit() {
     this.state = this.stateService.create(this.options, this.value);
   }
@@ -51,6 +55,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     e.stopPropagation();
     e.preventDefault();
 
+    if (!this.cancelEnabled) {
+      return;
+    }
+
     this.cancel.emit();
     this.state.form.reset();
   }
@@ -59,7 +67,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     e.stopPropagation();
     e.preventDefault();
 
-    if (!this.state.form.valid) {
+    if (!this.state.form.valid || !this.submitEnabled) {
       return;
     }
 

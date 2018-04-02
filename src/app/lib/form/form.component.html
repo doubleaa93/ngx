@@ -11,6 +11,7 @@
   </de-re-crud-button-host>
   <de-re-crud-button-host *ngIf="cancelVisible"
                           [formId]="state.id"
+                          [disabled]="!cancelEnabled"
                           text="Cancel"
                           (click)="onCancel($event)">
   </de-re-crud-button-host>
