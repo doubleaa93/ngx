@@ -68,7 +68,7 @@ export class AppComponent {
 
 #### Outputs
 
-`submit: (submission: { value: any, onComplete: (params) => void })` - Emitted when form is submitted
+`submit: (submission: { value: any, onComplete: (errors?) => void })` - Emitted when form is submitted
 
 The `onComplete` method must be called once a form submission is completed. Passing an errors object into this method will cancel the submission, otherwise passing in a falsy value will cause the form to reset.
 
