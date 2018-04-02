@@ -24,7 +24,7 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRef: ComponentRef<any>;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
-  @Input() type: 'button' | 'submit';
+  @Input() isSubmit: boolean;
   @Input() text: string;
   @Input() disabled: boolean;
   @Output() click = new EventEmitter<any>();
@@ -77,7 +77,7 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
 
     const componentRenderer = <ButtonRenderer>this._componentRef.instance;
     componentRenderer.button = {
-      type: this.type,
+      type: this.isSubmit ? 'submit' : 'button',
       text: this.text,
       disabled: this.disabled,
       onClick: this.onClick,
