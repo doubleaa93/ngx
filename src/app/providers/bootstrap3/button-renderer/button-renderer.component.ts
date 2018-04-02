@@ -47,6 +47,11 @@ export class Bootstrap3ButtonRendererComponent
   }
 
   updateClasses() {
+    if (this.button.class) {
+      this._classes = [this.button.class];
+      return;
+    }
+
     switch (this.button.type) {
       case 'submit':
         this._classes = ['btn-primary'];

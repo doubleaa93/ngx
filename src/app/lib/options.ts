@@ -6,5 +6,16 @@ export interface DeReCrudOptions extends DeReCrudStyleOptions {
 }
 
 export interface DeReCrudStyleOptions {
+  submitButtonStyle?: {
+    class?: string;
+    text?: string;
+    appendSchemaLabel?: boolean;
+  };
+
+  cancelButtonStyle?: {
+    class?: string;
+    text?: string;
+  };
+
   extraButtonClasses?: string[];
 }

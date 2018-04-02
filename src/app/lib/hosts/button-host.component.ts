@@ -56,7 +56,9 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
       this._componentRef.destroy();
     }
 
-    const providerOptions = this.providerService.get(this.state.options.provider);
+    const providerOptions = this.providerService.get(
+      this.state.options.provider
+    );
 
     const viewContainerRef = this.componentHost.viewContainerRef;
     viewContainerRef.clear();
@@ -75,12 +77,30 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    const {
+      options: { struct, submitButtonStyle, cancelButtonStyle },
+      structs
+    } = this.state;
+
+    const style = this.isSubmit ? submitButtonStyle : cancelButtonStyle;
+
+    let text = (style && style.text) || this.text;
+
+    if (
+      this.isSubmit &&
+      submitButtonStyle &&
+      submitButtonStyle.appendSchemaLabel
+    ) {
+      text = `${text} ${structs[struct].label}`;
+    }
+
     const componentRenderer = <ButtonRenderer>this._componentRef.instance;
     componentRenderer.button = {
+      text,
       type: this.isSubmit ? 'submit' : 'button',
-      text: this.text,
       disabled: this.disabled,
       onClick: this.onClick,
+      class: (style && style.class) || undefined,
       extraClasses: this.state.options.extraButtonClasses
     };
   }
