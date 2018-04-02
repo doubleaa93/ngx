@@ -52,6 +52,7 @@ export class ValidationErrorHelper {
   static getErrorMessage(error: {  key: string, metadata: any }) {
     switch (error.key) {
       case 'required':
+      case 'whitespace':
         return 'This field is required.';
       case 'minlength':
         return `This field must have at least ${error.metadata.requiredLength} characters.`;

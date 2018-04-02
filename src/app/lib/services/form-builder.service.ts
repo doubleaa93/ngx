@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { IField, ITextField } from '../schema';
+import { whitespaceValidator } from '../validators/whitespace-validator';
 
 @Injectable()
 export class FormBuilderService {
@@ -28,7 +29,7 @@ export class FormBuilderService {
       const validators = [];
 
       if (field.required) {
-        validators.push(Validators.required);
+        validators.push(Validators.required, whitespaceValidator);
       }
 
       if ((<ITextField>field).minLength) {
