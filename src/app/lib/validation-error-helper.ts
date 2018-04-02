@@ -50,7 +50,6 @@ export class ValidationErrorHelper {
   }
 
   static getErrorMessage(error: {  key: string, metadata: any }) {
-    console.log(error.key);
     switch (error.key) {
       case 'required':
         return 'This field is required.';
