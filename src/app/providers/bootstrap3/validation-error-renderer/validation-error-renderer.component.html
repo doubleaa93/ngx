@@ -1,8 +1,8 @@
 <ng-template #error let-errors="errors">
   <ng-container *ngIf="errors?.length">
-    <span *ngFor="let error of errors" class="help-block">
+    <p *ngFor="let error of errors" class="help-block">
       {{error}}
-    </span>
+    </p>
   </ng-container>
 </ng-template>
 
