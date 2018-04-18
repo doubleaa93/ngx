@@ -18,13 +18,40 @@ export interface IField {
 }
 
 export interface ITextField extends IField {
-  struct: string;
   type: 'text';
   initialValue?: string;
+}
+
+export interface IListField extends IField {
+  type: 'list';
+  options: IOption[];
+}
+
+export interface IOption {
+  label: string;
+  value: any;
+}
+
+export interface IReferenceField extends IField {
+  reference: {
+    name: string;
+    labelField: string;
+    block: string;
+  };
+}
+
+export interface ILinkedStructField extends IReferenceField {
+  type: 'linkedStruct';
+  initialValue?: any[];
+}
+
+export interface IForeignKeyField extends IReferenceField {
+  type: 'foreignKey';
+  initialValue?: object;
 }
 
 export interface IBlock {
   name: string;
   struct: string;
-  fields: string[];
+  fields: { field: string; condition?: string }[];
 }

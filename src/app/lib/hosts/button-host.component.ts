@@ -38,11 +38,11 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
-    this.renderButton();
+    this.render();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.updateButtonInputs();
+    this.updateInputs();
   }
 
   ngOnDestroy() {
@@ -51,7 +51,7 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  renderButton() {
+  render() {
     if (this._componentRef) {
       this._componentRef.destroy();
     }
@@ -69,10 +69,10 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
 
     this._componentRef = viewContainerRef.createComponent(componentFactory);
 
-    this.updateButtonInputs();
+    this.updateInputs();
   }
 
-  updateButtonInputs() {
+  updateInputs() {
     if (!this._componentRef) {
       return;
     }

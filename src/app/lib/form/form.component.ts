@@ -12,6 +12,8 @@ import 'rxjs/add/operator/do';
 import { DeReCrudOptions } from '../options';
 import { FormSubmission } from '../form-submission';
 import { FormState, FormStateService } from '../services/form-state.service';
+import { Subscription } from 'rxjs/Subscription';
+import { IField } from '../schema';
 
 @Component({
   selector: 'de-re-crud-form',
@@ -19,13 +21,25 @@ import { FormState, FormStateService } from '../services/form-state.service';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit, OnChanges, OnDestroy {
+  private _navigationChangeSubscription: Subscription;
+  private _cancelVisible: boolean;
   @Input() options: DeReCrudOptions;
-  @Input() cancelVisible: boolean;
   @Input() value: object;
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
+  navigationId: number;
+  fields: IField[];
   state: FormState;
   submitting: boolean;
+
+  get cancelVisible() {
+    return this.navigationId !== this.state.id || this._cancelVisible;
+  }
+
+  @Input()
+  set cancelVisible(value: boolean) {
+    this._cancelVisible = value;
+  }
 
   constructor(private stateService: FormStateService) {}
 
@@ -39,6 +53,11 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.state = this.stateService.create(this.options, this.value);
+    this.update();
+
+    this._navigationChangeSubscription = this.state.onNavigationChange.subscribe(() => {
+      this.update();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -48,7 +67,27 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._navigationChangeSubscription.unsubscribe();
     this.stateService.remove(this.state.id);
+  }
+
+  update() {
+    const { navigationStack } = this.state;
+
+    let state = this.state;
+
+    if (navigationStack.length) {
+      state = this.stateService.get(navigationStack[navigationStack.length - 1]);
+    }
+
+    const { blocks, fields, options } = state;
+    const fieldReferences = blocks[`${options.struct}-${options.block}`].fields;
+    const blockFields = fieldReferences.map(
+      fieldReference => fields[`${options.struct}-${fieldReference.field}`]
+    );
+
+    this.navigationId = state.id;
+    this.fields = blockFields;
   }
 
   onCancel(e) {
@@ -56,6 +95,11 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     e.preventDefault();
 
     if (!this.cancelEnabled) {
+      return;
+    }
+
+    if (this.navigationId !== this.state.id) {
+      this.stateService.popNavigation(this.state.id);
       return;
     }
 

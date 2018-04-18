@@ -3,25 +3,60 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  FormArray
 } from '@angular/forms';
-import { IField, ITextField } from '../schema';
+import { IField, ITextField, ILinkedStructField, IBlock, IForeignKeyField } from '../schema';
 import { whitespaceValidator } from '../validators/whitespace-validator';
+import { Map } from '../map';
 
 @Injectable()
 export class FormBuilderService {
   constructor(private fb: FormBuilder) {}
 
-  group(struct: string, fields: IField[]): FormGroup {
-    const form = {};
+  group(struct: string, blockName: string, blocks: Map<IBlock>, fields: Map<IField>, value = {}): FormGroup {
+    const group = {};
 
-    for (const field of fields) {
+    const block = blocks[`${struct}-${blockName}`];
+
+    for (const fieldReference of block.fields) {
+      const field = fields[`${struct}-${fieldReference.field}`];
+
+      if (field.type === 'linkedStruct') {
+        const linkedStructField = <ILinkedStructField>field;
+        const { reference } = linkedStructField;
+        group[field.name] = this.array(reference.name, reference.block, blocks, fields, value[field.name]);
+        continue;
+      }
+
+      if (field.type === 'foreignKey') {
+        const foreignKeyField = <IForeignKeyField>field;
+        const { reference } = foreignKeyField;
+        group[field.name] = this.group(reference.name, reference.block, blocks, fields, value[field.name]);
+        continue;
+      }
+
       const validators = this.getValidators(field);
+      const initialValue = value[field.name] || field.initialValue;
 
-      form[field.name] = [field.initialValue, validators];
+      group[field.name] = [initialValue, validators];
     }
 
-    return this.fb.group(form);
+    return this.fb.group(group);
+  }
+
+  array(struct: string, blockName: string, blocks: Map<IBlock>, fields: Map<IField>, value = []): FormArray {
+    const array = [];
+
+    if (value && value.length) {
+      value.forEach((item) => {
+        const group = this.group(struct, blockName, blocks, fields, item);
+
+        array.push(group);
+      });
+    }
+
+    return this.fb.array(array);
   }
 
   private getValidators(field: IField) {

@@ -1,0 +1,9 @@
+<table class="table table-bordered table-condensed">
+  <tbody>
+    <tr *ngIf="!table.form[key]?.length">
+      <td colspan="100%">None</td>
+    </tr>
+    <tr *ngFor="let row of table.form[key]">
+    </tr>
+  </tbody>
+</table>

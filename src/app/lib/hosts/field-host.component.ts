@@ -5,25 +5,29 @@ import {
   OnDestroy,
   ViewChild,
   ComponentFactoryResolver,
-  ComponentRef
+  ComponentRef,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { IField } from '../schema';
+import { IField, IReferenceField, IListField } from '../schema';
 import { ControlRenderer } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
+import { IControl, ILinkedStructControl, ISelectControl } from '../renderers/control';
 
 @Component({
   selector: 'de-re-crud-field-host',
   template: `
     <ng-template deReCrudComponentHost></ng-template>`
 })
-export class FieldHostComponent implements OnInit, OnDestroy {
+export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
   private _submissionErrorsChangeSubscription: Subscription;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
+  @Input() block: string;
   @Input() field: IField;
   state: FormState;
 
@@ -38,11 +42,15 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
     this._submissionErrorsChangeSubscription = this.state.onSubmissionErrorsChange.subscribe(
       () => {
-        this.updateControlInputs();
+        this.updateInputs();
       }
     );
 
-    this.renderControl();
+    this.render();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.updateInputs();
   }
 
   ngOnDestroy() {
@@ -50,7 +58,11 @@ export class FieldHostComponent implements OnInit, OnDestroy {
     this._componentRefs.forEach(x => x.destroy());
   }
 
-  renderControl() {
+  render() {
+    if (this._componentRefs.length) {
+      this._componentRefs.forEach(x => x.destroy());
+    }
+
     let controlComponent: any;
 
     const providerOptions = this.providerService.get(
@@ -59,7 +71,18 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
     switch (this.field.type) {
       case 'text':
+      case 'integer':
+      case 'date':
         controlComponent = providerOptions.inputComponent;
+        break;
+      case 'boolean':
+        controlComponent = providerOptions.checkboxComponent;
+        break;
+      case 'list':
+        controlComponent = providerOptions.selectComponent;
+        break;
+      case 'linkedStruct':
+        controlComponent = providerOptions.linkedStructComponent;
         break;
       default:
         console.error(
@@ -93,10 +116,10 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
     this._componentRefs.push(controlComponentRef, containerComponentRef);
 
-    this.updateControlInputs();
+    this.updateInputs();
   }
 
-  updateControlInputs() {
+  updateInputs() {
     if (!this._componentRefs.length) {
       return;
     }
@@ -105,20 +128,35 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
     for (const componentRef of this._componentRefs) {
       const componentRenderer = <ControlRenderer>componentRef.instance;
-      componentRenderer.control = {
+      const control: IControl = {
         formPath,
+        formId: this.formId,
         submissionErrors:
           (this.state.submissionErrors &&
             this.state.submissionErrors[formPath]) ||
           [],
         form: this.state.form,
-        type: this.field.type,
+        type: this.mapType(this.field.type),
         htmlId: `${this.field.name}-${Math.random()}`,
         key: this.field.name,
         label: this.field.label,
         onBlur: this.onBlur,
         onChange: this.onChange
       };
+
+      if (this.field.type === 'list') {
+        const listField = <IListField>this.field;
+
+        const selectControl = <ISelectControl>control;
+        selectControl.options = listField.options;
+      }
+
+      if (this.field.type === 'linkedStruct') {
+        const linkedStructControl = <ILinkedStructControl>control;
+        linkedStructControl.onOpenEditor = this.onOpenEditor;
+      }
+
+      componentRenderer.control = control;
     }
   }
 
@@ -128,5 +166,42 @@ export class FieldHostComponent implements OnInit, OnDestroy {
 
   onChange = () => {
     this.stateService.clearErrors(this.formId);
+  }
+
+  onOpenEditor = (e, index: number = null) => {
+    const { form } = this.state;
+    const { name, struct } = this.field;
+
+    const array = form[name];
+    const value = !array ? {} : array[index];
+
+    const options = { ...this.state.options };
+    const reference = (<IReferenceField>this.field).reference;
+
+    options.struct = reference.name;
+    options.block = reference.block;
+
+    options.submitButtonStyle = {
+      ...options.submitButtonStyle,
+      text: !value ? 'Add' : 'Update'
+    };
+
+    options.cancelButtonStyle = {
+      ...options.cancelButtonStyle,
+      text: 'Cancel'
+    };
+
+    const state = this.stateService.create(options, value, this.formId);
+
+    this.stateService.pushNavigation(this.formId, state.id);
+  }
+
+  private mapType(type: string) {
+    switch (type) {
+      case 'integer':
+        return 'number';
+      default:
+        return type;
+    }
   }
 }

@@ -1,7 +1,9 @@
 import { FormGroup } from '@angular/forms';
+import { IOption } from '../schema';
 
 export interface IControl {
   form: FormGroup;
+  formId: number;
   formPath: string;
   type: string;
   htmlId: string;
@@ -12,11 +14,10 @@ export interface IControl {
   onChange: (e: any) => void;
 }
 
-export interface ISelectControlOption {
-  label: string;
-  value: any;
+export interface ISelectControl extends IControl {
+  options: IOption[];
 }
 
-export interface ISelectControl extends IControl {
-  options: ISelectControlOption[];
+export interface ILinkedStructControl extends IControl {
+  onOpenEditor: (e: any, index?: number) => void;
 }

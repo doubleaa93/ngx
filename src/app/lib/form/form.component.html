@@ -1,6 +1,6 @@
 <form *ngIf="state.form" [formGroup]="state.form">
-  <de-re-crud-field-host *ngFor="let field of state.blockFields"
-                         [formId]="state.id"
+  <de-re-crud-field-host *ngFor="let field of fields"
+                         [formId]="navigationId"
                          [field]="field">
   </de-re-crud-field-host>
   <de-re-crud-button-host [isSubmit]="true"

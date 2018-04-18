@@ -6,21 +6,20 @@ import { DeReCrudOptions } from '../options';
 import { IStruct, IField, IBlock } from '../schema';
 import { FormBuilderService } from './form-builder.service';
 import { FormSubmissionErrors } from '../form-submission';
+import { Map } from '../map';
 
 export interface FormState {
   id: number;
+  parentId: number | null;
   options: DeReCrudOptions;
   form: FormGroup;
   structs: Map<IStruct>;
   fields: Map<IField>;
   blocks: Map<IBlock>;
-  blockFields: IField[];
   submissionErrors: FormSubmissionErrors;
   onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
-}
-
-export interface Map<T> {
-  [key: string]: T;
+  navigationStack: number[];
+  onNavigationChange: Observable<number>;
 }
 
 export type GetKeyFunction<T> = (item: T) => string;
@@ -61,8 +60,13 @@ export class FormStateService {
       for (const blockSchema of structSchema.blocks) {
         const block = {
           ...blockSchema,
+          fields: [],
           struct: structSchema.name
         };
+
+        for (const fieldReference of blockSchema.fields) {
+          block.fields.push(fieldReference.field ? fieldReference : { field: fieldReference });
+        }
 
         blocks.push(block);
         struct.blocks.push(block.name);
@@ -82,7 +86,7 @@ export class FormStateService {
     return this._cache[id];
   }
 
-  create(options: DeReCrudOptions, value: object): FormState {
+  create(options: DeReCrudOptions, value: object, parentId: number = null): FormState {
     let id: number;
 
     while (true) {
@@ -107,26 +111,24 @@ export class FormStateService {
       schema.blocks
     );
 
-    const fieldNames = blocks[`${options.struct}-${options.block}`].fields;
-    const blockFields = fieldNames.map(
-      fieldName => fields[`${options.struct}-${fieldName}`]
-    );
+    const form = this.formBuilder.group(options.struct, options.block, blocks, fields, value);
 
-    const form = this.formBuilder.group(options.struct, blockFields);
     if (value) {
-      form.setValue(value);
+      form.patchValue(value);
     }
 
     const state = {
       id,
+      parentId,
       options,
       form,
       structs,
       fields,
       blocks,
-      blockFields,
       submissionErrors: {},
-      onSubmissionErrorsChange: new Subject<FormSubmissionErrors>()
+      onSubmissionErrorsChange: new Subject<FormSubmissionErrors>(),
+      navigationStack: [],
+      onNavigationChange: new Subject<number>()
     };
 
     this._cache[id] = state;
@@ -141,7 +143,7 @@ export class FormStateService {
 
     const { form } = this._cache[id];
 
-    form.setValue(value);
+    form.patchValue(value);
   }
 
   remove(id: number) {
@@ -164,6 +166,39 @@ export class FormStateService {
 
     this._cache[id].submissionErrors = errors;
     this.pushSubmissionErrorsChange(id);
+  }
+
+  pushNavigation(id: number, childId: number) {
+    if (!this._cache[id] || !this._cache[childId]) {
+      return;
+    }
+
+    let parentId = id;
+
+    while (this._cache[parentId].parentId) {
+      parentId = this._cache[parentId].parentId;
+    }
+
+    const state = this._cache[parentId];
+    state.navigationStack.push(childId);
+
+    this.pushNavigationChange(parentId, childId);
+  }
+
+  popNavigation(id: number) {
+    if (!this._cache[id]) {
+      return;
+    }
+
+    const state = this._cache[id];
+    state.navigationStack.pop();
+
+    this.pushNavigationChange(id);
+  }
+
+  private pushNavigationChange(id: number, childId?: number) {
+    const state = this._cache[id];
+    (<Subject<number>>state.onNavigationChange).next(childId);
   }
 
   private pushSubmissionErrorsChange(id: number) {

@@ -3,4 +3,7 @@ export interface DeReCrudProviderOptions {
   inputComponent: any;
   selectComponent: any;
   buttonComponent: any;
+  tableComponent: any;
+  linkedStructComponent: any;
+  checkboxComponent: any;
 }

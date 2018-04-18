@@ -9,6 +9,9 @@ import { Bootstrap3SelectRendererComponent } from './select-renderer/select-rend
 import { Bootstrap3LabelRendererComponent } from './label-renderer/label-renderer.component';
 import { Bootstrap3ButtonRendererComponent } from './button-renderer/button-renderer.component';
 import { Bootstrap3ValidationErrorRendererComponent } from './validation-error-renderer/validation-error-renderer.component';
+import { Bootstrap3LinkedStructRendererComponent } from './linked-struct-renderer/linked-struct-renderer.component';
+import { Bootstrap3TableRendererComponent } from './table-renderer/table-renderer.component';
+import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DeReCrudProviderModule],
@@ -18,13 +21,19 @@ import { Bootstrap3ValidationErrorRendererComponent } from './validation-error-r
     Bootstrap3SelectRendererComponent,
     Bootstrap3LabelRendererComponent,
     Bootstrap3ButtonRendererComponent,
-    Bootstrap3ValidationErrorRendererComponent
+    Bootstrap3ValidationErrorRendererComponent,
+    Bootstrap3LinkedStructRendererComponent,
+    Bootstrap3TableRendererComponent,
+    Bootstrap3CheckboxRendererComponent
   ],
   entryComponents: [
     Bootstrap3ControlContainerRendererComponent,
     Bootstrap3InputRendererComponent,
     Bootstrap3SelectRendererComponent,
-    Bootstrap3ButtonRendererComponent
+    Bootstrap3ButtonRendererComponent,
+    Bootstrap3LinkedStructRendererComponent,
+    Bootstrap3TableRendererComponent,
+    Bootstrap3CheckboxRendererComponent
   ]
 })
 export class Bootstrap3DeReCrudProviderModule {
@@ -33,7 +42,10 @@ export class Bootstrap3DeReCrudProviderModule {
       containerComponent: Bootstrap3ControlContainerRendererComponent,
       inputComponent: Bootstrap3InputRendererComponent,
       selectComponent: Bootstrap3SelectRendererComponent,
-      buttonComponent: Bootstrap3ButtonRendererComponent
+      buttonComponent: Bootstrap3ButtonRendererComponent,
+      tableComponent: Bootstrap3TableRendererComponent,
+      linkedStructComponent: Bootstrap3LinkedStructRendererComponent,
+      checkboxComponent: Bootstrap3CheckboxRendererComponent
     });
   }
 }
