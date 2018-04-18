@@ -160,45 +160,15 @@
         ]
       },
       {
-        "name": "listType",
-        "label": "List Type",
-        "type": "list",
-        "required": true,
-        "initialValue": "static",
-        "options": [
-          {
-            "label": "Static",
-            "value": "static"
-          },
-          {
-            "label": "Dynamic (in-memory)",
-            "value": "inMemory"
-          }
-        ]
-      },
-      {
-        "name": "listValues",
-        "label": "List Values",
-        "type":"linkedStruct",
+        "name": "options",
+        "label": "Options",
+        "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "listValue",
-          "labelField": "value",
+          "name": "option",
+          "labelField": "description",
           "block": "default"
         }
-      },
-      {
-        "name": "listReference",
-        "label": "List Reference",
-        "type": "text",
-        "description": "Can correspond to a key in options.references or an inline function. This must run synchronously.",
-        "required": true
-      },
-      {
-        "name": "listLabelField",
-        "label": "List Label Field",
-        "type": "text",
-        "required": true
       },
       {
         "name": "minlength",
@@ -273,20 +243,8 @@
             "condition": "value.type === 'linkedStruct'"
           },
           {
-            "field": "listType",
+            "field": "options",
             "condition": "value.type === 'list'"
-          },
-          {
-            "field": "listValues",
-            "condition": "value.type === 'list' && (!value.listType || value.listType === 'static')"
-          },
-          {
-            "field": "listReference",
-            "condition": "value.type === 'list' && value.listType === 'inMemory'"
-          },
-          {
-            "field": "listLabelField",
-            "condition": "value.type === 'list' && value.listType === 'inMemory'"
           }
         ]
       }
@@ -335,11 +293,13 @@
         "name": "field",
         "label": "Field",
         "keyField": true,
-        "type": "list",
-        "listType": "inMemory",
-        "listReference": "fields",
-        "listLabelField": "name",
-        "required": true
+        "type": "foreignKey",
+        "required": true,
+        "reference": {
+          "name": "field",
+          "labelField": "name",
+          "block": "default"
+        }
       },
       {
         "name": "condition",
@@ -387,9 +347,9 @@
     ]
   },
   {
-    "name": "listValue",
-    "label": "Value",
-    "collectionLabel": "Values",
+    "name": "option",
+    "label": "Option",
+    "collectionLabel": "Options",
     "fields": [
       {
         "name": "value",
@@ -399,8 +359,8 @@
         "required": true
       },
       {
-        "name": "label",
-        "label": "Label",
+        "name": "description",
+        "label": "Description",
         "type": "text",
         "required": true
       }
