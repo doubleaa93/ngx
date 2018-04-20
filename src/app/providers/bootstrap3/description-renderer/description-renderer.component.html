@@ -1,0 +1,13 @@
+<p *ngIf="control.field.description && !hasError() else validationErrors" class="help-block">{{control.field.description}}</p>
+
+<ng-template #validationErrorsTemplate let-errors="errors">
+  <ng-container *ngIf="errors?.length">
+    <p *ngFor="let error of errors" class="help-block">
+      {{error}}
+    </p>
+  </ng-container>
+</ng-template>
+
+<ng-template #validationErrors>
+  <ng-container [ngTemplateOutlet]="validationErrorsTemplate" [ngTemplateOutletContext]="{ errors: getErrors() }"></ng-container>
+</ng-template>

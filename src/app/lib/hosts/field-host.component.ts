@@ -130,16 +130,15 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       const componentRenderer = <ControlRenderer>componentRef.instance;
       const control: IControl = {
         formPath,
+        field: this.field,
         formId: this.formId,
         submissionErrors:
           (this.state.submissionErrors &&
             this.state.submissionErrors[formPath]) ||
           [],
         form: this.state.form,
-        type: this.mapType(this.field.type),
+        rendererType: this.mapType(this.field.type),
         htmlId: `${this.field.name}-${Math.random()}`,
-        key: this.field.name,
-        label: this.field.label,
         onBlur: this.onBlur,
         onChange: this.onChange
       };

@@ -12,6 +12,7 @@ export interface IField {
   label: string;
   type: any;
   required: boolean;
+  description?: string;
   initialValue?: any;
   minLength?: number;
   maxLength?: number;

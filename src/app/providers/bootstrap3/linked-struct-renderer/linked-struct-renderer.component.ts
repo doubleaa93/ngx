@@ -13,12 +13,12 @@ export class Bootstrap3LinkedStructRendererComponent implements ControlRenderer,
   table: ITable;
 
   ngOnInit() {
-    const { form, formId, key } = this.control;
+    const { form, formId, field } = this.control;
 
     this.table = {
       form,
       formId,
-      key
+      field
     };
   }
 }

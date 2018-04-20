@@ -8,10 +8,10 @@ import { Bootstrap3InputRendererComponent } from './input-renderer/input-rendere
 import { Bootstrap3SelectRendererComponent } from './select-renderer/select-renderer.component';
 import { Bootstrap3LabelRendererComponent } from './label-renderer/label-renderer.component';
 import { Bootstrap3ButtonRendererComponent } from './button-renderer/button-renderer.component';
-import { Bootstrap3ValidationErrorRendererComponent } from './validation-error-renderer/validation-error-renderer.component';
 import { Bootstrap3LinkedStructRendererComponent } from './linked-struct-renderer/linked-struct-renderer.component';
 import { Bootstrap3TableRendererComponent } from './table-renderer/table-renderer.component';
 import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
+import { Bootstrap3DescriptionRendererComponent } from './description-renderer/description-renderer.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DeReCrudProviderModule],
@@ -21,10 +21,10 @@ import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbo
     Bootstrap3SelectRendererComponent,
     Bootstrap3LabelRendererComponent,
     Bootstrap3ButtonRendererComponent,
-    Bootstrap3ValidationErrorRendererComponent,
     Bootstrap3LinkedStructRendererComponent,
     Bootstrap3TableRendererComponent,
-    Bootstrap3CheckboxRendererComponent
+    Bootstrap3CheckboxRendererComponent,
+    Bootstrap3DescriptionRendererComponent
   ],
   entryComponents: [
     Bootstrap3ControlContainerRendererComponent,

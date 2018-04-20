@@ -1,12 +1,12 @@
 <ng-container [formGroup]="control.form">
   <de-re-crud-bootstrap3-label-renderer [control]="control"></de-re-crud-bootstrap3-label-renderer>
   <input class="form-control"
-         [type]="control.type"
+         [type]="control.rendererType"
          [id]="control.htmlId"
-         [name]="control.key"
-         [formControlName]="control.key"
+         [name]="control.field.name"
+         [formControlName]="control.field.name"
          (blur)="control.onBlur($event)"
          (input)="control.onChange($event)" />
-  <de-re-crud-bootstrap3-validation-error-renderer [control]="control">
-  </de-re-crud-bootstrap3-validation-error-renderer>
+  <de-re-crud-bootstrap3-description-renderer [control]="control">
+  </de-re-crud-bootstrap3-description-renderer>
 </ng-container>

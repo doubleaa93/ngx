@@ -75,6 +75,7 @@
         "name": "label",
         "label": "Label",
         "type": "text",
+        "required": true,
         "description": "Name is converted to sentence case and used if not specified."
       },
       {

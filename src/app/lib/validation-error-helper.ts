@@ -4,7 +4,7 @@ export class ValidationErrorHelper {
   private static _errorSort = ['required'];
 
   private static getFormControlIfErrorFound(control: IControl) {
-    const formControl = control.form.get(control.key);
+    const formControl = control.form.get(control.field.name);
 
     if (
       (!formControl.errors || !formControl.touched) &&

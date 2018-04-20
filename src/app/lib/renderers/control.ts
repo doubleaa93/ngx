@@ -1,14 +1,13 @@
 import { FormGroup } from '@angular/forms';
-import { IOption } from '../schema';
+import { IOption, IField } from '../schema';
 
 export interface IControl {
   form: FormGroup;
   formId: number;
   formPath: string;
-  type: string;
   htmlId: string;
-  key: string;
-  label: string;
+  rendererType: string;
+  field: IField;
   submissionErrors: string[];
   onBlur: (e: any) => void;
   onChange: (e: any) => void;
