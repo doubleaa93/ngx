@@ -1,3 +1,5 @@
+import { FormGroup } from '@angular/forms';
+
 export interface IStruct {
   name: string;
   label: string;
@@ -14,13 +16,19 @@ export interface IField {
   required: boolean;
   description?: string;
   initialValue?: any;
-  minLength?: number;
-  maxLength?: number;
 }
 
 export interface ITextField extends IField {
   type: 'text';
   initialValue?: string;
+  minLength?: number;
+  maxLength?: number;
+}
+
+export interface IIntegerField extends IField {
+  type: 'integer';
+  min?: number;
+  max?: number;
 }
 
 export interface IListField extends IField {
@@ -54,5 +62,10 @@ export interface IForeignKeyField extends IReferenceField {
 export interface IBlock {
   name: string;
   struct: string;
-  fields: { field: string; condition?: string }[];
+  fields: IFieldReference[];
+}
+
+export interface IFieldReference {
+  field: string;
+  condition: (value: any) => boolean;
 }

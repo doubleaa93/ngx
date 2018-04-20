@@ -6,7 +6,7 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { IField, ITextField, ILinkedStructField, IBlock, IForeignKeyField } from '../schema';
+import { IField, ITextField, ILinkedStructField, IBlock, IForeignKeyField, IIntegerField, IFieldReference } from '../schema';
 import { whitespaceValidator } from '../validators/whitespace-validator';
 import { Map } from '../map';
 
@@ -36,7 +36,7 @@ export class FormBuilderService {
         continue;
       }
 
-      const validators = this.getValidators(field);
+      const validators = this.getValidators(fieldReference, field);
       const initialValue = value[field.name] || field.initialValue;
 
       group[field.name] = [initialValue, validators];
@@ -59,9 +59,22 @@ export class FormBuilderService {
     return this.fb.array(array);
   }
 
-  private getValidators(field: IField) {
+  getRootControl(control: AbstractControl) {
+    if (control.parent && !(control.parent instanceof FormGroup)) {
+      return this.getRootControl(control.parent);
+    }
+
+    return control.parent || control;
+  }
+
+  private getValidators(fieldReference: IFieldReference, field: IField) {
     return (control: AbstractControl) => {
       const validators = [];
+      const rootControl = this.getRootControl(control);
+
+      if (rootControl instanceof FormGroup && !fieldReference.condition(rootControl.value)) {
+        return null;
+      }
 
       if (field.required) {
         validators.push(Validators.required, whitespaceValidator);
@@ -73,6 +86,14 @@ export class FormBuilderService {
 
       if ((<ITextField>field).maxLength) {
         validators.push(Validators.maxLength((<ITextField>field).maxLength));
+      }
+
+      if ((<IIntegerField>field).min) {
+        validators.push(Validators.min((<IIntegerField>field).min));
+      }
+
+      if ((<IIntegerField>field).max) {
+        validators.push(Validators.max((<IIntegerField>field).max));
       }
 
       if (!validators.length) {

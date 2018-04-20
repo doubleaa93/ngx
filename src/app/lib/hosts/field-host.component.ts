@@ -25,6 +25,7 @@ import { IControl, ILinkedStructControl, ISelectControl } from '../renderers/con
 export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
   private _submissionErrorsChangeSubscription: Subscription;
+  private _formChangeSubscription: Subscription;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
   @Input() block: string;
@@ -46,6 +47,12 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       }
     );
 
+    this._formChangeSubscription = this.state.form.valueChanges.subscribe(
+      () => {
+        this.render();
+      }
+    );
+
     this.render();
   }
 
@@ -55,12 +62,20 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this._submissionErrorsChangeSubscription.unsubscribe();
+    this._formChangeSubscription.unsubscribe();
     this._componentRefs.forEach(x => x.destroy());
   }
 
   render() {
     if (this._componentRefs.length) {
       this._componentRefs.forEach(x => x.destroy());
+    }
+
+    const { struct, block } = this.state.options;
+    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(x => x.field === this.field.name);
+
+    if (!fieldReference.condition(this.state.form.value)) {
+      return;
     }
 
     let controlComponent: any;

@@ -360,8 +360,8 @@
         "required": true
       },
       {
-        "name": "description",
-        "label": "Description",
+        "name": "label",
+        "label": "Label",
         "type": "text",
         "required": true
       }

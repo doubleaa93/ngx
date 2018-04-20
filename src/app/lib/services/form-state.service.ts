@@ -26,6 +26,8 @@ export type GetKeyFunction<T> = (item: T) => string;
 
 @Injectable()
 export class FormStateService {
+  // tslint:disable-next-line:no-function-constructor-with-string-args
+  private static defaultConditionFunc = new Function('return true');
   private _cache: { [id: number]: FormState } = {};
 
   constructor(private formBuilder: FormBuilderService) {}
@@ -64,8 +66,25 @@ export class FormStateService {
           struct: structSchema.name
         };
 
-        for (const fieldReference of blockSchema.fields) {
-          block.fields.push(fieldReference.field ? fieldReference : { field: fieldReference });
+        for (let fieldReference of blockSchema.fields) {
+          fieldReference =  fieldReference.field ? fieldReference : { field: fieldReference };
+
+          let condition;
+
+          if (fieldReference.condition) {
+            const returnValue = fieldReference.condition[0] === '{'
+              ? fieldReference
+              : `return ${fieldReference.condition}`;
+
+            // tslint:disable-next-line:no-function-constructor-with-string-args
+            condition = new Function('value', returnValue);
+          } else {
+            // tslint:disable-next-line:no-function-constructor-with-string-args
+            condition = FormStateService.defaultConditionFunc;
+          }
+
+          fieldReference.condition = condition;
+          block.fields.push(fieldReference);
         }
 
         blocks.push(block);
@@ -99,23 +118,32 @@ export class FormStateService {
       break;
     }
 
-    const schema = FormStateService.parseSchema(options);
-    const structs = this.arrayToMap(struct => struct.name, schema.structs);
-    const fields = this.arrayToMap(
-      field => `${field.struct}-${field.name}`,
-      schema.fields
-    );
+    let structs;
+    let fields;
+    let blocks;
 
-    const blocks = this.arrayToMap(
-      block => `${block.struct}-${block.name}`,
-      schema.blocks
-    );
+    if (!parentId) {
+      const schema = FormStateService.parseSchema(options);
+      structs = this.arrayToMap(struct => struct.name, schema.structs);
+      fields = this.arrayToMap(
+        field => `${field.struct}-${field.name}`,
+        schema.fields
+      );
+
+      blocks = this.arrayToMap(
+        block => `${block.struct}-${block.name}`,
+        schema.blocks
+      );
+    } else {
+      const parent = this._cache[parentId];
+
+      structs = parent.structs;
+      fields = parent.fields;
+      blocks = parent.blocks;
+    }
 
     const form = this.formBuilder.group(options.struct, options.block, blocks, fields, value);
-
-    if (value) {
-      form.patchValue(value);
-    }
+    form.patchValue(value || {});
 
     const state = {
       id,
