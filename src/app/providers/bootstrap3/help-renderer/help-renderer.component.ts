@@ -7,7 +7,7 @@ import { ValidationErrorHelper } from '../../../lib/validation-error-helper';
   selector: 'de-re-crud-bootstrap3-description-renderer',
   templateUrl: './description-renderer.component.html'
 })
-export class Bootstrap3DescriptionRendererComponent implements ControlRenderer {
+export class Bootstrap3HelpRendererComponent implements ControlRenderer {
   @Input()
   control: IControl;
 

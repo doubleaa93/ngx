@@ -32,6 +32,8 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   state: FormState;
   submitting: boolean;
 
+  constructor(private stateService: FormStateService) {}
+
   get cancelVisible() {
     return this.navigationId !== this.state.id || this._cancelVisible;
   }
@@ -40,8 +42,6 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   set cancelVisible(value: boolean) {
     this._cancelVisible = value;
   }
-
-  constructor(private stateService: FormStateService) {}
 
   get submitEnabled() {
     return !this.submitting && this.state.form.valid;

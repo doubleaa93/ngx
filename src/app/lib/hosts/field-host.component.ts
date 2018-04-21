@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { IField, IReferenceField, IListField } from '../schema';
-import { ControlRenderer } from '../renderers/control.renderer';
+import { IField, IReferenceField, IListField, ILinkedStructField } from '../schema';
+import { ControlRenderer, CollectionControlRenderer } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
 import { IControl, ILinkedStructControl, ISelectControl } from '../renderers/control';
@@ -168,6 +168,20 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       if (this.field.type === 'linkedStruct') {
         const linkedStructControl = <ILinkedStructControl>control;
         linkedStructControl.onOpenEditor = this.onOpenEditor;
+
+        const linkedStructField = <ILinkedStructField>this.field;
+        const { reference } = linkedStructField;
+
+        const fieldNames = this.state.blocks[`${reference.name}-${reference.block}`].fields;
+        const fields = [];
+
+        for (const fieldName of fieldNames) {
+          const field = this.state.fields[`${reference.name}-${fieldName}`];
+          fields.push(field);
+        }
+
+        const collectonControlRenderer = <CollectionControlRenderer>componentRenderer;
+        collectonControlRenderer.fields = fields;
       }
 
       componentRenderer.control = control;

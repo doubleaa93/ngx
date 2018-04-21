@@ -1,11 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ITable } from '../../../lib/renderers/table';
-import { TableRenderer } from '../../../lib/renderers/table.renderer';
+import { Component, Input } from '@angular/core';
+import { CollectionControlRenderer } from '../../../lib/renderers/control.renderer';
+import { IField } from '../../../lib/schema';
+import { IControl } from '../../../lib/renderers/control';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-table-renderer',
   templateUrl: './table-renderer.component.html'
 })
-export class Bootstrap3TableRendererComponent implements TableRenderer {
-  @Input() table: ITable;
+export class Bootstrap3TableRendererComponent implements CollectionControlRenderer {
+  fields: IField[];
+  control: IControl;
 }

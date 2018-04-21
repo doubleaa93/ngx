@@ -11,7 +11,7 @@ import { Bootstrap3ButtonRendererComponent } from './button-renderer/button-rend
 import { Bootstrap3LinkedStructRendererComponent } from './linked-struct-renderer/linked-struct-renderer.component';
 import { Bootstrap3TableRendererComponent } from './table-renderer/table-renderer.component';
 import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
-import { Bootstrap3DescriptionRendererComponent } from './description-renderer/description-renderer.component';
+import { Bootstrap3HelpRendererComponent } from './help-renderer/help-renderer.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DeReCrudProviderModule],
@@ -24,7 +24,7 @@ import { Bootstrap3DescriptionRendererComponent } from './description-renderer/d
     Bootstrap3LinkedStructRendererComponent,
     Bootstrap3TableRendererComponent,
     Bootstrap3CheckboxRendererComponent,
-    Bootstrap3DescriptionRendererComponent
+    Bootstrap3HelpRendererComponent
   ],
   entryComponents: [
     Bootstrap3ControlContainerRendererComponent,

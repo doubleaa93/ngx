@@ -76,19 +76,19 @@
         "label": "Label",
         "type": "text",
         "required": true,
-        "description": "Name is converted to sentence case and used if not specified."
+        "help": "Name is converted to sentence case and used if not specified."
       },
       {
         "name": "placeholder",
         "label": "Placeholder",
         "type": "text",
-        "description": "Label is used if not specified."
+        "help": "Label is used if not specified."
       },
       {
-        "name": "description",
+        "name": "help",
         "label": "Description",
         "type": "text",
-        "description": "Shown under a control, like this!"
+        "help": "Shown under a control, like this!"
       },
       {
         "name": "required",
@@ -167,7 +167,7 @@
         "required": true,
         "reference": {
           "name": "option",
-          "labelField": "description",
+          "labelField": "help",
           "block": "default"
         }
       },
@@ -214,7 +214,7 @@
           "name",
           "label",
           "placeholder",
-          "description",
+          "help",
           "required",
           "unique",
           "keyField",
