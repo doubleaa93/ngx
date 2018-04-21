@@ -69,12 +69,25 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes.formId) {
+      this.ngOnDestroy();
+      this.ngOnInit();
+      return;
+    }
+
+
     this.updateInputs();
   }
 
   ngOnDestroy() {
-    this._submissionErrorsChangeSubscription.unsubscribe();
-    this._formChangeSubscription.unsubscribe();
+    if (this._submissionErrorsChangeSubscription) {
+      this._submissionErrorsChangeSubscription.unsubscribe();
+    }
+
+    if (this._formChangeSubscription) {
+      this._formChangeSubscription.unsubscribe();
+    }
+
     this._componentRefs.forEach(x => x.destroy());
   }
 
@@ -231,8 +244,6 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const { name, struct } = this.field;
 
     const array = form[name];
-    const value = !array ? {} : array[index];
-
     const options = { ...this.state.options };
     const reference = (<IReferenceField>this.field).reference;
 
@@ -241,7 +252,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
     options.submitButtonStyle = {
       ...options.submitButtonStyle,
-      text: !value ? 'Add' : 'Update'
+      text: !array || !array[index] ? 'Add' : 'Update'
     };
 
     options.cancelButtonStyle = {
@@ -249,6 +260,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       text: 'Cancel'
     };
 
+    const value = !array ? {} : array[index];
     const state = this.stateService.create(options, value, this.formId);
 
     this.stateService.pushNavigation(this.formId, state.id);

@@ -43,6 +43,12 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes.formId) {
+      this.ngOnDestroy();
+      this.ngOnInit();
+      return;
+    }
+
     this.updateInputs();
   }
 
