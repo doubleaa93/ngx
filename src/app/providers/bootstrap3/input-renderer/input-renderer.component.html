@@ -1,5 +1,6 @@
 <ng-container [formGroup]="control.form">
-  <de-re-crud-bootstrap3-label-renderer [control]="control"></de-re-crud-bootstrap3-label-renderer>
+  <de-re-crud-bootstrap3-label-renderer [control]="control">
+  </de-re-crud-bootstrap3-label-renderer>
   <input class="form-control"
          [type]="control.rendererType"
          [id]="control.htmlId"
@@ -7,6 +8,8 @@
          [formControlName]="control.field.name"
          (blur)="control.onBlur($event)"
          (input)="control.onChange($event)" />
-  <de-re-crud-bootstrap3-description-renderer [control]="control">
-  </de-re-crud-bootstrap3-description-renderer>
+  <de-re-crud-bootstrap3-help-renderer [control]="control">
+  </de-re-crud-bootstrap3-help-renderer>
+  <de-re-crud-bootstrap3-validation-errors-renderer [control]="control">
+  </de-re-crud-bootstrap3-validation-errors-renderer>
 </ng-container>

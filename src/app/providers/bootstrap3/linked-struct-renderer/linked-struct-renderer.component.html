@@ -1,4 +1,15 @@
-<de-re-crud-bootstrap3-label-renderer [control]="control"></de-re-crud-bootstrap3-label-renderer> <button class="btn btn-sm btn-primary" type="button" (click)="control.onOpenEditor($event)">Add</button>
-<div class="table-container">
-  <de-re-crud-bootstrap3-table-renderer [control]="control" [fields]="fields"></de-re-crud-bootstrap3-table-renderer>
+<div>
+  <de-re-crud-bootstrap3-label-renderer [control]="control">
+  </de-re-crud-bootstrap3-label-renderer>
+  <button class="btn btn-sm btn-primary" type="button"
+    (click)="control.onOpenEditor($event)">
+    Add
+  </button>
 </div>
+<ng-container [ngSwitch]="layout">
+  <div class="table-container" *ngSwitchCase="'table'">
+    <de-re-crud-bootstrap3-table-renderer [control]="control" [fields]="fields">
+    </de-re-crud-bootstrap3-table-renderer>
+  </div>
+</ng-container>
+

@@ -14,7 +14,7 @@ export interface IField {
   label: string;
   type: any;
   required: boolean;
-  description?: string;
+  help?: string;
   initialValue?: any;
 }
 
@@ -43,7 +43,7 @@ export interface IOption {
 
 export interface IReferenceField extends IField {
   reference: {
-    name: string;
+    struct: string;
     labelField: string;
     block: string;
   };
@@ -62,10 +62,17 @@ export interface IForeignKeyField extends IReferenceField {
 export interface IBlock {
   name: string;
   struct: string;
-  fields: IFieldReference[];
+  fields: (IFieldReference | ILinkedStructFieldReference)[];
 }
 
 export interface IFieldReference {
   field: string;
   condition: (value: any) => boolean;
+}
+
+export interface ILinkedStructFieldReference extends IFieldReference {
+  hints?: {
+    layout?: 'inline' | 'table'
+    block?: string;
+  };
 }

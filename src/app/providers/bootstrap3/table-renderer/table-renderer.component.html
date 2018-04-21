@@ -1,15 +1,19 @@
 <table class="table table-bordered table-condensed">
   <thead>
-    <tr *ngFor="let field of fields">
-      <th>{{field.name}}</th>
+    <tr>
+      <th *ngFor="let field of fields">
+        {{field.label}}
+      </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngIf="!control.form[control.field.name]?.length">
       <td colspan="100%">None</td>
     </tr>
-    <tr *ngFor="let field of fields">
-      <td>{{control.form[control.field.name][field.name]}}</td>
+    <tr *ngFor="let item of control.form[control.field.name]">
+      <td *ngFor="let field of fields">
+        {{item[field.name]}}
+      </td>
     </tr>
   </tbody>
 </table>

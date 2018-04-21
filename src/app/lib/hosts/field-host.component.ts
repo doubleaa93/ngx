@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { IField, IReferenceField, IListField, ILinkedStructField } from '../schema';
+import { IField, IReferenceField, IListField, ILinkedStructField, ILinkedStructFieldReference } from '../schema';
 import { ControlRenderer, CollectionControlRenderer } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
@@ -171,17 +171,21 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
         const linkedStructField = <ILinkedStructField>this.field;
         const { reference } = linkedStructField;
+        const blockFields = this.state.blocks[`${this.state.options.struct}-${this.state.options.block}`].fields;
+        const { hints } = <ILinkedStructFieldReference>blockFields.find(x => x.field === linkedStructField.name);
+        const block = hints && hints.block || reference.block;
 
-        const fieldNames = this.state.blocks[`${reference.name}-${reference.block}`].fields;
+        const fieldReferences = <ILinkedStructFieldReference[]>this.state.blocks[`${reference.struct}-${block}`].fields;
         const fields = [];
 
-        for (const fieldName of fieldNames) {
-          const field = this.state.fields[`${reference.name}-${fieldName}`];
+        for (const fieldReference of fieldReferences) {
+          const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
           fields.push(field);
         }
 
         const collectonControlRenderer = <CollectionControlRenderer>componentRenderer;
         collectonControlRenderer.fields = fields;
+        collectonControlRenderer.layout = hints && hints.layout || 'inline';
       }
 
       componentRenderer.control = control;
@@ -206,7 +210,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const options = { ...this.state.options };
     const reference = (<IReferenceField>this.field).reference;
 
-    options.struct = reference.name;
+    options.struct = reference.struct;
     options.block = reference.block;
 
     options.submitButtonStyle = {

@@ -29,8 +29,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "field",
-          "labelField": "name",
+          "struct": "field",
           "block": "default"
         }
       },
@@ -40,8 +39,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "block",
-          "labelField": "name",
+          "struct": "block",
           "block": "default"
         }
       }
@@ -53,7 +51,13 @@
           "name",
           "label",
           "collectionLabel",
-          "fields",
+          {
+            "field": "fields",
+            "hints": {
+              "layout": "table",
+              "block": "table"
+            }
+          },
           "blocks"
         ]
       }
@@ -75,8 +79,7 @@
         "name": "label",
         "label": "Label",
         "type": "text",
-        "required": true,
-        "help": "Name is converted to sentence case and used if not specified."
+        "required": true
       },
       {
         "name": "placeholder",
@@ -166,8 +169,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "option",
-          "labelField": "help",
+          "struct": "option",
           "block": "default"
         }
       },
@@ -201,7 +203,7 @@
         "label": "Reference",
         "type": "foreignKey",
         "reference": {
-          "name": "structReference",
+          "struct": "structReference",
           "labelField": "name",
           "block": "default"
         }
@@ -248,6 +250,14 @@
             "condition": "value.type === 'list'"
           }
         ]
+      },
+      {
+        "name": "table",
+        "fields": [
+          "name",
+          "label",
+          "type"
+        ]
       }
     ]
   },
@@ -269,8 +279,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "fieldReference",
-          "labelField": "field",
+          "struct": "fieldReference",
           "block": "default"
         }
       }
@@ -297,9 +306,9 @@
         "type": "foreignKey",
         "required": true,
         "reference": {
-          "name": "field",
-          "labelField": "name",
-          "block": "default"
+          "struct": "field",
+          "block": "default",
+          "labelField": "name"
         }
       },
       {

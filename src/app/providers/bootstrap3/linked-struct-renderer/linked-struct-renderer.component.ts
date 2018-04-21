@@ -11,4 +11,5 @@ import { IField } from '../../../lib/schema';
 export class Bootstrap3LinkedStructRendererComponent implements CollectionControlRenderer {
   @Input() control: ILinkedStructControl;
   @Input() fields: IField[];
+  @Input() layout: 'inline' | 'table';
 }

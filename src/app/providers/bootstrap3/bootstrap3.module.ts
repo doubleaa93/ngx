@@ -12,6 +12,7 @@ import { Bootstrap3LinkedStructRendererComponent } from './linked-struct-rendere
 import { Bootstrap3TableRendererComponent } from './table-renderer/table-renderer.component';
 import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
 import { Bootstrap3HelpRendererComponent } from './help-renderer/help-renderer.component';
+import { Bootstrap3ValidationErrorsRendererComponent } from './validation-errors-renderer/validation-errors-renderer.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DeReCrudProviderModule],
@@ -24,7 +25,8 @@ import { Bootstrap3HelpRendererComponent } from './help-renderer/help-renderer.c
     Bootstrap3LinkedStructRendererComponent,
     Bootstrap3TableRendererComponent,
     Bootstrap3CheckboxRendererComponent,
-    Bootstrap3HelpRendererComponent
+    Bootstrap3HelpRendererComponent,
+    Bootstrap3ValidationErrorsRendererComponent
   ],
   entryComponents: [
     Bootstrap3ControlContainerRendererComponent,

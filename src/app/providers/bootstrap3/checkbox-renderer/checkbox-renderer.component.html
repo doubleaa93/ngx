@@ -9,6 +9,8 @@
         (input)="control.onChange($event)" /> {{control.field.label}}
     </label>
   </div>
-  <de-re-crud-bootstrap3-description-renderer [control]="control">
-  </de-re-crud-bootstrap3-description-renderer>
+  <de-re-crud-bootstrap3-help-renderer [control]="control">
+  </de-re-crud-bootstrap3-help-renderer>
+  <de-re-crud-bootstrap3-validation-errors-renderer [control]="control">
+  </de-re-crud-bootstrap3-validation-errors-renderer>
 </ng-container>

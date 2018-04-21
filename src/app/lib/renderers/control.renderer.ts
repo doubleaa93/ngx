@@ -7,4 +7,5 @@ export interface ControlRenderer {
 
 export interface CollectionControlRenderer extends ControlRenderer {
   fields: IField[];
+  layout: 'inline' | 'table';
 }

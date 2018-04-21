@@ -8,6 +8,7 @@ import { IControl } from '../../../lib/renderers/control';
   templateUrl: './table-renderer.component.html'
 })
 export class Bootstrap3TableRendererComponent implements CollectionControlRenderer {
-  fields: IField[];
-  control: IControl;
+  @Input() control: IControl;
+  @Input() fields: IField[];
+  layout: 'inline' | 'table';
 }

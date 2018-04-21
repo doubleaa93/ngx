@@ -1,0 +1,12 @@
+<ng-container *ngIf="hasError()"
+  [ngTemplateOutlet]="validationErrors"
+  [ngTemplateOutletContext]="{ errors: getErrors() }">
+</ng-container>
+
+<ng-template #validationErrors let-errors="errors">
+  <ng-container>
+    <p *ngFor="let error of errors" class="help-block">
+      {{error}}
+    </p>
+  </ng-container>
+</ng-template>

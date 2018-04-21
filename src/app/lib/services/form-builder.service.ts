@@ -25,14 +25,14 @@ export class FormBuilderService {
       if (field.type === 'linkedStruct') {
         const linkedStructField = <ILinkedStructField>field;
         const { reference } = linkedStructField;
-        group[field.name] = this.array(reference.name, reference.block, blocks, fields, value[field.name]);
+        group[field.name] = this.array(reference.struct, reference.block, blocks, fields, value[field.name]);
         continue;
       }
 
       if (field.type === 'foreignKey') {
         const foreignKeyField = <IForeignKeyField>field;
         const { reference } = foreignKeyField;
-        group[field.name] = this.group(reference.name, reference.block, blocks, fields, value[field.name]);
+        group[field.name] = this.group(reference.struct, reference.block, blocks, fields, value[field.name]);
         continue;
       }
 
