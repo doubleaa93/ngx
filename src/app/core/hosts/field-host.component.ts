@@ -28,6 +28,7 @@ import {
 } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: 'de-re-crud-field-host',
@@ -74,7 +75,6 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       this.ngOnInit();
       return;
     }
-
 
     this.updateInputs();
   }
@@ -244,7 +244,8 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const { form } = this.state;
     const { name, struct } = this.field;
 
-    const array = form[name];
+    const array = <FormArray>form.get(name);
+
     const options = { ...this.state.options };
     const reference = (<IReferenceField>this.field).reference;
 
@@ -253,7 +254,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
     options.submitButtonStyle = {
       ...options.submitButtonStyle,
-      text: !array || !array[index] ? 'Add' : 'Update'
+      text: !array.at(index) ? 'Add' : 'Update'
     };
 
     options.cancelButtonStyle = {
@@ -261,8 +262,9 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       text: 'Cancel'
     };
 
-    const value = !array ? {} : array[index];
+    const value = typeof index === 'undefined' ? {} : array.at(index);
     const state = this.stateService.create(options, value, this.formId);
+    array.push(state.form);
 
     this.stateService.pushNavigation(this.formId, state.id);
   }

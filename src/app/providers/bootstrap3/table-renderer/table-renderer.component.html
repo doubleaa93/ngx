@@ -7,12 +7,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!control.form[control.field.name]?.length">
+    <tr *ngIf="!control.form.get(control.field.name).value.length">
       <td colspan="100%">None</td>
     </tr>
-    <tr *ngFor="let item of control.form[control.field.name]">
+    <tr *ngFor="let value of control.form.get(control.field.name).value">
       <td *ngFor="let field of fields">
-        {{item[field.name]}}
+        {{value[control.field.name]}}
       </td>
     </tr>
   </tbody>
