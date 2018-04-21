@@ -101,7 +101,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       x => x.field === this.field.name
     );
 
-    if (!fieldReference.condition(this.state.form.value)) {
+    if (!fieldReference.condition(this.state.form.value, this.state.form.root.value)) {
       return;
     }
 
@@ -219,6 +219,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
           const field = this.state.fields[
             `${reference.struct}-${fieldReference.field}`
           ];
+
           fields.push(field);
         }
 

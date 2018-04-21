@@ -77,7 +77,7 @@ export class FormStateService {
               : `return ${fieldReference.condition}`;
 
             // tslint:disable-next-line:no-function-constructor-with-string-args
-            condition = new Function('value', returnValue);
+            condition = new Function('value', 'rootValue', returnValue);
           } else {
             // tslint:disable-next-line:no-function-constructor-with-string-args
             condition = FormStateService.defaultConditionFunc;

@@ -67,7 +67,7 @@ export interface IBlock {
 
 export interface IFieldReference {
   field: string;
-  condition: (value: any) => boolean;
+  condition: (value: any, rootValue: any) => boolean;
 }
 
 export interface ILinkedStructFieldReference extends IFieldReference {

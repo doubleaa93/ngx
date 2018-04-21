@@ -91,22 +91,18 @@ export class FormBuilderService {
     return this.fb.array(array);
   }
 
-  getRootControl(control: AbstractControl) {
-    if (control.parent && !(control.parent instanceof FormGroup)) {
-      return this.getRootControl(control.parent);
-    }
 
-    return control.parent || control;
-  }
 
   private getValidators(fieldReference: IFieldReference, field: IField) {
     return (control: AbstractControl) => {
       const validators = [];
-      const rootControl = this.getRootControl(control);
+
+      const root = control.root;
+      const parent = control.parent;
 
       if (
-        rootControl instanceof FormGroup &&
-        !fieldReference.condition(rootControl.value)
+        parent instanceof FormGroup &&
+        !fieldReference.condition(parent.value, root.value)
       ) {
         return null;
       }
