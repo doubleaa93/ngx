@@ -5,8 +5,7 @@ import {
   Input,
   SimpleChanges
 } from '@angular/core';
-import { ButtonRenderer } from '../../../lib/renderers/button.renderer';
-import { IButton } from '../../../lib/renderers/button';
+import { ButtonRenderer, IButton } from '../../../core/renderers/button.renderer';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-button-renderer',

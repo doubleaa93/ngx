@@ -1,4 +1,4 @@
-import { IControl } from './renderers/control';
+import { IControl } from './renderers/control.renderer';
 
 export class ValidationErrorHelper {
   private static _errorSort = ['required'];
@@ -49,14 +49,18 @@ export class ValidationErrorHelper {
       .concat(control.submissionErrors);
   }
 
-  static getErrorMessage(error: {  key: string, metadata: any }) {
+  static getErrorMessage(error: { key: string; metadata: any }) {
     switch (error.key) {
       case 'required':
         return 'This field is required.';
       case 'minlength':
-        return `This field must have at least ${error.metadata.requiredLength} characters.`;
+        return `This field must have at least ${
+          error.metadata.requiredLength
+        } characters.`;
       case 'maxlength':
-        return `This field can not exceed ${error.metadata.requiredLength} characters.`;
+        return `This field can not exceed ${
+          error.metadata.requiredLength
+        } characters.`;
       default:
         return `Validation failed with error: ${error}`;
     }

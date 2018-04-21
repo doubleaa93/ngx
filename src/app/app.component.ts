@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DeReCrudOptions } from './lib/options';
+import { DeReCrudOptions } from './core/models/options';
 import * as schema from './schema.json';
 
 @Component({

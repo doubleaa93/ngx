@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ILinkedStructControl } from '../../../lib/renderers/control';
-import { CollectionControlRenderer } from '../../../lib/renderers/control.renderer';
-import { IField } from '../../../lib/schema';
+import { CollectionControlRenderer, ILinkedStructControl } from '../../../core/renderers/control.renderer';
+import { IField } from '../../../core/models/schema';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-linked-struct-renderer',

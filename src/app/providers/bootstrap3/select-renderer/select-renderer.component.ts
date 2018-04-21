@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ISelectControl } from '../../../lib/renderers/control';
-import { ControlRenderer } from '../../../lib/renderers/control.renderer';
+import { ControlRenderer, ISelectControl } from '../../../core/renderers/control.renderer';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-select-renderer',

@@ -6,3 +6,7 @@ export interface IButton {
   class?: string;
   extraClasses?: string[];
 }
+
+export interface ButtonRenderer {
+  button: IButton;
+}

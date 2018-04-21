@@ -6,15 +6,29 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { IField, ITextField, ILinkedStructField, IBlock, IForeignKeyField, IIntegerField, IFieldReference } from '../schema';
+import {
+  IField,
+  ITextField,
+  ILinkedStructField,
+  IBlock,
+  IForeignKeyField,
+  IIntegerField,
+  IFieldReference
+} from '../models/schema';
 import { whitespaceValidator } from '../validators/whitespace-validator';
-import { Map } from '../map';
+import { Map } from '../models/map';
 
 @Injectable()
 export class FormBuilderService {
   constructor(private fb: FormBuilder) {}
 
-  group(struct: string, blockName: string, blocks: Map<IBlock>, fields: Map<IField>, value = {}): FormGroup {
+  group(
+    struct: string,
+    blockName: string,
+    blocks: Map<IBlock>,
+    fields: Map<IField>,
+    value = {}
+  ): FormGroup {
     const group = {};
 
     const block = blocks[`${struct}-${blockName}`];
@@ -25,14 +39,26 @@ export class FormBuilderService {
       if (field.type === 'linkedStruct') {
         const linkedStructField = <ILinkedStructField>field;
         const { reference } = linkedStructField;
-        group[field.name] = this.array(reference.struct, reference.block, blocks, fields, value[field.name]);
+        group[field.name] = this.array(
+          reference.struct,
+          reference.block,
+          blocks,
+          fields,
+          value[field.name]
+        );
         continue;
       }
 
       if (field.type === 'foreignKey') {
         const foreignKeyField = <IForeignKeyField>field;
         const { reference } = foreignKeyField;
-        group[field.name] = this.group(reference.struct, reference.block, blocks, fields, value[field.name]);
+        group[field.name] = this.group(
+          reference.struct,
+          reference.block,
+          blocks,
+          fields,
+          value[field.name]
+        );
         continue;
       }
 
@@ -45,11 +71,17 @@ export class FormBuilderService {
     return this.fb.group(group);
   }
 
-  array(struct: string, blockName: string, blocks: Map<IBlock>, fields: Map<IField>, value = []): FormArray {
+  array(
+    struct: string,
+    blockName: string,
+    blocks: Map<IBlock>,
+    fields: Map<IField>,
+    value = []
+  ): FormArray {
     const array = [];
 
     if (value && value.length) {
-      value.forEach((item) => {
+      value.forEach(item => {
         const group = this.group(struct, blockName, blocks, fields, item);
 
         array.push(group);
@@ -72,7 +104,10 @@ export class FormBuilderService {
       const validators = [];
       const rootControl = this.getRootControl(control);
 
-      if (rootControl instanceof FormGroup && !fieldReference.condition(rootControl.value)) {
+      if (
+        rootControl instanceof FormGroup &&
+        !fieldReference.condition(rootControl.value)
+      ) {
         return null;
       }
 

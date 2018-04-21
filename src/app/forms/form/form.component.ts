@@ -9,11 +9,11 @@ import {
   SimpleChanges
 } from '@angular/core';
 import 'rxjs/add/operator/do';
-import { DeReCrudOptions } from '../options';
-import { FormSubmission } from '../form-submission';
-import { FormState, FormStateService } from '../services/form-state.service';
+import { FormState, FormStateService } from '../../core/services/form-state.service';
 import { Subscription } from 'rxjs/Subscription';
-import { IField } from '../schema';
+import { DeReCrudOptions } from '../../core/models/options';
+import { IField } from '../../core/models/schema';
+import { FormSubmission } from '../../core/models/form-submission';
 
 @Component({
   selector: 'de-re-crud-form',

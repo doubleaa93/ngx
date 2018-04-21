@@ -1,27 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormComponent } from './form/form.component';
+
+import { ComponentHostDirective } from './hosts/component-host.directive';
 import { FieldHostComponent } from './hosts/field-host.component';
 import { ButtonHostComponent } from './hosts/button-host.component';
 import { FormBuilderService } from './services/form-builder.service';
-import { ComponentHostDirective } from './hosts/component-host.directive';
-import { DeReCrudProviderModule } from '../providers/provider/provider.module';
 import { FormStateService } from './services/form-state.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    DeReCrudProviderModule
+    ReactiveFormsModule
   ],
   declarations: [
-    FormComponent,
+    ComponentHostDirective,
     FieldHostComponent,
-    ButtonHostComponent,
-    ComponentHostDirective
+    ButtonHostComponent
   ],
   providers: [FormStateService, FormBuilderService],
-  exports: [FormComponent]
+  exports: [FieldHostComponent, ButtonHostComponent]
 })
-export class DeReCrudModule {}
+export class DeReCrudCoreModule { }

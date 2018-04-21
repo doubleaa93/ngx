@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { DeReCrudOptions } from '../options';
-import { IStruct, IField, IBlock } from '../schema';
+import { DeReCrudOptions } from '../models/options';
+import { IStruct, IField, IBlock } from '../models/schema';
+import { FormSubmissionErrors } from '../models/form-submission';
 import { FormBuilderService } from './form-builder.service';
-import { FormSubmissionErrors } from '../form-submission';
-import { Map } from '../map';
+import { Map } from '../models/map';
 
 export interface FormState {
   id: number;

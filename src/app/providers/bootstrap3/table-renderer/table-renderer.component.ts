@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { CollectionControlRenderer } from '../../../lib/renderers/control.renderer';
-import { IField } from '../../../lib/schema';
-import { IControl } from '../../../lib/renderers/control';
+import { CollectionControlRenderer, IControl } from '../../../core/renderers/control.renderer';
+import { IField } from '../../../core/models/schema';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-table-renderer',

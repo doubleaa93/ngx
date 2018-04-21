@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Bootstrap3ControlContainerRendererComponent } from './control-container-renderer/control-container-renderer.component';
+import { DeReCrudCoreModule } from '../../core/core.module';
 import { DeReCrudProviderModule } from '../provider/provider.module';
 import { DeReCrudProviderService } from '../provider/provider.service';
 import { Bootstrap3InputRendererComponent } from './input-renderer/input-renderer.component';
@@ -15,7 +16,7 @@ import { Bootstrap3HelpRendererComponent } from './help-renderer/help-renderer.c
 import { Bootstrap3ValidationErrorsRendererComponent } from './validation-errors-renderer/validation-errors-renderer.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, DeReCrudProviderModule],
+  imports: [CommonModule, ReactiveFormsModule, DeReCrudCoreModule, DeReCrudProviderModule],
   declarations: [
     Bootstrap3ControlContainerRendererComponent,
     Bootstrap3InputRendererComponent,

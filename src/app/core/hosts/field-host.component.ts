@@ -11,11 +11,22 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { IField, IReferenceField, IListField, ILinkedStructField, ILinkedStructFieldReference } from '../schema';
-import { ControlRenderer, CollectionControlRenderer } from '../renderers/control.renderer';
+import {
+  IField,
+  IReferenceField,
+  IListField,
+  ILinkedStructField,
+  ILinkedStructFieldReference
+} from '../models/schema';
+import {
+  ControlRenderer,
+  CollectionControlRenderer,
+  IControl,
+  ILinkedStructControl,
+  ISelectControl
+} from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
-import { IControl, ILinkedStructControl, ISelectControl } from '../renderers/control';
 
 @Component({
   selector: 'de-re-crud-field-host',
@@ -72,7 +83,9 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const { struct, block } = this.state.options;
-    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(x => x.field === this.field.name);
+    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(
+      x => x.field === this.field.name
+    );
 
     if (!fieldReference.condition(this.state.form.value)) {
       return;
@@ -171,21 +184,28 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
         const linkedStructField = <ILinkedStructField>this.field;
         const { reference } = linkedStructField;
-        const blockFields = this.state.blocks[`${this.state.options.struct}-${this.state.options.block}`].fields;
-        const { hints } = <ILinkedStructFieldReference>blockFields.find(x => x.field === linkedStructField.name);
-        const block = hints && hints.block || reference.block;
+        const blockFields = this.state.blocks[
+          `${this.state.options.struct}-${this.state.options.block}`
+        ].fields;
+        const { hints } = <ILinkedStructFieldReference>blockFields.find(
+          x => x.field === linkedStructField.name
+        );
+        const block = (hints && hints.block) || reference.block;
 
-        const fieldReferences = <ILinkedStructFieldReference[]>this.state.blocks[`${reference.struct}-${block}`].fields;
+        const fieldReferences = <ILinkedStructFieldReference[]>this.state
+          .blocks[`${reference.struct}-${block}`].fields;
         const fields = [];
 
         for (const fieldReference of fieldReferences) {
-          const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
+          const field = this.state.fields[
+            `${reference.struct}-${fieldReference.field}`
+          ];
           fields.push(field);
         }
 
         const collectonControlRenderer = <CollectionControlRenderer>componentRenderer;
         collectonControlRenderer.fields = fields;
-        collectonControlRenderer.layout = hints && hints.layout || 'inline';
+        collectonControlRenderer.layout = (hints && hints.layout) || 'inline';
       }
 
       componentRenderer.control = control;
@@ -194,11 +214,11 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
   onBlur = () => {
     this.stateService.clearErrors(this.formId);
-  }
+  };
 
   onChange = () => {
     this.stateService.clearErrors(this.formId);
-  }
+  };
 
   onOpenEditor = (e, index: number = null) => {
     const { form } = this.state;
@@ -226,7 +246,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const state = this.stateService.create(options, value, this.formId);
 
     this.stateService.pushNavigation(this.formId, state.id);
-  }
+  };
 
   private mapType(type: string) {
     switch (type) {

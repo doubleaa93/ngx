@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ControlRenderer } from '../../../lib/renderers/control.renderer';
-import { IControl } from '../../../lib/renderers/control';
-import { ValidationErrorHelper } from '../../../lib/validation-error-helper';
+import { ControlRenderer, IControl } from '../../../core/renderers/control.renderer';
+import { ValidationErrorHelper } from '../../../core/validation-error-helper';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-help-renderer',
