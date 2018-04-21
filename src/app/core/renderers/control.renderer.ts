@@ -5,6 +5,7 @@ export interface IControl {
   form: FormGroup;
   formId: number;
   formPath: string;
+  value: any;
   htmlId: string;
   rendererType: string;
   field: IField;
@@ -18,7 +19,7 @@ export interface ISelectControl extends IControl {
 }
 
 export interface ILinkedStructControl extends IControl {
-  onOpenEditor: (e: any, index?: number) => void;
+  onAddOrEdit: (e: any, index?: number) => void;
 }
 
 export interface ControlRenderer {
@@ -27,5 +28,9 @@ export interface ControlRenderer {
 
 export interface CollectionControlRenderer extends ControlRenderer {
   fields: IField[];
+
+}
+
+export interface LinkedStructControlRenderer extends CollectionControlRenderer {
   layout: 'inline' | 'table';
 }

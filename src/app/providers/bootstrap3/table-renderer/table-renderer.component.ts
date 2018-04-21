@@ -9,5 +9,4 @@ import { IField } from '../../../core/models/schema';
 export class Bootstrap3TableRendererComponent implements CollectionControlRenderer {
   @Input() control: IControl;
   @Input() fields: IField[];
-  layout: 'inline' | 'table';
 }

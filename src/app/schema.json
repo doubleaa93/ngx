@@ -58,7 +58,12 @@
               "block": "table"
             }
           },
-          "blocks"
+          {
+            "field": "blocks",
+            "hints": {
+              "layout": "table"
+            }
+          }
         ]
       }
     ]
@@ -289,7 +294,12 @@
         "name": "default",
         "fields": [
           "name",
-          "fields"
+          {
+            "field": "fields",
+            "hints": {
+              "layout": "table"
+            }
+          }
         ]
       }
     ]

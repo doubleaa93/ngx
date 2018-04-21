@@ -1,15 +1,19 @@
 <div>
   <de-re-crud-bootstrap3-label-renderer [control]="control">
   </de-re-crud-bootstrap3-label-renderer>
-  <button class="btn btn-sm btn-primary" type="button"
-    (click)="control.onOpenEditor($event)">
-    Add
-  </button>
+  <de-re-crud-button-host
+    [formId]="control.formId"
+    extraClasses="btn-sm"
+    text="Add"
+    (click)="control.onAddOrEdit($event)">
+  </de-re-crud-button-host>
 </div>
 <ng-container [ngSwitch]="layout">
   <div class="table-container" *ngSwitchCase="'table'">
     <de-re-crud-bootstrap3-table-renderer [control]="control" [fields]="fields">
     </de-re-crud-bootstrap3-table-renderer>
   </div>
+  <ng-container *ngSwitchDefault>
+  </ng-container>
 </ng-container>
 

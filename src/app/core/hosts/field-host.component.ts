@@ -21,6 +21,7 @@ import {
 import {
   ControlRenderer,
   CollectionControlRenderer,
+  LinkedStructControlRenderer,
   IControl,
   ILinkedStructControl,
   ISelectControl
@@ -160,6 +161,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
         formPath,
         field: this.field,
         formId: this.formId,
+        value: this.state.form[this.field.name],
         submissionErrors:
           (this.state.submissionErrors &&
             this.state.submissionErrors[formPath]) ||
@@ -180,20 +182,24 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
       if (this.field.type === 'linkedStruct') {
         const linkedStructControl = <ILinkedStructControl>control;
-        linkedStructControl.onOpenEditor = this.onOpenEditor;
+        linkedStructControl.onAddOrEdit = this.onAddOrEdit;
 
         const linkedStructField = <ILinkedStructField>this.field;
         const { reference } = linkedStructField;
+
         const blockFields = this.state.blocks[
           `${this.state.options.struct}-${this.state.options.block}`
         ].fields;
+
         const { hints } = <ILinkedStructFieldReference>blockFields.find(
           x => x.field === linkedStructField.name
         );
+
         const block = (hints && hints.block) || reference.block;
 
         const fieldReferences = <ILinkedStructFieldReference[]>this.state
           .blocks[`${reference.struct}-${block}`].fields;
+
         const fields = [];
 
         for (const fieldReference of fieldReferences) {
@@ -203,7 +209,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
           fields.push(field);
         }
 
-        const collectonControlRenderer = <CollectionControlRenderer>componentRenderer;
+        const collectonControlRenderer = <LinkedStructControlRenderer>componentRenderer;
         collectonControlRenderer.fields = fields;
         collectonControlRenderer.layout = (hints && hints.layout) || 'inline';
       }
@@ -214,13 +220,13 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
   onBlur = () => {
     this.stateService.clearErrors(this.formId);
-  };
+  }
 
   onChange = () => {
     this.stateService.clearErrors(this.formId);
-  };
+  }
 
-  onOpenEditor = (e, index: number = null) => {
+  onAddOrEdit = (e, index: number = null) => {
     const { form } = this.state;
     const { name, struct } = this.field;
 
@@ -246,7 +252,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const state = this.stateService.create(options, value, this.formId);
 
     this.stateService.pushNavigation(this.formId, state.id);
-  };
+  }
 
   private mapType(type: string) {
     switch (type) {

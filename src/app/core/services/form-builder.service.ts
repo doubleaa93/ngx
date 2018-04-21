@@ -81,7 +81,7 @@ export class FormBuilderService {
     const array = [];
 
     if (value && value.length) {
-      value.forEach(item => {
+      value.forEach((item) => {
         const group = this.group(struct, blockName, blocks, fields, item);
 
         array.push(group);

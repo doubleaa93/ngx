@@ -24,7 +24,8 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRef: ComponentRef<any>;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
-  @Input() isSubmit: boolean;
+  @Input() type: 'button' | 'submit' | 'cancel';
+  @Input() extraClasses: string | string[];
   @Input() text: string;
   @Input() disabled: boolean;
   @Output() click = new EventEmitter<any>();
@@ -82,26 +83,51 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
       structs
     } = this.state;
 
-    const style = this.isSubmit ? submitButtonStyle : cancelButtonStyle;
+    const isSubmit = this.type === 'submit';
+
+    let style = null;
+
+    switch (this.type) {
+      case 'submit':
+        style = submitButtonStyle;
+        break;
+      case 'cancel':
+        style = cancelButtonStyle;
+        break;
+    }
 
     let text = (style && style.text) || this.text;
 
     if (
-      this.isSubmit &&
+      isSubmit &&
       submitButtonStyle &&
       submitButtonStyle.appendSchemaLabel
     ) {
       text = `${text} ${structs[struct].label}`;
     }
 
+    const extraClasses = [];
+
+    if (this.state.options.extraButtonClasses) {
+      extraClasses.push(...this.state.options.extraButtonClasses);
+    }
+
+    if (this.extraClasses) {
+      if (typeof this.extraClasses === 'string') {
+        extraClasses.push(...this.extraClasses.split(' '));
+      } else {
+        extraClasses.push(...this.extraClasses);
+      }
+    }
+
     const componentRenderer = <ButtonRenderer>this._componentRef.instance;
     componentRenderer.button = {
       text,
-      type: this.isSubmit ? 'submit' : 'button',
+      extraClasses,
+      type: isSubmit ? 'submit' : 'button',
       disabled: this.disabled,
       onClick: this.onClick,
-      class: (style && style.class) || undefined,
-      extraClasses: this.state.options.extraButtonClasses
+      class: (style && style.class) || undefined
     };
   }
 
