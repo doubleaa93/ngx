@@ -69,7 +69,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.formId) {
+    if (changes.formId && !changes.formId.isFirstChange()) {
       this.ngOnDestroy();
       this.ngOnInit();
       return;
