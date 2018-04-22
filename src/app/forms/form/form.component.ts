@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ChangeDetectorRef
 } from '@angular/core';
 import 'rxjs/add/operator/do';
 import { FormState, FormStateService } from '../../core/services/form-state.service';
@@ -33,7 +32,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   state: FormState;
   submitting: boolean;
 
-  constructor(private stateService: FormStateService, private changeDetectorRef: ChangeDetectorRef ) {}
+  constructor(private stateService: FormStateService) {}
 
   get cancelVisible() {
     return this.navigationId !== this.state.id || this._cancelVisible;

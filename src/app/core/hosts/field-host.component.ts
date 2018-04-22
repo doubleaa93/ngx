@@ -16,7 +16,8 @@ import {
   IReferenceField,
   IListField,
   ILinkedStructField,
-  ILinkedStructFieldReference
+  ILinkedStructFieldReference,
+  IFieldReference
 } from '../models/schema';
 import {
   ControlRenderer,
@@ -44,6 +45,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() block: string;
   @Input() field: IField;
   state: FormState;
+  fieldReference: IFieldReference;
 
   constructor(
     private stateService: FormStateService,
@@ -54,6 +56,13 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
 
+    const { struct, block } = this.state.options;
+    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(
+      x => x.field === this.field.name
+    );
+
+    this.fieldReference = fieldReference;
+
     this._submissionErrorsChangeSubscription = this.state.onSubmissionErrorsChange.subscribe(
       () => {
         this.updateInputs();
@@ -62,7 +71,11 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
     this._formChangeSubscription = this.state.form.valueChanges.subscribe(
       () => {
-        this.render();
+        if (!this.shouldRender()) {
+          this.destroyRefs();
+        } else if (!this._componentRefs.length) {
+          this.render();
+        }
       }
     );
 
@@ -88,20 +101,23 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       this._formChangeSubscription.unsubscribe();
     }
 
-    this._componentRefs.forEach(x => x.destroy());
+    this.destroyRefs();
   }
 
-  render() {
+  destroyRefs() {
     if (this._componentRefs.length) {
       this._componentRefs.forEach(x => x.destroy());
     }
+  }
 
-    const { struct, block } = this.state.options;
-    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(
-      x => x.field === this.field.name
-    );
+  shouldRender() {
+    return this.fieldReference.condition(this.state.form.value, this.state.form.root.value);
+  }
 
-    if (!fieldReference.condition(this.state.form.value, this.state.form.root.value)) {
+  render() {
+    this.destroyRefs();
+
+    if (!this.shouldRender()) {
       return;
     }
 

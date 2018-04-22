@@ -9,4 +9,14 @@ import { IField } from '../../../core/models/schema';
 export class Bootstrap3TableRendererComponent implements CollectionControlRenderer {
   @Input() control: IControl;
   @Input() fields: IField[];
+
+  getValue(field: IField, value: any) {
+    const fieldValue = value[field.name];
+
+    if (fieldValue == null || typeof fieldValue === 'undefined') {
+      return '&nbsp;';
+    }
+
+    return fieldValue;
+  }
 }

@@ -11,9 +11,7 @@
       <td colspan="100%">None</td>
     </tr>
     <tr *ngFor="let value of control.form.get(control.field.name).value">
-      <td *ngFor="let field of fields">
-        {{value[control.field.name]}}
-      </td>
+      <td *ngFor="let field of fields" [innerHtml]="getValue(field, value)"></td>
     </tr>
   </tbody>
 </table>
