@@ -51,8 +51,11 @@ export class FormBuilderService {
           value[field.name]
         );
 
-        if (!array.value.length && linkedStructField.required) {
-          array.push(this.group(reference.struct, reference.block, blocks, fields));
+        if (!array.value.length && linkedStructField.minInstances > 0) {
+          // tslint:disable-next-line:no-increment-decrement
+          for (let i = 0; i < linkedStructField.minInstances; i++) {
+            array.push(this.group(reference.struct, reference.block, blocks, fields));
+          }
         }
 
         group[field.name] = array;

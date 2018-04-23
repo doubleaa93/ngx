@@ -53,6 +53,11 @@ export class FormHostComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes.formId && !changes.formId.isFirstChange()) {
+      this.ngOnInit();
+      return;
+    }
+
     if (changes.struct && !changes.struct.isFirstChange()) {
       this.ngOnInit();
       return;
