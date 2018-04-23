@@ -35,10 +35,10 @@ export class Bootstrap3ButtonRendererComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['button']) {
+    if (changes.button) {
       if (
-        changes['button'].currentValue.type !==
-        changes['button'].previousValue.type
+        changes.button.currentValue.type !==
+        changes.button.previousValue.type
       ) {
         this.updateClasses();
       }

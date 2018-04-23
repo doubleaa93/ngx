@@ -12,7 +12,7 @@ import 'rxjs/add/operator/do';
 import { FormState, FormStateService } from '../../core/services/form-state.service';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudOptions } from '../../core/models/options';
-import { IField } from '../../core/models/schema';
+import { IField, IFieldReference } from '../../core/models/schema';
 import { FormSubmission } from '../../core/models/form-submission';
 
 @Component({
@@ -80,14 +80,24 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       state = this.stateService.get(navigationStack[navigationStack.length - 1]);
     }
 
-    const { blocks, fields, options } = state;
-    const fieldReferences = blocks[`${options.struct}-${options.block}`].fields;
-    const blockFields = fieldReferences.map(
-      fieldReference => fields[`${options.struct}-${fieldReference.field}`]
-    );
+    const { options } = state;
+    const blockFields = this.getBlockFields(options.struct, options.block);
 
     this.navigationId = state.id;
     this.fields = blockFields;
+  }
+
+  getBlockFields(struct: string, block: string) {
+    const { blocks, fields } = this.state;
+    const references = blocks[`${struct}-${block}`].fields;
+
+    const blockFields = [];
+
+    for (const reference of references) {
+      blockFields.push(fields[`${struct}-${reference.field}`]);
+    }
+
+    return blockFields;
   }
 
   onCancel(e) {

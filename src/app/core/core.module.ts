@@ -7,6 +7,7 @@ import { FieldHostComponent } from './hosts/field-host.component';
 import { ButtonHostComponent } from './hosts/button-host.component';
 import { FormBuilderService } from './services/form-builder.service';
 import { FormStateService } from './services/form-state.service';
+import { CollectionFieldHostComponent } from './hosts/collection-field-host.component';
 
 @NgModule({
   imports: [
@@ -16,9 +17,11 @@ import { FormStateService } from './services/form-state.service';
   declarations: [
     ComponentHostDirective,
     FieldHostComponent,
-    ButtonHostComponent
+    ButtonHostComponent,
+    CollectionFieldHostComponent
   ],
   providers: [FormStateService, FormBuilderService],
-  exports: [FieldHostComponent, ButtonHostComponent]
+  exports: [FieldHostComponent, ButtonHostComponent],
+  entryComponents: [CollectionFieldHostComponent]
 })
 export class DeReCrudCoreModule { }

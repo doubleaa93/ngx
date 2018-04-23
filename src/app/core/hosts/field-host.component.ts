@@ -22,19 +22,18 @@ import {
 import {
   ControlRenderer,
   CollectionControlRenderer,
-  LinkedStructControlRenderer,
   IControl,
-  ILinkedStructControl,
-  ISelectControl
+  ISelectControl,
+  ICollectionControl
 } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
 import { FormArray } from '@angular/forms';
+import { CollectionFieldHostComponent } from './collection-field-host.component';
 
 @Component({
   selector: 'de-re-crud-field-host',
-  template: `
-    <ng-template deReCrudComponentHost></ng-template>`
+  template: `<ng-template deReCrudComponentHost></ng-template>`
 })
 export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
@@ -42,6 +41,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _formChangeSubscription: Subscription;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
+  @Input() struct: string;
   @Input() block: string;
   @Input() field: IField;
   state: FormState;
@@ -56,7 +56,16 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
 
-    const { struct, block } = this.state.options;
+    let { struct, block } = this.state.options;
+
+    if (this.struct) {
+      struct = this.struct;
+    }
+
+    if (this.block) {
+      block = this.block;
+    }
+
     const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(
       x => x.field === this.field.name
     );
@@ -137,10 +146,11 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
         controlComponent = providerOptions.checkboxComponent;
         break;
       case 'list':
+      case 'foreignKey':
         controlComponent = providerOptions.selectComponent;
         break;
       case 'linkedStruct':
-        controlComponent = providerOptions.linkedStructComponent;
+        controlComponent = CollectionFieldHostComponent;
         break;
       default:
         console.error(
@@ -184,6 +194,16 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
     const formPath = this.field.name; // TODO: Support nested fields and arrays
 
+    let { struct, block } = this.state.options;
+
+    if (this.struct) {
+      struct = this.struct;
+    }
+
+    if (this.block) {
+      block = this.block;
+    }
+
     for (const componentRef of this._componentRefs) {
       const componentRenderer = <ControlRenderer>componentRef.instance;
       const control: IControl = {
@@ -202,48 +222,51 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
         onChange: this.onChange
       };
 
-      if (this.field.type === 'list') {
-        const listField = <IListField>this.field;
+      switch (this.field.type) {
+        case 'list':
+        case 'foreignKey': {
+          const listField = <IListField>this.field;
 
-        const selectControl = <ISelectControl>control;
-        selectControl.options = listField.options;
-      }
+          const selectControl = <ISelectControl>control;
 
-      if (this.field.type === 'linkedStruct') {
-        const linkedStructControl = <ILinkedStructControl>control;
-        linkedStructControl.onAddOrEdit = this.onAddOrEdit;
-
-        const linkedStructField = <ILinkedStructField>this.field;
-        const { reference } = linkedStructField;
-
-        const blockFields = this.state.blocks[
-          `${this.state.options.struct}-${this.state.options.block}`
-        ].fields;
-
-        const { hints } = <ILinkedStructFieldReference>blockFields.find(
-          x => x.field === linkedStructField.name
-        );
-
-        const block = (hints && hints.block) || reference.block;
-
-        const fieldReferences = <ILinkedStructFieldReference[]>this.state
-          .blocks[`${reference.struct}-${block}`].fields;
-
-        const fields = [];
-
-        for (const fieldReference of fieldReferences) {
-          const field = this.state.fields[
-            `${reference.struct}-${fieldReference.field}`
-          ];
-
-          fields.push(field);
+          if (this.field.type === 'foreignKey') {
+            selectControl.options = () => [];
+          } else {
+            selectControl.options = () => listField.options;
+          }
+          break;
         }
+        case 'linkedStruct': {
+          const collectionControl = <ICollectionControl>control;
 
-        const collectonControlRenderer = <LinkedStructControlRenderer>componentRenderer;
-        collectonControlRenderer.fields = fields;
-        collectonControlRenderer.layout = (hints && hints.layout) || 'inline';
+          const linkedStructField = <ILinkedStructField>this.field;
+          const { reference } = linkedStructField;
+
+          const blockFields = this.state.blocks[`${struct}-${block}`].fields;
+
+          const { hints } = <ILinkedStructFieldReference>blockFields.find(
+            x => x.field === linkedStructField.name
+          );
+
+          const referenceBlock = (hints && hints.block) || reference.block;
+
+          const fieldReferences = <ILinkedStructFieldReference[]>this.state
+            .blocks[`${reference.struct}-${referenceBlock}`].fields;
+
+          const fields = [];
+
+          for (const fieldReference of fieldReferences) {
+            const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
+            fields.push(field);
+          }
+
+          collectionControl.fields = fields;
+          collectionControl.layout = (hints && hints.layout) || 'inline';
+          break;
+        }
       }
 
+      console.log(control);
       componentRenderer.control = control;
     }
   }
@@ -254,35 +277,6 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
   onChange = () => {
     this.stateService.clearErrors(this.formId);
-  }
-
-  onAddOrEdit = (e, index: number = null) => {
-    const { form } = this.state;
-    const { name, struct } = this.field;
-
-    const array = <FormArray>form.get(name);
-
-    const options = { ...this.state.options };
-    const reference = (<IReferenceField>this.field).reference;
-
-    options.struct = reference.struct;
-    options.block = reference.block;
-
-    options.submitButtonStyle = {
-      ...options.submitButtonStyle,
-      text: !array.at(index) ? 'Add' : 'Update'
-    };
-
-    options.cancelButtonStyle = {
-      ...options.cancelButtonStyle,
-      text: 'Cancel'
-    };
-
-    const value = typeof index === 'undefined' ? {} : array.at(index);
-    const state = this.stateService.create(options, value, this.formId);
-    array.push(state.form);
-
-    this.stateService.pushNavigation(this.formId, state.id);
   }
 
   private mapType(type: string) {

@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { IField, IOption } from '../models/schema';
+import { IField, IOption, IReferenceField } from '../models/schema';
 
 export interface IControl {
   form: FormGroup;
@@ -15,22 +15,20 @@ export interface IControl {
 }
 
 export interface ISelectControl extends IControl {
-  options: IOption[];
+  options: ((rootValue: any) => IOption[]);
 }
 
-export interface ILinkedStructControl extends IControl {
-  onAddOrEdit: (e: any, index?: number) => void;
+export interface ICollectionControl extends IControl {
+  field: IReferenceField;
+  fields: IField[];
+  layout: 'inline' | 'table';
+  onAdd: (e) => void;
 }
 
 export interface ControlRenderer {
   control: IControl;
 }
 
-export interface CollectionControlRenderer extends ControlRenderer {
-  fields: IField[];
-
-}
-
-export interface LinkedStructControlRenderer extends CollectionControlRenderer {
-  layout: 'inline' | 'table';
+export interface CollectionControlRenderer {
+  control: ICollectionControl;
 }

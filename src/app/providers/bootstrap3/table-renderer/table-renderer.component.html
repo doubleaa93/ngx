@@ -1,17 +1,30 @@
-<table class="table table-bordered table-condensed">
-  <thead>
-    <tr>
-      <th *ngFor="let field of fields">
-        {{field.label}}
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngIf="!control.form.get(control.field.name).value.length">
-      <td colspan="100%">None</td>
-    </tr>
-    <tr *ngFor="let value of control.form.get(control.field.name).value">
-      <td *ngFor="let field of fields" [innerHtml]="getValue(field, value)"></td>
-    </tr>
-  </tbody>
-</table>
+<div>
+  <de-re-crud-bootstrap3-label-renderer [control]="control">
+  </de-re-crud-bootstrap3-label-renderer>
+  <de-re-crud-button-host
+    [formId]="control.formId"
+    extraClasses="btn-sm"
+    text="Add"
+    (click)="control.onAdd($event)">
+  </de-re-crud-button-host>
+</div>
+
+<div class="table-control-container">
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th *ngFor="let field of control.fields">
+          {{field.label}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!control.form.get(control.field.name).value.length">
+        <td colspan="100%">None</td>
+      </tr>
+      <tr *ngFor="let value of control.form.get(control.field.name).value">
+        <td *ngFor="let field of control.fields" [innerHtml]="getValue(field, value)"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -4,6 +4,6 @@ export interface DeReCrudProviderOptions {
   selectComponent: any;
   buttonComponent: any;
   tableComponent: any;
-  linkedStructComponent: any;
+  inlineComponent: any;
   checkboxComponent: any;
 }

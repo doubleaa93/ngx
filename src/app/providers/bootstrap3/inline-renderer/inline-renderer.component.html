@@ -1,0 +1,22 @@
+<div>
+  <de-re-crud-bootstrap3-label-renderer [control]="control">
+  </de-re-crud-bootstrap3-label-renderer>
+  <de-re-crud-button-host
+    [formId]="control.formId"
+    extraClasses="btn-sm"
+    text="Add"
+    (click)="control.onAdd($event)">
+  </de-re-crud-button-host>
+</div>
+
+<div class="inline-control-container">
+  <span *ngIf="!control.form.get(control.field.name).value.length">None</span>
+  <div *ngFor="let value of control.form.get(control.field.name).value; let i = index">
+    <de-re-crud-field-host *ngFor="let field of control.fields"
+      [formId]="control.formId"
+      [struct]="control.field.reference.struct"
+      [block]="control.field.reference.block"
+      [field]="field">
+    </de-re-crud-field-host>
+  </div>
+</div>

@@ -36,6 +36,16 @@ export class FormStateService {
     return Math.random();
   }
 
+  // TODO: This should expand strings into a label object; the renderers should handle
+  // which label to show based on screen size
+  static parseLabel(label: string | { short: string }) {
+    if (typeof label === 'string') {
+      return label;
+    }
+
+    return label.short;
+  }
+
   static parseSchema(options: DeReCrudOptions) {
     const structs: IStruct[] = [];
     const fields: IField[] = [];
@@ -44,16 +54,25 @@ export class FormStateService {
     for (const structSchema of options.schema) {
       const struct = {
         ...structSchema,
+        label: this.parseLabel(structSchema.label),
+        collectionLabel: this.parseLabel(structSchema.label),
         fields: [],
         blocks: []
       };
 
       for (const fieldSchema of structSchema.fields) {
+        const label = this.parseLabel(fieldSchema.label);
+
         const field = {
           ...fieldSchema,
-          placeholder: fieldSchema.placeholder || fieldSchema.label,
+          label,
+          placeholder: fieldSchema.placeholder || label,
           struct: structSchema.name
         };
+
+        if (field.reference && !field.reference.block) {
+          field.reference.block = 'default';
+        }
 
         fields.push(field);
         struct.fields.push(field.name);
@@ -66,8 +85,12 @@ export class FormStateService {
           struct: structSchema.name
         };
 
-        for (let fieldReference of blockSchema.fields) {
-          fieldReference =  fieldReference.field ? fieldReference : { field: fieldReference };
+        for (const reference of blockSchema.fields) {
+          if (!reference) {
+            continue;
+          }
+
+          const fieldReference =  reference.field ? reference : { field: reference };
 
           let condition;
 
