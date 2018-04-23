@@ -18,7 +18,7 @@ export interface FormState {
   blocks: Map<IBlock>;
   submissionErrors: FormSubmissionErrors;
   onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
-  navigationStack: number[];
+  navigationStack: { id: number, onComplete: (state: FormState) => void }[];
   onNavigationChange: Observable<number>;
 }
 
@@ -166,7 +166,6 @@ export class FormStateService {
     }
 
     const form = this.formBuilder.group(options.struct, options.block, blocks, fields, value);
-    form.patchValue(value || {});
 
     const state = {
       id,
@@ -198,6 +197,14 @@ export class FormStateService {
   }
 
   remove(id: number) {
+    if (!this._cache[id]) {
+      return;
+    }
+
+    this._cache[id].navigationStack.reverse().forEach((child) => {
+      this.remove(child.id);
+    });
+
     delete this._cache[id];
   }
 
@@ -219,7 +226,7 @@ export class FormStateService {
     this.pushSubmissionErrorsChange(id);
   }
 
-  pushNavigation(id: number, childId: number) {
+  pushNavigation(id: number, childId: number, onComplete: (state: FormState) => void) {
     if (!this._cache[id] || !this._cache[childId]) {
       return;
     }
@@ -231,7 +238,7 @@ export class FormStateService {
     }
 
     const state = this._cache[parentId];
-    state.navigationStack.push(childId);
+    state.navigationStack.push({ onComplete, id: childId });
 
     this.pushNavigationChange(parentId, childId);
   }
@@ -245,6 +252,17 @@ export class FormStateService {
     state.navigationStack.pop();
 
     this.pushNavigationChange(id);
+  }
+
+  completeNavigation(id: number) {
+    if (!this._cache[id]) {
+      return;
+    }
+
+    const state = this._cache[id];
+    const topNavigationItem = state.navigationStack[state.navigationStack.length - 1];
+    topNavigationItem.onComplete(this._cache[topNavigationItem.id]);
+    this.popNavigation(id);
   }
 
   private pushNavigationChange(id: number, childId?: number) {

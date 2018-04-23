@@ -30,22 +30,33 @@ export class FormBuilderService {
     value = {}
   ): FormGroup {
     const group = {};
-
     const block = blocks[`${struct}-${blockName}`];
 
     for (const fieldReference of block.fields) {
       const field = fields[`${struct}-${fieldReference.field}`];
 
+      if (field.type === 'label') {
+        continue;
+      }
+
       if (field.type === 'linkedStruct') {
         const linkedStructField = <ILinkedStructField>field;
         const { reference } = linkedStructField;
-        group[field.name] = this.array(
+
+        const array = this.array(
           reference.struct,
           reference.block,
           blocks,
           fields,
           value[field.name]
         );
+
+        if (!array.value.length && linkedStructField.required) {
+          array.push(this.group(reference.struct, reference.block, blocks, fields));
+        }
+
+        group[field.name] = array;
+
         continue;
       }
 
@@ -68,7 +79,12 @@ export class FormBuilderService {
       group[field.name] = [initialValue, validators];
     }
 
-    return this.fb.group(group);
+    const formGroup = this.fb.group(group);
+    if (!formGroup.value) {
+      formGroup.patchValue({});
+    }
+
+    return formGroup;
   }
 
   array(
@@ -88,7 +104,12 @@ export class FormBuilderService {
       });
     }
 
-    return this.fb.array(array);
+    const formArray = this.fb.array(array);
+    if (!formArray.value) {
+      formArray.setValue([]);
+    }
+
+    return formArray;
   }
 
 

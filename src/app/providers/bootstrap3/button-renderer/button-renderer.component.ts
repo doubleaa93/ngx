@@ -11,8 +11,7 @@ import { ButtonRenderer, IButton } from '../../../core/renderers/button.renderer
   selector: 'de-re-crud-bootstrap3-button-renderer',
   templateUrl: './button-renderer.component.html'
 })
-export class Bootstrap3ButtonRendererComponent
-  implements OnInit, OnChanges, ButtonRenderer {
+export class Bootstrap3ButtonRendererComponent implements OnInit, OnChanges, ButtonRenderer {
   @Input() button: IButton;
   _classes: string[];
 

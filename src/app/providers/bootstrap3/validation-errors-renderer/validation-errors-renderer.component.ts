@@ -7,8 +7,7 @@ import { ValidationErrorHelper } from '../../../core/validation-error-helper';
   templateUrl: './validation-errors-renderer.component.html'
 })
 export class Bootstrap3ValidationErrorsRendererComponent implements ControlRenderer {
-  @Input()
-  control: IControl;
+  @Input() control: IControl;
 
   hasError() {
     return ValidationErrorHelper.hasError(this.control);

@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CollectionControlRenderer, ICollectionControl } from '../../../core/renderers/control.renderer';
-import { IField } from '../../../core/models/schema';
+import { IField, ILinkedStructField } from '../../../core/models/schema';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-inline-renderer',
@@ -8,5 +8,5 @@ import { IField } from '../../../core/models/schema';
   styleUrls: ['./inline-renderer.component.css']
 })
 export class Bootstrap3InlineRendererComponent implements CollectionControlRenderer {
-  @Input() control: ICollectionControl;
+  control: ICollectionControl;
 }

@@ -7,7 +7,8 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  SimpleChange
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
@@ -17,7 +18,8 @@ import {
   IListField,
   ILinkedStructField,
   ILinkedStructFieldReference,
-  IFieldReference
+  IFieldReference,
+  ILabelField
 } from '../models/schema';
 import {
   ControlRenderer,
@@ -28,19 +30,20 @@ import {
 } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { CollectionFieldHostComponent } from './collection-field-host.component';
 
 @Component({
-  selector: 'de-re-crud-field-host',
+  selector: 'de-re-crud-input-field-host',
   template: `<ng-template deReCrudComponentHost></ng-template>`
 })
-export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
+export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
   private _submissionErrorsChangeSubscription: Subscription;
   private _formChangeSubscription: Subscription;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
+  @Input() form: FormGroup;
   @Input() struct: string;
   @Input() block: string;
   @Input() field: IField;
@@ -56,17 +59,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
 
-    let { struct, block } = this.state.options;
-
-    if (this.struct) {
-      struct = this.struct;
-    }
-
-    if (this.block) {
-      block = this.block;
-    }
-
-    const fieldReference = this.state.blocks[`${struct}-${block}`].fields.find(
+    const fieldReference = this.state.blocks[`${this.struct}-${this.block}`].fields.find(
       x => x.field === this.field.name
     );
 
@@ -78,12 +71,14 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
       }
     );
 
-    this._formChangeSubscription = this.state.form.valueChanges.subscribe(
+    this._formChangeSubscription = this.form.valueChanges.subscribe(
       () => {
         if (!this.shouldRender()) {
           this.destroyRefs();
         } else if (!this._componentRefs.length) {
           this.render();
+        } else {
+          this.updateInputs();
         }
       }
     );
@@ -120,7 +115,7 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   shouldRender() {
-    return this.fieldReference.condition(this.state.form.value, this.state.form.root.value);
+    return this.fieldReference.condition(this.form.value, this.state.form.root.value);
   }
 
   render() {
@@ -194,79 +189,94 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
     const formPath = this.field.name; // TODO: Support nested fields and arrays
 
-    let { struct, block } = this.state.options;
+    const { blocks, fields } = this.state;
 
-    if (this.struct) {
-      struct = this.struct;
-    }
+    const control: IControl = {
+      formPath,
+      field: this.field,
+      formId: this.formId,
+      value: this.form.get(this.field.name),
+      submissionErrors:
+        (this.state.submissionErrors &&
+          this.state.submissionErrors[formPath]) ||
+        [],
+      form: this.form,
+      rendererType: this.mapType(this.field.type),
+      htmlId: `${this.field.name}-${Math.random()}`,
+      onBlur: this.onBlur,
+      onChange: this.onChange
+    };
 
-    if (this.block) {
-      block = this.block;
+    switch (this.field.type) {
+      case 'list':
+      case 'foreignKey': {
+        const listField = <IListField>this.field;
+
+        const selectControl = <ISelectControl>control;
+
+        if (this.field.type === 'foreignKey') {
+          selectControl.options = () => [];
+        } else {
+          selectControl.options = () => listField.options;
+        }
+        break;
+      }
+      case 'linkedStruct': {
+        const collectionControl = <ICollectionControl>control;
+
+        const linkedStructField = <ILinkedStructField>this.field;
+        const { reference } = linkedStructField;
+
+        const blockFields = this.state.blocks[`${this.struct}-${this.block}`].fields;
+
+        const { hints } = <ILinkedStructFieldReference>blockFields.find(
+          x => x.field === linkedStructField.name
+        );
+
+        const referenceBlock = (hints && hints.block) || reference.block;
+
+        const fieldReferences = <ILinkedStructFieldReference[]>this.state
+          .blocks[`${reference.struct}-${referenceBlock}`].fields;
+
+        const nestedfields = [];
+
+        for (const fieldReference of fieldReferences) {
+          const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
+          nestedfields.push(field);
+        }
+
+        const nestedForms = [];
+
+        for (const form of collectionControl.value.controls) {
+          nestedForms.push(<FormGroup>form);
+        }
+
+        collectionControl.heading = { text: control.field.label };
+        collectionControl.canAdd = !linkedStructField.maxInstances || nestedForms.length < linkedStructField.maxInstances;
+        collectionControl.nestedForms = nestedForms;
+        collectionControl.nestedfields = nestedfields;
+        collectionControl.layout = (hints && hints.layout) || 'inline';
+        break;
+      }
     }
 
     for (const componentRef of this._componentRefs) {
       const componentRenderer = <ControlRenderer>componentRef.instance;
-      const control: IControl = {
-        formPath,
-        field: this.field,
-        formId: this.formId,
-        value: this.state.form[this.field.name],
-        submissionErrors:
-          (this.state.submissionErrors &&
-            this.state.submissionErrors[formPath]) ||
-          [],
-        form: this.state.form,
-        rendererType: this.mapType(this.field.type),
-        htmlId: `${this.field.name}-${Math.random()}`,
-        onBlur: this.onBlur,
-        onChange: this.onChange
-      };
 
-      switch (this.field.type) {
-        case 'list':
-        case 'foreignKey': {
-          const listField = <IListField>this.field;
-
-          const selectControl = <ISelectControl>control;
-
-          if (this.field.type === 'foreignKey') {
-            selectControl.options = () => [];
-          } else {
-            selectControl.options = () => listField.options;
-          }
-          break;
-        }
-        case 'linkedStruct': {
-          const collectionControl = <ICollectionControl>control;
-
-          const linkedStructField = <ILinkedStructField>this.field;
-          const { reference } = linkedStructField;
-
-          const blockFields = this.state.blocks[`${struct}-${block}`].fields;
-
-          const { hints } = <ILinkedStructFieldReference>blockFields.find(
-            x => x.field === linkedStructField.name
-          );
-
-          const referenceBlock = (hints && hints.block) || reference.block;
-
-          const fieldReferences = <ILinkedStructFieldReference[]>this.state
-            .blocks[`${reference.struct}-${referenceBlock}`].fields;
-
-          const fields = [];
-
-          for (const fieldReference of fieldReferences) {
-            const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
-            fields.push(field);
-          }
-
-          collectionControl.fields = fields;
-          collectionControl.layout = (hints && hints.layout) || 'inline';
-          break;
-        }
-      }
-
+      const previousControl = componentRenderer.control;
       componentRenderer.control = control;
+
+      const onComponentChange = (<OnChanges>componentRef.instance).ngOnChanges;
+      if (onComponentChange) {
+        const change: SimpleChange = {
+          previousValue: previousControl,
+          currentValue: control,
+          firstChange: typeof previousControl === 'undefined',
+          isFirstChange: () => change.firstChange
+        };
+
+        onComponentChange.call(componentRenderer, { control: change });
+      }
     }
   }
 

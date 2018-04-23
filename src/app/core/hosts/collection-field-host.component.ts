@@ -3,14 +3,15 @@ import {
   Input,
   OnInit,
   ComponentFactoryResolver,
-  OnChanges,
   SimpleChanges,
   OnDestroy,
   ComponentRef,
-  ViewChild
+  ViewChild,
+  OnChanges,
+  SimpleChange
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { CollectionControlRenderer, ICollectionControl } from '../renderers/control.renderer';
+import { CollectionControlRenderer, ICollectionControl, IControl } from '../renderers/control.renderer';
 import { IField, IReferenceField } from '../models/schema';
 import { FormState, FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
@@ -40,13 +41,9 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.control && !changes.control.isFirstChange()) {
-      this.ngOnDestroy();
-      this.ngOnInit();
-      return;
+    if (changes.control && !changes.control.firstChange) {
+      this.updateInputs();
     }
-
-    this.updateInputs();
   }
 
   ngOnDestroy() {
@@ -99,10 +96,27 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     }
 
     const componentRenderer = <CollectionControlRenderer>this._componentRef.instance;
-    componentRenderer.control = {
+
+    const control: ICollectionControl = {
       ...this.control,
       onAdd: this.onAdd
     };
+
+    const previousControl = componentRenderer.control;
+    componentRenderer.control = control;
+
+    const onComponentChange = (<OnChanges>this._componentRef.instance).ngOnChanges;
+
+    if (onComponentChange) {
+      const change: SimpleChange = {
+        previousValue: previousControl,
+        currentValue: control,
+        firstChange: typeof previousControl === 'undefined',
+        isFirstChange: () => change.firstChange
+      };
+
+      onComponentChange.call(componentRenderer, { control: change });
+    }
   }
 
   onAdd = (e) => {
@@ -112,14 +126,13 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     const { form, structs, fields, blocks } = this.state;
     const { name, struct } = this.control.field;
 
-    const array = <FormArray>form.get(name);
     const options = { ...this.state.options };
     const reference = (<IReferenceField>this.control.field).reference;
 
-    if (this.control.layout === 'table') {
-      options.struct = reference.struct;
-      options.block = reference.block;
+    options.struct = reference.struct;
+    options.block = reference.block;
 
+    if (this.control.layout === 'table') {
       options.submitButtonStyle = {
         ...options.submitButtonStyle,
         text: 'Add'
@@ -131,11 +144,14 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
       };
 
       const state = this.stateService.create(options, {}, this.control.formId);
-
-      this.stateService.pushNavigation(this.control.formId, state.id);
+      this.stateService.pushNavigation(this.control.formId, state.id, this.onAddComplete);
     } else {
-      const inlineForm = this.formBuilder.group(reference.struct, reference.block, blocks, fields, []);
-      array.push(inlineForm);
+      const value = this.formBuilder.group(options.struct, options.block, blocks, fields, {});
+      this.control.value.push(value);
     }
+  }
+
+  onAddComplete = (state: FormState) => {
+    this.control.value.push(state.form);
   }
 }

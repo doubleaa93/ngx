@@ -1,0 +1,20 @@
+<ng-container *ngFor="let field of fields">
+  <ng-container [ngSwitch]="field.type">
+    <de-re-crud-heading-field-host
+      *ngSwitchCase="'label'"
+      [formId]="formId"
+      [form]="form"
+      [field]="field"
+      [struct]="struct"
+      [block]="block">
+    </de-re-crud-heading-field-host>
+    <de-re-crud-input-field-host
+      *ngSwitchDefault
+      [formId]="formId"
+      [form]="form"
+      [field]="field"
+      [struct]="struct"
+      [block]="block">
+    </de-re-crud-input-field-host>
+  </ng-container>
+</ng-container>

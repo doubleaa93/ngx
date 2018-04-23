@@ -1,11 +1,12 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { IField, IOption, IReferenceField } from '../models/schema';
+import { IHeading } from './heading.renderer';
 
 export interface IControl {
   form: FormGroup;
   formId: number;
   formPath: string;
-  value: any;
+  value: AbstractControl;
   htmlId: string;
   rendererType: string;
   field: IField;
@@ -19,14 +20,22 @@ export interface ISelectControl extends IControl {
 }
 
 export interface ICollectionControl extends IControl {
+  heading: IHeading;
   field: IReferenceField;
-  fields: IField[];
+  nestedfields: IField[];
+  nestedForms: FormGroup[];
   layout: 'inline' | 'table';
+  value: FormArray;
+  canAdd: boolean;
   onAdd: (e) => void;
 }
 
 export interface ControlRenderer {
   control: IControl;
+}
+
+export interface SelectControlRenderer {
+  control: ISelectControl;
 }
 
 export interface CollectionControlRenderer {

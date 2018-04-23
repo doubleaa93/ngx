@@ -1,17 +1,17 @@
 <form *ngIf="state.form" [formGroup]="state.form">
-  <de-re-crud-field-host *ngFor="let field of fields"
-                         [formId]="navigationId"
-                         [field]="field">
-  </de-re-crud-field-host>
+  <de-re-crud-form-host [formId]="navigationState.id"
+                        [form]="navigationState.form"
+                        [fields]="fields">
+  </de-re-crud-form-host>
   <de-re-crud-button-host type="submit"
-                          [formId]="navigationId"
+                          [formId]="navigationState.id"
                           [disabled]="!submitEnabled"
                           text="Submit"
                           (click)="onSubmit($event)">
   </de-re-crud-button-host>
   <de-re-crud-button-host *ngIf="cancelVisible"
                           type="cancel"
-                          [formId]="navigationId"
+                          [formId]="navigationState.id"
                           [disabled]="!cancelEnabled"
                           text="Cancel"
                           (click)="onCancel($event)">

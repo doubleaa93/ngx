@@ -1,6 +1,6 @@
 <div>
-  <de-re-crud-bootstrap3-label-renderer [control]="control">
-  </de-re-crud-bootstrap3-label-renderer>
+  <de-re-crud-heading-renderer [heading]="control.heading">
+  </de-re-crud-heading-renderer>
   <de-re-crud-button-host
     [formId]="control.formId"
     extraClasses="btn-sm"
@@ -13,17 +13,17 @@
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
-        <th *ngFor="let field of control.fields">
+        <th *ngFor="let field of control.nestedfields">
           {{field.label}}
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!control.form.get(control.field.name).value.length">
+      <tr *ngIf="!control.nestedForms.length">
         <td colspan="100%">None</td>
       </tr>
-      <tr *ngFor="let value of control.form.get(control.field.name).value">
-        <td *ngFor="let field of control.fields" [innerHtml]="getValue(field, value)"></td>
+      <tr *ngFor="let form of control.nestedForms">
+        <td *ngFor="let field of control.nestedfields" [innerHtml]="getValue(field, form.value)"></td>
       </tr>
     </tbody>
   </table>

@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField, IFieldReference } from '../../core/models/schema';
 import { FormSubmission } from '../../core/models/form-submission';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'de-re-crud-form',
@@ -27,15 +28,15 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() value: object;
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
-  navigationId: number;
   fields: IField[];
   state: FormState;
+  navigationState: FormState;
   submitting: boolean;
 
   constructor(private stateService: FormStateService) {}
 
   get cancelVisible() {
-    return this.navigationId !== this.state.id || this._cancelVisible;
+    return this.navigationState.id !== this.state.id || this._cancelVisible;
   }
 
   @Input()
@@ -44,7 +45,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get submitEnabled() {
-    return !this.submitting && this.state.form.valid;
+    return !this.submitting && this.navigationState.form.valid;
   }
 
   get cancelEnabled() {
@@ -77,13 +78,13 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     let state = this.state;
 
     if (navigationStack.length) {
-      state = this.stateService.get(navigationStack[navigationStack.length - 1]);
+      state = this.stateService.get(navigationStack[navigationStack.length - 1].id);
     }
 
     const { options } = state;
     const blockFields = this.getBlockFields(options.struct, options.block);
 
-    this.navigationId = state.id;
+    this.navigationState = state;
     this.fields = blockFields;
   }
 
@@ -108,7 +109,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (this.navigationId !== this.state.id) {
+    if (this.navigationState.id !== this.state.id) {
       this.stateService.popNavigation(this.state.id);
       return;
     }
@@ -121,7 +122,12 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     e.stopPropagation();
     e.preventDefault();
 
-    if (!this.state.form.valid || !this.submitEnabled) {
+    if (!this.navigationState.form.valid || !this.submitEnabled) {
+      return;
+    }
+
+    if (this.navigationState.id !== this.state.id) {
+      this.stateService.completeNavigation(this.state.id);
       return;
     }
 

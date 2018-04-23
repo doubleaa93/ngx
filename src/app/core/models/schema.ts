@@ -18,6 +18,10 @@ export interface IField {
   initialValue?: any;
 }
 
+export interface ILabelField extends IField {
+  type: 'label';
+}
+
 export interface ITextField extends IField {
   type: 'text';
   initialValue?: string;
@@ -52,6 +56,8 @@ export interface IReferenceField extends IField {
 export interface ILinkedStructField extends IReferenceField {
   type: 'linkedStruct';
   initialValue?: any[];
+  minInstances?: number;
+  maxInstances?: number;
 }
 
 export interface IForeignKeyField extends IReferenceField {

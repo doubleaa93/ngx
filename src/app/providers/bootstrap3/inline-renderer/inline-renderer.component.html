@@ -1,7 +1,8 @@
 <div>
-  <de-re-crud-bootstrap3-label-renderer [control]="control">
-  </de-re-crud-bootstrap3-label-renderer>
+  <de-re-crud-heading-renderer [heading]="control.heading">
+  </de-re-crud-heading-renderer>
   <de-re-crud-button-host
+    *ngIf="control.canAdd"
     [formId]="control.formId"
     extraClasses="btn-sm"
     text="Add"
@@ -10,13 +11,14 @@
 </div>
 
 <div class="inline-control-container">
-  <span *ngIf="!control.form.get(control.field.name).value.length">None</span>
-  <div *ngFor="let value of control.form.get(control.field.name).value; let i = index">
-    <de-re-crud-field-host *ngFor="let field of control.fields"
+  <span *ngIf="!control.nestedForms.length">None</span>
+  <div *ngFor="let form of control.nestedForms">
+    <de-re-crud-form-host
       [formId]="control.formId"
+      [form]="form"
+      [fields]="control.nestedfields"
       [struct]="control.field.reference.struct"
-      [block]="control.field.reference.block"
-      [field]="field">
-    </de-re-crud-field-host>
+      [block]="control.field.reference.block">
+    </de-re-crud-form-host>
   </div>
 </div>

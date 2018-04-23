@@ -6,8 +6,7 @@ import { ValidationErrorHelper } from '../../../core/validation-error-helper';
   selector: 'de-re-crud-bootstrap3-control-container-renderer',
   templateUrl: './control-container-renderer.component.html'
 })
-export class Bootstrap3ControlContainerRendererComponent
-  implements ControlRenderer {
+export class Bootstrap3ControlContainerRendererComponent implements ControlRenderer {
   @Input() control: IControl;
 
   getClasses() {
