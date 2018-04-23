@@ -266,7 +266,6 @@ export class FieldHostComponent implements OnInit, OnChanges, OnDestroy {
         }
       }
 
-      console.log(control);
       componentRenderer.control = control;
     }
   }
