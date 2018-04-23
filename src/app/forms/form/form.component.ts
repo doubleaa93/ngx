@@ -23,9 +23,11 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormComponent implements OnInit, OnChanges, OnDestroy {
   private _navigationChangeSubscription: Subscription;
+  private _formChangeSubscription: Subscription;
   private _cancelVisible: boolean;
   @Input() options: DeReCrudOptions;
   @Input() value: object;
+  @Output() change = new EventEmitter<any>();
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
   fields: IField[];
@@ -59,6 +61,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     this._navigationChangeSubscription = this.state.onNavigationChange.subscribe(() => {
       this.update();
     });
+
+    this._formChangeSubscription = this.state.form.valueChanges.subscribe((value) => {
+      this.change.emit(value);
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -68,7 +74,14 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._navigationChangeSubscription.unsubscribe();
+    if (this._navigationChangeSubscription) {
+      this._navigationChangeSubscription.unsubscribe();
+    }
+
+    if (this._formChangeSubscription) {
+      this._formChangeSubscription.unsubscribe();
+    }
+
     this.stateService.remove(this.state.id);
   }
 
