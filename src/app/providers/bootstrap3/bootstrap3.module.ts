@@ -14,7 +14,7 @@ import { Bootstrap3CheckboxRendererComponent } from './checkbox-renderer/checkbo
 import { Bootstrap3HelpRendererComponent } from './help-renderer/help-renderer.component';
 import { Bootstrap3ValidationErrorsRendererComponent } from './validation-errors-renderer/validation-errors-renderer.component';
 import { Bootstrap3InlineRendererComponent } from './inline-renderer/inline-renderer.component';
-import { Bootstrap3HeadingRendererComponent } from './heading-renderer/heading-renderer.component';
+import { Bootstrap3StampRendererComponent } from './stamp-renderer/stamp-renderer.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DeReCrudCoreModule, DeReCrudProviderModule],
@@ -29,7 +29,7 @@ import { Bootstrap3HeadingRendererComponent } from './heading-renderer/heading-r
     Bootstrap3CheckboxRendererComponent,
     Bootstrap3HelpRendererComponent,
     Bootstrap3ValidationErrorsRendererComponent,
-    Bootstrap3HeadingRendererComponent
+    Bootstrap3StampRendererComponent
   ],
   entryComponents: [
     Bootstrap3ControlContainerRendererComponent,
@@ -39,13 +39,13 @@ import { Bootstrap3HeadingRendererComponent } from './heading-renderer/heading-r
     Bootstrap3InlineRendererComponent,
     Bootstrap3TableRendererComponent,
     Bootstrap3CheckboxRendererComponent,
-    Bootstrap3HeadingRendererComponent
+    Bootstrap3StampRendererComponent
   ]
 })
 export class Bootstrap3DeReCrudProviderModule {
   constructor(providerService: DeReCrudProviderService) {
     providerService.register('bootstrap3', {
-      headingComponent: Bootstrap3HeadingRendererComponent,
+      stampComponent: Bootstrap3StampRendererComponent,
       containerComponent: Bootstrap3ControlContainerRendererComponent,
       inputComponent: Bootstrap3InputRendererComponent,
       selectComponent: Bootstrap3SelectRendererComponent,

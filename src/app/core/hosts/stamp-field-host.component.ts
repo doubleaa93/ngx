@@ -12,16 +12,16 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ComponentHostDirective } from './component-host.directive';
-import { IField, IFieldReference, ILabelField } from '../models/schema';
+import { IField, IFieldReference, IStampField } from '../models/schema';
 import { FormState, FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
-import { HeadingRenderer, IHeading } from '../renderers/heading.renderer';
+import { StampRenderer, IStamp } from '../renderers/stamp.renderer';
 
 @Component({
-  selector: 'de-re-crud-heading-field-host',
+  selector: 'de-re-crud-stamp-field-host',
   template: `<ng-template deReCrudComponentHost></ng-template>`
 })
-export class HeadingFieldHostComponent implements OnInit, OnChanges, OnDestroy {
+export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRef: ComponentRef<any>;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
@@ -89,8 +89,8 @@ export class HeadingFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     switch (this.field.type) {
-      case 'label':
-        controlComponent = providerOptions.headingComponent;
+      case 'stamp':
+        controlComponent = providerOptions.stampComponent;
         break;
       default:
         console.error(
@@ -117,24 +117,24 @@ export class HeadingFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const componentRenderer = <HeadingRenderer>this._componentRef.instance;
-    const labelField = <ILabelField>this.field;
+    const componentRenderer = <StampRenderer>this._componentRef.instance;
+    const stampField = <IStampField>this.field;
 
-    const heading: IHeading = {
-      text: labelField.label
+    const stamp: IStamp = {
+      text: stampField.label
     };
 
-    const previousHeading = componentRenderer.heading;
-    componentRenderer.heading = heading;
+    const previousStamp = componentRenderer.stamp;
+    componentRenderer.stamp = stamp;
 
     const onComponentChange = (<OnChanges>this._componentRef.instance)
       .ngOnChanges;
 
     if (onComponentChange) {
       const change: SimpleChange = {
-        previousValue: previousHeading,
-        currentValue: heading,
-        firstChange: typeof previousHeading === 'undefined',
+        previousValue: previousStamp,
+        currentValue: stamp,
+        firstChange: typeof previousStamp === 'undefined',
         isFirstChange: () => change.firstChange
       };
 

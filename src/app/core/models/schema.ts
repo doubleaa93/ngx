@@ -18,8 +18,8 @@ export interface IField {
   initialValue?: any;
 }
 
-export interface ILabelField extends IField {
-  type: 'label';
+export interface IStampField extends IField {
+  type: 'stamp';
 }
 
 export interface ITextField extends IField {

@@ -1,6 +1,6 @@
 import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { IField, IOption, IReferenceField } from '../models/schema';
-import { IHeading } from './heading.renderer';
+import { IStamp } from './stamp.renderer';
 
 export interface IControl {
   form: FormGroup;
@@ -20,7 +20,7 @@ export interface ISelectControl extends IControl {
 }
 
 export interface ICollectionControl extends IControl {
-  heading: IHeading;
+  stamp: IStamp;
   field: IReferenceField;
   nestedfields: IField[];
   nestedForms: FormGroup[];

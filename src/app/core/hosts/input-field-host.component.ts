@@ -19,7 +19,7 @@ import {
   ILinkedStructField,
   ILinkedStructFieldReference,
   IFieldReference,
-  ILabelField
+  IStampField
 } from '../models/schema';
 import {
   ControlRenderer,
@@ -251,7 +251,7 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
           nestedForms.push(<FormGroup>form);
         }
 
-        collectionControl.heading = { text: control.field.label };
+        collectionControl.stamp = { text: control.field.label };
         collectionControl.canAdd = !linkedStructField.maxInstances || nestedForms.length < linkedStructField.maxInstances;
         collectionControl.nestedForms = nestedForms;
         collectionControl.nestedfields = nestedfields;

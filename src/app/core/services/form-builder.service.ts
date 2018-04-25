@@ -35,7 +35,7 @@ export class FormBuilderService {
     for (const fieldReference of block.fields) {
       const field = fields[`${struct}-${fieldReference.field}`];
 
-      if (field.type === 'label') {
+      if (field.type === 'stamp') {
         continue;
       }
 

@@ -1,6 +1,6 @@
 export interface DeReCrudProviderOptions {
   containerComponent: any;
-  headingComponent: any;
+  stampComponent: any;
   inputComponent: any;
   selectComponent: any;
   buttonComponent: any;
