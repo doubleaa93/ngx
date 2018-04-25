@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@de-re-crud/ngx",
-  "version": "0.0.7-alpha.4",
+  "version": "0.0.7-alpha.5",
   "license": "Apache-2.0",
   "ngPackage": {
     "lib": {
