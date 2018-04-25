@@ -1,1 +1,9 @@
-<h3 [ngClass]="stamp.class">{{stamp.text}}</h3>
+<ng-container [ngSwitch]="stamp.headerSize">
+  <h1 *ngSwitchCase="1" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <h2 *ngSwitchCase="2" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <h3 *ngSwitchCase="3" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <h4 *ngSwitchCase="4" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <h5 *ngSwitchCase="5" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <h6 *ngSwitchCase="6" [ngClass]="stamp.classes">{{stamp.text}}</h1>
+  <p *ngSwitchDefault [ngClass]="stamp.classes">{{stamp.text}}</p>
+</ng-container>

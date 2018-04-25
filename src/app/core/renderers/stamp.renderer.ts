@@ -1,6 +1,7 @@
 export interface IStamp {
   text: string;
-  class?: string;
+  classes?: string[];
+  headerSize?: 1|2|3|4|5|6;
 }
 
 export interface StampRenderer {

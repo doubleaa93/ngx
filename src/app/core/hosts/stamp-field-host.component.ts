@@ -124,6 +124,16 @@ export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       text: stampField.label
     };
 
+    if (stampField.hints) {
+      if (stampField.hints.headerSize) {
+        stamp.headerSize = stampField.hints.headerSize;
+      }
+
+      if (stampField.hints.displayClassNames) {
+        stamp.classes = stampField.hints.displayClassNames;
+      }
+    }
+
     const previousStamp = componentRenderer.stamp;
     componentRenderer.stamp = stamp;
 

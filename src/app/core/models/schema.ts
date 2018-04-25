@@ -20,6 +20,10 @@ export interface IField {
 
 export interface IStampField extends IField {
   type: 'stamp';
+  hints?: {
+    headerSize?: 1|2|3|4|5|6;
+    displayClassNames?: string[];
+  };
 }
 
 export interface ITextField extends IField {
