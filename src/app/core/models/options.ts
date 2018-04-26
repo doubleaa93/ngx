@@ -1,3 +1,5 @@
+import { HeaderSize } from './schema';
+
 export interface DeReCrudOptions extends DeReCrudStyleOptions {
   provider: 'bootstrap3';
   schema: any;
@@ -6,6 +8,7 @@ export interface DeReCrudOptions extends DeReCrudStyleOptions {
 }
 
 export interface DeReCrudStyleOptions {
+  headerSize?: HeaderSize;
   submitButtonStyle?: {
     class?: string;
     text?: string;

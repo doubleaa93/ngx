@@ -37,6 +37,12 @@ export class FormStateService {
     return Math.random();
   }
 
+  static assignDefaults(options: DeReCrudOptions) {
+    if (!options.headerSize) {
+      options.headerSize = 3;
+    }
+  }
+
   // TODO: This should expand strings into a label object; the renderers should handle which label to show based on screen size
   static parseLabel(label: string | { short: string }) {
     if (typeof label === 'string') {
@@ -146,6 +152,7 @@ export class FormStateService {
     let blocks;
 
     if (!parentId) {
+      FormStateService.assignDefaults(options);
       const schema = FormStateService.parseSchema(options);
       structs = this.arrayToMap(struct => struct.name, schema.structs);
       fields = this.arrayToMap(

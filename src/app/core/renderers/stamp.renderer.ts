@@ -1,7 +1,9 @@
+import { HeaderSize } from '../models/schema';
+
 export interface IStamp {
   text: string;
   classes?: string[];
-  headerSize?: 1|2|3|4|5|6;
+  headerSize?: HeaderSize;
 }
 
 export interface StampRenderer {

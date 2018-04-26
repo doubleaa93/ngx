@@ -32,7 +32,8 @@ import { CollectionFieldHostComponent } from './collection-field-host.component'
 
 @Component({
   selector: 'de-re-crud-input-field-host',
-  template: `<ng-template deReCrudComponentHost></ng-template>`
+  template: `
+    <ng-template deReCrudComponentHost></ng-template>`
 })
 export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
@@ -51,7 +52,8 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     private stateService: FormStateService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private providerService: DeReCrudProviderService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
@@ -192,9 +194,9 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       formId: this.formId,
       value: this.form.get(this.field.name),
       submissionErrors:
-        (this.state.submissionErrors &&
-          this.state.submissionErrors[formPath]) ||
-        [],
+      (this.state.submissionErrors &&
+        this.state.submissionErrors[formPath]) ||
+      [],
       form: this.form,
       rendererType: this.mapType(this.field.type),
       htmlId: `${this.field.name}-${Math.random()}`,
@@ -246,7 +248,11 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
           nestedForms.push(<FormGroup>form);
         }
 
-        collectionControl.stamp = { text: control.field.label };
+        collectionControl.stamp = {
+          text: control.field.label,
+          headerSize: this.state.options.headerSize
+        };
+
         collectionControl.canAdd = !linkedStructField.maxInstances || nestedForms.length < linkedStructField.maxInstances;
         collectionControl.nestedForms = nestedForms;
         collectionControl.nestedfields = nestedfields;
@@ -275,11 +281,11 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onBlur = () => {
+  onBlur() {
     this.stateService.clearErrors(this.formId);
   }
 
-  onChange = () => {
+  onChange() {
     this.stateService.clearErrors(this.formId);
   }
 

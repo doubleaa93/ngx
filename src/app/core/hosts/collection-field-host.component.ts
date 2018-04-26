@@ -118,7 +118,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
-  onAdd = (e) => {
+  onAdd(e) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -148,7 +148,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
-  onAddComplete = (state: FormState) => {
+  onAddComplete(state: FormState) {
     this.control.value.push(state.form);
   }
 }

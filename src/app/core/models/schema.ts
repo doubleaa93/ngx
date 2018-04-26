@@ -1,3 +1,5 @@
+export type HeaderSize = 1|2|3|4|5|6;
+
 export interface IStruct {
   name: string;
   label: string;
@@ -19,7 +21,7 @@ export interface IField {
 export interface IStampField extends IField {
   type: 'stamp';
   hints?: {
-    headerSize?: 1|2|3|4|5|6;
+    headerSize?: HeaderSize;
     displayClassNames?: string[];
   };
 }

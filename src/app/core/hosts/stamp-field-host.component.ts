@@ -121,7 +121,8 @@ export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     const stampField = <IStampField>this.field;
 
     const stamp: IStamp = {
-      text: stampField.label
+      text: stampField.label,
+      headerSize: this.state.options.headerSize
     };
 
     if (stampField.hints) {
@@ -132,9 +133,6 @@ export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       if (stampField.hints.displayClassNames) {
         stamp.classes = stampField.hints.displayClassNames;
       }
-    }
-    if (!stamp.headerSize) {
-      stamp.headerSize = 3;
     }
 
     const previousStamp = componentRenderer.stamp;
