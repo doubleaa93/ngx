@@ -12,9 +12,8 @@ import 'rxjs/add/operator/do';
 import { FormState, FormStateService } from '../../core/services/form-state.service';
 import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudOptions } from '../../core/models/options';
-import { IField, IFieldReference } from '../../core/models/schema';
+import { IField } from '../../core/models/schema';
 import { FormSubmission } from '../../core/models/form-submission';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'de-re-crud-form',

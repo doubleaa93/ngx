@@ -14,23 +14,20 @@ import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import {
   IField,
-  IReferenceField,
   IListField,
   ILinkedStructField,
   ILinkedStructFieldReference,
-  IFieldReference,
-  IStampField
+  IFieldReference
 } from '../models/schema';
 import {
   ControlRenderer,
-  CollectionControlRenderer,
   IControl,
   ISelectControl,
   ICollectionControl
 } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { CollectionFieldHostComponent } from './collection-field-host.component';
 
 @Component({
@@ -188,8 +185,6 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const formPath = this.field.name; // TODO: Support nested fields and arrays
-
-    const { blocks, fields } = this.state;
 
     const control: IControl = {
       formPath,

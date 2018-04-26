@@ -1,5 +1,3 @@
-import { FormGroup } from '@angular/forms';
-
 export interface IStruct {
   name: string;
   label: string;

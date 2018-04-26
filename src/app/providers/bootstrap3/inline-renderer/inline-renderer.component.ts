@@ -1,6 +1,5 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { CollectionControlRenderer, ICollectionControl } from '../../../core/renderers/control.renderer';
-import { IField, ILinkedStructField } from '../../../core/models/schema';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-inline-renderer',

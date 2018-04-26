@@ -17,7 +17,7 @@ export class AppComponent {
     block: 'default'
   };
 
-  constructor(private titleService: Title) {
+  constructor(titleService: Title) {
     titleService.setTitle(this.title);
   }
 }

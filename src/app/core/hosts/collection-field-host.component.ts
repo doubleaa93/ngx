@@ -10,9 +10,8 @@ import {
   OnChanges,
   SimpleChange
 } from '@angular/core';
-import { FormArray } from '@angular/forms';
-import { CollectionControlRenderer, ICollectionControl, IControl } from '../renderers/control.renderer';
-import { IField, IReferenceField } from '../models/schema';
+import { CollectionControlRenderer, ICollectionControl } from '../renderers/control.renderer';
+import { IReferenceField } from '../models/schema';
 import { FormState, FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { ComponentHostDirective } from './component-host.directive';
@@ -123,9 +122,6 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     e.stopPropagation();
     e.preventDefault();
 
-    const { form, structs, fields, blocks } = this.state;
-    const { name, struct } = this.control.field;
-
     const options = { ...this.state.options };
     const reference = (<IReferenceField>this.control.field).reference;
 
@@ -146,6 +142,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
       const state = this.stateService.create(options, {}, this.control.formId);
       this.stateService.pushNavigation(this.control.formId, state.id, this.onAddComplete);
     } else {
+      const { fields, blocks } = this.state;
       const value = this.formBuilder.group(options.struct, options.block, blocks, fields, {});
       this.control.value.push(value);
     }

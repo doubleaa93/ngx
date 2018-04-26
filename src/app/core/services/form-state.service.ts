@@ -30,14 +30,14 @@ export class FormStateService {
   private static defaultConditionFunc = new Function('return true');
   private _cache: { [id: number]: FormState } = {};
 
-  constructor(private formBuilder: FormBuilderService) {}
+  constructor(private formBuilder: FormBuilderService) {
+  }
 
   static generateId() {
     return Math.random();
   }
 
-  // TODO: This should expand strings into a label object; the renderers should handle
-  // which label to show based on screen size
+  // TODO: This should expand strings into a label object; the renderers should handle which label to show based on screen size
   static parseLabel(label: string | { short: string }) {
     if (typeof label === 'string') {
       return label;
@@ -90,7 +90,7 @@ export class FormStateService {
             continue;
           }
 
-          const fieldReference =  reference.field ? reference : { field: reference };
+          const fieldReference = reference.field ? reference : { field: reference };
 
           let condition;
 
