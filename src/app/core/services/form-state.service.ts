@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { DeReCrudOptions } from '../models/options';
@@ -18,7 +18,7 @@ export interface FormState {
   blocks: Map<IBlock>;
   submissionErrors: FormSubmissionErrors;
   onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
-  navigationStack: { id: number, onComplete: (state: FormState) => void }[];
+  navigationStack: { id: number }[];
   onNavigationChange: Observable<number>;
 }
 
@@ -30,8 +30,7 @@ export class FormStateService {
   private static defaultConditionFunc = new Function('return true');
   private _cache: { [id: number]: FormState } = {};
 
-  constructor(private formBuilder: FormBuilderService) {
-  }
+  constructor(private formBuilder: FormBuilderService) {}
 
   static generateId() {
     return Math.random();
@@ -96,14 +95,17 @@ export class FormStateService {
             continue;
           }
 
-          const fieldReference = reference.field ? reference : { field: reference };
+          const fieldReference = reference.field
+            ? reference
+            : { field: reference };
 
           let condition;
 
           if (fieldReference.condition) {
-            const returnValue = fieldReference.condition[0] === '{'
-              ? fieldReference
-              : `return ${fieldReference.condition}`;
+            const returnValue =
+              fieldReference.condition[0] === '{'
+                ? fieldReference
+                : `return ${fieldReference.condition}`;
 
             // tslint:disable-next-line:no-function-constructor-with-string-args
             condition = new Function('value', 'rootValue', returnValue);
@@ -134,7 +136,11 @@ export class FormStateService {
     return this._cache[id];
   }
 
-  create(options: DeReCrudOptions, value: object, parentId: number = null): FormState {
+  create(
+    options: DeReCrudOptions,
+    value: object,
+    parent?: { id: number; path: string; form: AbstractControl }
+  ): FormState {
     let id: number;
 
     while (true) {
@@ -151,7 +157,7 @@ export class FormStateService {
     let fields;
     let blocks;
 
-    if (!parentId) {
+    if (!parent) {
       FormStateService.assignDefaults(options);
       const schema = FormStateService.parseSchema(options);
       structs = this.arrayToMap(struct => struct.name, schema.structs);
@@ -165,18 +171,23 @@ export class FormStateService {
         schema.blocks
       );
     } else {
-      const parent = this._cache[parentId];
+      const parentState = this._cache[parent.id];
 
-      structs = parent.structs;
-      fields = parent.fields;
-      blocks = parent.blocks;
+      structs = parentState.structs;
+      fields = parentState.fields;
+      blocks = parentState.blocks;
     }
 
-    const form = this.formBuilder.group(options.struct, options.block, blocks, fields, value);
+    const form = this.formBuilder.group(
+      options.struct,
+      options.block,
+      blocks,
+      fields,
+      value
+    );
 
     const state = {
       id,
-      parentId,
       options,
       form,
       structs,
@@ -185,7 +196,10 @@ export class FormStateService {
       submissionErrors: {},
       onSubmissionErrorsChange: new Subject<FormSubmissionErrors>(),
       navigationStack: [],
-      onNavigationChange: new Subject<number>()
+      onNavigationChange: new Subject<number>(),
+      parentId: parent && parent.id,
+      parentForm: parent && parent.form,
+      parentPath: parent && parent.path
     };
 
     this._cache[id] = state;
@@ -208,7 +222,7 @@ export class FormStateService {
       return;
     }
 
-    this._cache[id].navigationStack.reverse().forEach((child) => {
+    this._cache[id].navigationStack.reverse().forEach(child => {
       this.remove(child.id);
     });
 
@@ -233,7 +247,7 @@ export class FormStateService {
     this.pushSubmissionErrorsChange(id);
   }
 
-  pushNavigation(id: number, childId: number, onComplete: (state: FormState) => void) {
+  pushNavigation(id: number, childId: number) {
     if (!this._cache[id] || !this._cache[childId]) {
       return;
     }
@@ -245,7 +259,7 @@ export class FormStateService {
     }
 
     const state = this._cache[parentId];
-    state.navigationStack.push({ onComplete, id: childId });
+    state.navigationStack.push({ id: childId });
 
     this.pushNavigationChange(parentId, childId);
   }
@@ -266,9 +280,6 @@ export class FormStateService {
       return;
     }
 
-    const state = this._cache[id];
-    const topNavigationItem = state.navigationStack[state.navigationStack.length - 1];
-    topNavigationItem.onComplete(this._cache[topNavigationItem.id]);
     this.popNavigation(id);
   }
 
@@ -279,7 +290,9 @@ export class FormStateService {
 
   private pushSubmissionErrorsChange(id: number) {
     const state = this._cache[id];
-    (<Subject<FormSubmissionErrors>>state.onSubmissionErrorsChange).next(state.submissionErrors);
+    (<Subject<FormSubmissionErrors>>state.onSubmissionErrorsChange).next(
+      state.submissionErrors
+    );
   }
 
   private arrayToMap<T>(getKey: GetKeyFunction<T>, array: T[]) {

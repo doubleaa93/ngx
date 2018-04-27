@@ -118,7 +118,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
-  onAdd(e) {
+  onAdd = (e) => {
     e.stopPropagation();
     e.preventDefault();
 
@@ -139,16 +139,18 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
         text: 'Cancel'
       };
 
-      const state = this.stateService.create(options, {}, this.control.formId);
-      this.stateService.pushNavigation(this.control.formId, state.id, this.onAddComplete);
+      const state = this.stateService.create(options, {}, {
+        id: this.control.formId,
+        path: this.control.formPath,
+        form: this.control.value
+      });
+
+      this.control.value.push(state.form);
+      this.stateService.pushNavigation(this.control.formId, state.id);
     } else {
       const { fields, blocks } = this.state;
       const value = this.formBuilder.group(options.struct, options.block, blocks, fields, {});
       this.control.value.push(value);
     }
-  }
-
-  onAddComplete(state: FormState) {
-    this.control.value.push(state.form);
   }
 }

@@ -27,7 +27,7 @@ import {
 } from '../renderers/control.renderer';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormStateService, FormState } from '../services/form-state.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { CollectionFieldHostComponent } from './collection-field-host.component';
 
 @Component({
@@ -45,6 +45,8 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   @Input() struct: string;
   @Input() block: string;
   @Input() field: IField;
+  @Input() parentForm: AbstractControl;
+  @Input() parentPath: string;
   state: FormState;
   fieldReference: IFieldReference;
 
@@ -186,7 +188,17 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const formPath = this.field.name; // TODO: Support nested fields and arrays
+    let formPath = this.field.name;
+    if (this.parentPath) {
+      let parentPath = this.parentPath;
+
+      if (this.parentForm instanceof FormArray) {
+        const index = this.parentForm.controls.indexOf(this.form);
+        parentPath += '.' + index;
+      }
+
+      formPath = `${parentPath}.${formPath}`;
+    }
 
     const control: IControl = {
       formPath,
@@ -199,7 +211,7 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       [],
       form: this.form,
       rendererType: this.mapType(this.field.type),
-      htmlId: `${this.field.name}-${Math.random()}`,
+      htmlId: `${this.formId}-${formPath}`,
       onBlur: this.onBlur,
       onChange: this.onChange
     };
@@ -235,17 +247,17 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
         const fieldReferences = <ILinkedStructFieldReference[]>this.state
           .blocks[`${reference.struct}-${referenceBlock}`].fields;
 
-        const nestedfields = [];
+        const nestedFields = [];
 
         for (const fieldReference of fieldReferences) {
           const field = this.state.fields[`${reference.struct}-${fieldReference.field}`];
-          nestedfields.push(field);
+          nestedFields.push(field);
         }
 
-        const nestedForms = [];
+        const nestedValues = [];
 
         for (const form of collectionControl.value.controls) {
-          nestedForms.push(<FormGroup>form);
+          nestedValues.push(<FormGroup>form);
         }
 
         collectionControl.stamp = {
@@ -253,9 +265,9 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
           headerSize: this.state.options.headerSize
         };
 
-        collectionControl.canAdd = !linkedStructField.maxInstances || nestedForms.length < linkedStructField.maxInstances;
-        collectionControl.nestedForms = nestedForms;
-        collectionControl.nestedfields = nestedfields;
+        collectionControl.canAdd = !linkedStructField.maxInstances || nestedValues.length < linkedStructField.maxInstances;
+        collectionControl.nestedValues = nestedValues;
+        collectionControl.nestedFields = nestedFields;
         collectionControl.layout = (hints && hints.layout) || 'inline';
         break;
       }
@@ -281,11 +293,11 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onBlur() {
+  onBlur = () => {
     this.stateService.clearErrors(this.formId);
   }
 
-  onChange() {
+  onChange = () => {
     this.stateService.clearErrors(this.formId);
   }
 

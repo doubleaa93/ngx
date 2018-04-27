@@ -11,12 +11,14 @@
 </div>
 
 <div class="inline-control-container">
-  <span *ngIf="!control.nestedForms.length">None</span>
-  <div *ngFor="let form of control.nestedForms">
+  <span *ngIf="!control.nestedValues.length">None</span>
+  <div *ngFor="let value of control.nestedValues">
     <de-re-crud-form-host
       [formId]="control.formId"
-      [form]="form"
-      [fields]="control.nestedfields"
+      [form]="value"
+      [parentPath]="control.formPath"
+      [parentForm]="control.value"
+      [fields]="control.nestedFields"
       [struct]="control.field.reference.struct"
       [block]="control.field.reference.block">
     </de-re-crud-form-host>

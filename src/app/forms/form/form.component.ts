@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField } from '../../core/models/schema';
 import { FormSubmission } from '../../core/models/form-submission';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'de-re-crud-form',
@@ -31,6 +32,8 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() cancel = new EventEmitter<any>();
   fields: IField[];
   state: FormState;
+  parentPath: string;
+  parentForm: FormGroup;
   navigationState: FormState;
   submitting: boolean;
 

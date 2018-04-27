@@ -22,8 +22,8 @@ export interface ISelectControl extends IControl {
 export interface ICollectionControl extends IControl {
   stamp: IStamp;
   field: IReferenceField;
-  nestedfields: IField[];
-  nestedForms: FormGroup[];
+  nestedFields: IField[];
+  nestedValues: FormGroup[];
   layout: 'inline' | 'table';
   value: FormArray;
   canAdd: boolean;

@@ -1,6 +1,8 @@
 <form *ngIf="state.form" [formGroup]="state.form">
   <de-re-crud-form-host [formId]="navigationState.id"
                         [form]="navigationState.form"
+                        [parentPath]="navigationState.parentPath"
+                        [parentForm]="navigationState.parentForm"
                         [fields]="fields">
   </de-re-crud-form-host>
   <de-re-crud-button-host type="submit"

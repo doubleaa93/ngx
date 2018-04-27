@@ -13,17 +13,17 @@
   <table class="table table-bordered table-condensed">
     <thead>
       <tr>
-        <th *ngFor="let field of control.nestedfields">
+        <th *ngFor="let field of control.nestedFields">
           {{field.label}}
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!control.nestedForms.length">
+      <tr *ngIf="!control.nestedValues.length">
         <td colspan="100%">None</td>
       </tr>
-      <tr *ngFor="let form of control.nestedForms">
-        <td *ngFor="let field of control.nestedfields" [innerHtml]="getValue(field, form.value)"></td>
+      <tr *ngFor="let form of control.nestedValues">
+        <td *ngFor="let field of control.nestedFields" [innerHtml]="getValue(field, form.value)"></td>
       </tr>
     </tbody>
   </table>

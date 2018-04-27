@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges, OnChanges, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { IField } from '../../models/schema';
 import { FormStateService, FormState } from '../../services/form-state.service';
 
@@ -14,6 +14,8 @@ export class FormHostComponent implements OnInit, OnChanges {
   @Input() formId: number;
   @Input() form: FormGroup;
   @Input() fields: IField[];
+  @Input() parentForm: AbstractControl;
+  @Input() parentPath: string;
   state: FormState;
 
   constructor(
@@ -40,30 +42,10 @@ export class FormHostComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.state = this.stateService.get(this.formId);
-
-    let { struct, block } = this.state.options;
-
-    if (this.struct) {
-      struct = this.struct;
-    }
-
-    if (this.block) {
-      block = this.block;
-    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.formId && !changes.formId.isFirstChange()) {
-      this.ngOnInit();
-      return;
-    }
-
-    if (changes.struct && !changes.struct.isFirstChange()) {
-      this.ngOnInit();
-      return;
-    }
-
-    if (changes.block && !changes.block.isFirstChange()) {
       this.ngOnInit();
       return;
     }
