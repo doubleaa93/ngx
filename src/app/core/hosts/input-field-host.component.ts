@@ -39,6 +39,7 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   private _componentRefs: ComponentRef<any>[] = [];
   private _submissionErrorsChangeSubscription: Subscription;
   private _formChangeSubscription: Subscription;
+  private _valueOnFocus: any;
   @ViewChild(ComponentHostDirective) componentHost: ComponentHostDirective;
   @Input() formId: number;
   @Input() form: FormGroup;
@@ -55,6 +56,23 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     private componentFactoryResolver: ComponentFactoryResolver,
     private providerService: DeReCrudProviderService
   ) {
+  }
+
+  get formPath() {
+    let formPath = this.field.name;
+
+    if (this.parentPath) {
+      let parentPath = this.parentPath;
+
+      if (this.parentForm instanceof FormArray) {
+        const index = this.parentForm.controls.indexOf(this.form);
+        parentPath += '.' + index;
+      }
+
+      formPath = `${parentPath}.${formPath}`;
+    }
+
+    return formPath;
   }
 
   ngOnInit() {
@@ -188,23 +206,14 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    let formPath = this.field.name;
-    if (this.parentPath) {
-      let parentPath = this.parentPath;
-
-      if (this.parentForm instanceof FormArray) {
-        const index = this.parentForm.controls.indexOf(this.form);
-        parentPath += '.' + index;
-      }
-
-      formPath = `${parentPath}.${formPath}`;
-    }
+    const formPath = this.formPath;
+    const value = this.form.root.get(formPath);
 
     const control: IControl = {
+      value,
       formPath,
       field: this.field,
       formId: this.formId,
-      value: this.form.get(this.field.name),
       submissionErrors:
       (this.state.submissionErrors &&
         this.state.submissionErrors[formPath]) ||
@@ -212,6 +221,7 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       form: this.form,
       rendererType: this.mapType(this.field.type),
       htmlId: `${this.formId}-${formPath}`,
+      onFocus: this.onFocus,
       onBlur: this.onBlur,
       onChange: this.onChange
     };
@@ -256,8 +266,8 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
 
         const nestedValues = [];
 
-        for (const form of collectionControl.value.controls) {
-          nestedValues.push(<FormGroup>form);
+        for (const nestedValue of collectionControl.value.controls) {
+          nestedValues.push(<FormGroup>nestedValue);
         }
 
         collectionControl.stamp = {
@@ -293,12 +303,24 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onBlur = () => {
-    this.stateService.clearErrors(this.formId);
+  onFocus = () => {
+    this._valueOnFocus = this.form.root.get(this.formPath).value;
   }
 
-  onChange = () => {
+  onBlur = () => {
     this.stateService.clearErrors(this.formId);
+
+    const newValue = this.form.root.get(this.formPath).value;
+    if (this._valueOnFocus !== newValue) {
+      this.stateService.onChange(this.formId, this.formPath, newValue, 'blur');
+    }
+  }
+
+  onChange = (e: any) => {
+    this.stateService.clearErrors(this.formId);
+
+    const newValue = this.form.root.get(this.formPath).value;
+    this.stateService.onChange(this.formId, this.formPath, newValue, e ? 'change' : null);
   }
 
   private mapType(type: string) {

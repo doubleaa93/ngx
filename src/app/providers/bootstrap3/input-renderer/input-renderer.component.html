@@ -6,6 +6,7 @@
          [id]="control.htmlId"
          [name]="control.field.name"
          [formControlName]="control.field.name"
+         (focus)="control.onFocus($event)"
          (blur)="control.onBlur($event)"
          (input)="control.onChange($event)" />
   <de-re-crud-bootstrap3-help-renderer [control]="control">

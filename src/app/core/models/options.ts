@@ -2,6 +2,7 @@ import { HeaderSize } from './schema';
 
 export interface DeReCrudOptions extends DeReCrudStyleOptions {
   provider: 'bootstrap3';
+  changeNotificationType: 'change' | 'blur';
   schema: any;
   struct: string;
   block: string;

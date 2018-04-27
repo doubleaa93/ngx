@@ -7,10 +7,13 @@ import { IStruct, IField, IBlock } from '../models/schema';
 import { FormSubmissionErrors } from '../models/form-submission';
 import { FormBuilderService } from './form-builder.service';
 import { Map } from '../models/map';
+import { FormChange } from '../models/form-change';
 
 export interface FormState {
   id: number;
   parentId: number | null;
+  parentPath: string | null;
+  parentForm: AbstractControl | null;
   options: DeReCrudOptions;
   form: FormGroup;
   structs: Map<IStruct>;
@@ -18,6 +21,7 @@ export interface FormState {
   blocks: Map<IBlock>;
   submissionErrors: FormSubmissionErrors;
   onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
+  onValueChange: Observable<FormChange>;
   navigationStack: { id: number }[];
   onNavigationChange: Observable<number>;
 }
@@ -186,7 +190,7 @@ export class FormStateService {
       value
     );
 
-    const state = {
+    const state: FormState = {
       id,
       options,
       form,
@@ -197,6 +201,7 @@ export class FormStateService {
       onSubmissionErrorsChange: new Subject<FormSubmissionErrors>(),
       navigationStack: [],
       onNavigationChange: new Subject<number>(),
+      onValueChange: new Subject<FormChange>(),
       parentId: parent && parent.id,
       parentForm: parent && parent.form,
       parentPath: parent && parent.path
@@ -222,7 +227,7 @@ export class FormStateService {
       return;
     }
 
-    this._cache[id].navigationStack.reverse().forEach(child => {
+    this._cache[id].navigationStack.reverse().forEach((child) => {
       this.remove(child.id);
     });
 
@@ -245,6 +250,28 @@ export class FormStateService {
 
     this._cache[id].submissionErrors = errors;
     this.pushSubmissionErrorsChange(id);
+  }
+
+  onChange(id: number, formPath: string, newValue: any, event: string) {
+    if (!this._cache[id]) {
+      return;
+    }
+
+    let state = this._cache[id];
+
+    if (event && state.options.changeNotificationType !== event) {
+      return;
+    }
+
+    if (state.parentId) {
+      state = this._cache[state.parentId];
+    }
+
+    (<Subject<FormChange>>state.onValueChange).next({
+      fieldPath: formPath,
+      value: newValue,
+      formValue: state.form.value
+    });
   }
 
   pushNavigation(id: number, childId: number) {

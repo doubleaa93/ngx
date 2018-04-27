@@ -4,6 +4,7 @@
           [id]="control.htmlId"
           [name]="control.field.name"
           [formControlName]="control.field.name"
+          (focus)="control.onFocus($event)"
           (blur)="control.onBlur($event)"
           (change)="control.onChange($event)">
     <option *ngFor="let option of control.options()" [value]="option.value">{{option.label}}</option>

@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField } from '../../core/models/schema';
 import { FormSubmission } from '../../core/models/form-submission';
+import { FormChange } from '../../core/models/form-change';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -27,7 +28,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   private _cancelVisible: boolean;
   @Input() options: DeReCrudOptions;
   @Input() value: object;
-  @Output() change = new EventEmitter<any>();
+  @Output() valueChange = new EventEmitter<FormChange>();
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
   fields: IField[];
@@ -64,9 +65,9 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       this.update();
     });
 
-    this._formChangeSubscription = this.state.form.valueChanges.subscribe((value) => {
-      this.change.emit(value);
-    })
+    this._formChangeSubscription = this.state.onValueChange.subscribe((change) => {
+      this.valueChange.emit(change);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

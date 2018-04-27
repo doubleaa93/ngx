@@ -11,6 +11,7 @@ export interface IControl {
   rendererType: string;
   field: IField;
   submissionErrors: string[];
+  onFocus: (e: any) => void;
   onBlur: (e: any) => void;
   onChange: (e: any) => void;
 }

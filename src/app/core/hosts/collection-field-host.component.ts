@@ -152,5 +152,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
       const value = this.formBuilder.group(options.struct, options.block, blocks, fields, {});
       this.control.value.push(value);
     }
+
+    this.control.onChange(null);
   }
 }

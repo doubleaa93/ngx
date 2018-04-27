@@ -5,6 +5,7 @@
         [id]="control.htmlId"
         [name]="control.field.name"
         [formControlName]="control.field.name"
+        (focus)="control.onFocus($event)"
         (blur)="control.onBlur($event)"
         (input)="control.onChange($event)" /> {{control.field.label}}
     </label>
