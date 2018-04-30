@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { CollectionControlRenderer, ICollectionControl } from '../renderers/control.renderer';
 import { IReferenceField } from '../models/schema';
-import { FormState, FormStateService } from '../services/form-state.service';
+import { FormState } from '../models/form-state';
+import { FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { ComponentHostDirective } from './component-host.directive';
 import { FormBuilderService } from '../services/form-builder.service';

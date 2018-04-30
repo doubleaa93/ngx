@@ -1,30 +1,12 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 import { DeReCrudOptions } from '../models/options';
 import { IStruct, IField, IBlock } from '../models/schema';
 import { FormSubmissionErrors } from '../models/form-submission';
 import { FormBuilderService } from './form-builder.service';
-import { Map } from '../models/map';
 import { FormChange } from '../models/form-change';
-
-export interface FormState {
-  id: number;
-  parentId: number | null;
-  parentPath: string | null;
-  parentForm: AbstractControl | null;
-  options: DeReCrudOptions;
-  form: FormGroup;
-  structs: Map<IStruct>;
-  fields: Map<IField>;
-  blocks: Map<IBlock>;
-  submissionErrors: FormSubmissionErrors;
-  onSubmissionErrorsChange: Observable<FormSubmissionErrors>;
-  onValueChange: Observable<FormChange>;
-  navigationStack: { id: number }[];
-  onNavigationChange: Observable<number>;
-}
+import { FormState } from '../models/form-state';
 
 export type GetKeyFunction<T> = (item: T) => string;
 
@@ -323,9 +305,9 @@ export class FormStateService {
   }
 
   private arrayToMap<T>(getKey: GetKeyFunction<T>, array: T[]) {
-    return array.reduce<Map<T>>((acc, current) => {
+    return array.reduce<Map<string, T>>((acc, current) => {
       acc[getKey(current)] = current;
       return acc;
-    }, {});
+    }, new Map<string, T>());
   }
 }

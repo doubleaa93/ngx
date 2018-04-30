@@ -1,7 +1,8 @@
 import { Component, Input, SimpleChanges, OnChanges, OnInit } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { IField } from '../../models/schema';
-import { FormStateService, FormState } from '../../services/form-state.service';
+import { FormState } from '../../models/form-state';
+import { FormStateService } from '../../services/form-state.service';
 
 @Component({
   selector: 'de-re-crud-form-host',

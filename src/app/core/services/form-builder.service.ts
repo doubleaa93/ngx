@@ -16,7 +16,6 @@ import {
   IFieldReference
 } from '../models/schema';
 import { whitespaceValidator } from '../validators/whitespace-validator';
-import { Map } from '../models/map';
 
 @Injectable()
 export class FormBuilderService {
@@ -25,8 +24,8 @@ export class FormBuilderService {
   group(
     struct: string,
     blockName: string,
-    blocks: Map<IBlock>,
-    fields: Map<IField>,
+    blocks: Map<string, IBlock>,
+    fields: Map<string, IField>,
     value = {}
   ): FormGroup {
     const group = {};
@@ -93,8 +92,8 @@ export class FormBuilderService {
   array(
     struct: string,
     blockName: string,
-    blocks: Map<IBlock>,
-    fields: Map<IField>,
+    blocks: Map<string, IBlock>,
+    fields: Map<string, IField>,
     value = []
   ): FormArray {
     const array = [];

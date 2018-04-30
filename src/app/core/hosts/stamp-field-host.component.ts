@@ -11,11 +11,12 @@ import {
   SimpleChange
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ComponentHostDirective } from './component-host.directive';
-import { IField, IFieldReference, IStampField } from '../models/schema';
-import { FormState, FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
+import { IField, IFieldReference, IStampField } from '../models/schema';
+import { FormStateService } from '../services/form-state.service';
 import { StampRenderer, IStamp } from '../renderers/stamp.renderer';
+import { FormState } from '../models/form-state';
+import { ComponentHostDirective } from './component-host.directive';
 
 @Component({
   selector: 'de-re-crud-stamp-field-host',
