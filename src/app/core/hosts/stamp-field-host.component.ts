@@ -63,6 +63,7 @@ export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
   }
 
@@ -76,6 +77,7 @@ export class StampFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   render() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
 
     if (!this.shouldRender()) {

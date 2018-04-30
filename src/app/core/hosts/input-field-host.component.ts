@@ -130,11 +130,12 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   destroyRefs() {
     if (this._componentRefs.length) {
       this._componentRefs.forEach(x => x.destroy());
+      this._componentRefs = [];
     }
   }
 
   shouldRender() {
-    return this.fieldReference.condition(this.form.value, this.state.form.root.value);
+    return this.fieldReference && this.fieldReference.condition(this.form.value, this.state.form.root.value);
   }
 
   render() {
@@ -202,6 +203,11 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   updateInputs() {
+    if (this.shouldRender() && !this._componentRefs.length) {
+      this.render();
+      return;
+    }
+
     if (!this._componentRefs.length) {
       return;
     }

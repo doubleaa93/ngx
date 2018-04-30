@@ -108,7 +108,7 @@ export class FormStateService {
           if (fieldReference.condition) {
             const returnValue =
               fieldReference.condition[0] === '{'
-                ? fieldReference
+                ? fieldReference.condition
                 : `return ${fieldReference.condition}`;
 
             // tslint:disable-next-line:no-function-constructor-with-string-args

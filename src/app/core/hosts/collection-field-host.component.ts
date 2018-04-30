@@ -48,12 +48,14 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
   ngOnDestroy() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
   }
 
   render() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
 
     let controlComponent: any;

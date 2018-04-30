@@ -55,12 +55,14 @@ export class ButtonHostComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
   }
 
   render() {
     if (this._componentRef) {
       this._componentRef.destroy();
+      this._componentRef = null;
     }
 
     const providerOptions = this.providerService.get(
