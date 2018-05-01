@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { FormStateService } from '../../core/services/form-state.service';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField } from '../../core/models/schema';
-import { FormSubmission } from '../../core/models/form-submission';
+import { FormSubmission, FormSubmissionErrors } from '../../core/models/form-submission';
 import { FormChange } from '../../core/models/form-change';
 import { FormState } from '../../core/models/form-state';
 
@@ -27,11 +27,14 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   private _navigationChangeSubscription: Subscription;
   private _formChangeSubscription: Subscription;
   private _cancelVisible: boolean;
+  private _formSubmissionErrors: FormSubmissionErrors;
+  
   @Input() options: DeReCrudOptions;
   @Input() value: object;
   @Output() valueChange = new EventEmitter<FormChange>();
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
+
   fields: IField[];
   state: FormState;
   parentPath: string;
@@ -50,6 +53,15 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     this._cancelVisible = value;
   }
 
+  @Input()
+  set serverSideErrors(value: FormSubmissionErrors)
+  {
+    this._formSubmissionErrors = value;
+
+    if (this.state)
+      this.update();
+  }
+
   get submitEnabled() {
     return !this.submitting && this.navigationState.form.valid;
   }
@@ -60,6 +72,8 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.state = this.stateService.create(this.options, this.value);
+    if (this._formSubmissionErrors)
+      this.state.submissionErrors = this._formSubmissionErrors;
     this.update();
 
     this._navigationChangeSubscription = this.state.onNavigationChange.subscribe(() => {
