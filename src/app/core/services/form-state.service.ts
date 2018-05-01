@@ -125,6 +125,7 @@ export class FormStateService {
   create(
     options: DeReCrudOptions,
     value: object,
+    errors?: FormSubmissionErrors,
     parent?: { id: number; path: string; form: AbstractControl }
   ): FormState {
     let id: number;
@@ -179,7 +180,7 @@ export class FormStateService {
       structs,
       fields,
       blocks,
-      submissionErrors: {},
+      submissionErrors: errors,
       onSubmissionErrorsChange: new Subject<FormSubmissionErrors>(),
       navigationStack: [],
       onNavigationChange: new Subject<number>(),
