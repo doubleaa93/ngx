@@ -77,8 +77,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value && !changes.value.firstChange) {
-      this.stateService.setErrors(this.state.id, this.errors);
       this.stateService.update(this.state.id, changes.value.currentValue);
+    }
+    if (changes.value && !changes.value.firstChange) {
+      this.stateService.setErrors(this.state.id, this.errors);
     }
   }
 
