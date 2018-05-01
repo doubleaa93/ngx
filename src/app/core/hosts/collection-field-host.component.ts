@@ -142,7 +142,7 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
         text: 'Cancel'
       };
 
-      const state = this.stateService.create(options, {}, {
+      const state = this.stateService.create(options, {}, null, {
         id: this.control.formId,
         path: this.control.formPath,
         form: this.control.value

@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { FormStateService } from '../../core/services/form-state.service';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField } from '../../core/models/schema';
-import { FormSubmission } from '../../core/models/form-submission';
+import { FormSubmission, FormSubmissionErrors } from '../../core/models/form-submission';
 import { FormChange } from '../../core/models/form-change';
 import { FormState } from '../../core/models/form-state';
 
@@ -27,11 +27,15 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   private _navigationChangeSubscription: Subscription;
   private _formChangeSubscription: Subscription;
   private _cancelVisible: boolean;
+
+  
   @Input() options: DeReCrudOptions;
   @Input() value: object;
+  @Input() errors: FormSubmissionErrors;
   @Output() valueChange = new EventEmitter<FormChange>();
   @Output() submit = new EventEmitter<FormSubmission>();
   @Output() cancel = new EventEmitter<any>();
+
   fields: IField[];
   state: FormState;
   parentPath: string;
@@ -59,7 +63,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.state = this.stateService.create(this.options, this.value);
+    this.state = this.stateService.create(this.options, this.value, this.errors);    
     this.update();
 
     this._navigationChangeSubscription = this.state.onNavigationChange.subscribe(() => {
@@ -74,6 +78,10 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value && !changes.value.firstChange) {
       this.stateService.update(this.state.id, changes.value.currentValue);
+    }
+    
+    if (changes.errors && !changes.errors.firstChange) {
+      this.stateService.setErrors(this.state.id, changes.errors);
     }
   }
 
