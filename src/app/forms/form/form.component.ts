@@ -79,8 +79,9 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.value && !changes.value.firstChange) {
       this.stateService.update(this.state.id, changes.value.currentValue);
     }
-    if (changes.value && !changes.value.firstChange) {
-      this.stateService.setErrors(this.state.id, this.errors);
+    
+    if (changes.errors && !changes.errors.firstChange) {
+      this.stateService.setErrors(this.state.id, changes.errors);
     }
   }
 
