@@ -20,7 +20,7 @@
     "@angular/common": ">= 4",
     "@angular/core": ">= 4",
     "@angular/forms": ">= 4",
-    "boostrap": ">= 3 < 4"
+    "bootstrap": ">= 3 < 4"
   },
   "dependencies": {
     "@angular/common": "^4.4.6",
