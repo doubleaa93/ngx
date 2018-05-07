@@ -316,17 +316,14 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onBlur = () => {
-    this.stateService.clearErrors(this.formId);
-
     const newValue = this.form.root.get(this.formPath).value;
+
     if (this._valueOnFocus !== newValue) {
       this.stateService.onChange(this.formId, this.formPath, newValue, 'blur');
     }
   }
 
   onChange = (e: any) => {
-    this.stateService.clearErrors(this.formId);
-
     const newValue = this.form.root.get(this.formPath).value;
     this.stateService.onChange(this.formId, this.formPath, newValue, e ? 'change' : null);
   }

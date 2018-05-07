@@ -8,6 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import 'rxjs/add/operator/do';
 import { Subscription } from 'rxjs/Subscription';
 import { FormStateService } from '../../core/services/form-state.service';
@@ -93,7 +94,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       : null;
   }
 
-  get parentForm() {
+  get parentForm(): (AbstractControl | null) {
     const { navigationStack } = this.state;
     const navigationStackCount = navigationStack.length;
 

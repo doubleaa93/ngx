@@ -203,12 +203,17 @@ export class FormStateService {
     delete this._cache[id];
   }
 
-  clearErrors(id: number) {
+  clearErrors(id: number, formPath?: string) {
     if (!this._cache[id]) {
       return;
     }
 
-    this._cache[id].submissionErrors = {};
+    if (formPath) {
+      delete this._cache[id].submissionErrors[formPath];
+    } else {
+      this._cache[id].submissionErrors = {};
+    }
+
     this.pushSubmissionErrorsChange(id);
   }
 
@@ -227,6 +232,7 @@ export class FormStateService {
     }
 
     const state = this._cache[id];
+    this.clearErrors(id, formPath);
 
     if (event && state.options.changeNotificationType !== event) {
       return;
