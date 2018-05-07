@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { DeReCrudOptions } from '../models/options';
 import { IStruct, IField, IBlock } from '../models/schema';
@@ -122,12 +122,7 @@ export class FormStateService {
     return this._cache[id];
   }
 
-  create(
-    options: DeReCrudOptions,
-    value: object,
-    errors?: FormSubmissionErrors,
-    parent?: { id: number; path: string; form: AbstractControl }
-  ): FormState {
+  create(options: DeReCrudOptions, value: object, initialErrors?: FormSubmissionErrors): FormState {
     let id: number;
 
     while (true) {
@@ -140,30 +135,19 @@ export class FormStateService {
       break;
     }
 
-    let structs;
-    let fields;
-    let blocks;
+    FormStateService.assignDefaults(options);
 
-    if (!parent) {
-      FormStateService.assignDefaults(options);
-      const schema = FormStateService.parseSchema(options);
-      structs = this.arrayToMap(struct => struct.name, schema.structs);
-      fields = this.arrayToMap(
-        field => `${field.struct}-${field.name}`,
-        schema.fields
-      );
+    const schema = FormStateService.parseSchema(options);
+    const structs = this.arrayToMap(struct => struct.name, schema.structs);
+    const fields = this.arrayToMap(
+      field => `${field.struct}-${field.name}`,
+      schema.fields
+    );
 
-      blocks = this.arrayToMap(
-        block => `${block.struct}-${block.name}`,
-        schema.blocks
-      );
-    } else {
-      const parentState = this._cache[parent.id];
-
-      structs = parentState.structs;
-      fields = parentState.fields;
-      blocks = parentState.blocks;
-    }
+    const blocks = this.arrayToMap(
+      block => `${block.struct}-${block.name}`,
+      schema.blocks
+    );
 
     const form = this.formBuilder.group(
       options.struct,
@@ -180,19 +164,25 @@ export class FormStateService {
       structs,
       fields,
       blocks,
-      submissionErrors: errors,
+      submissionErrors: initialErrors,
       onSubmissionErrorsChange: new Subject<FormSubmissionErrors>(),
       navigationStack: [],
       onNavigationChange: new Subject<number>(),
-      onValueChange: new Subject<FormChange>(),
-      parentId: parent && parent.id,
-      parentForm: parent && parent.form,
-      parentPath: parent && parent.path
+      onValueChange: new Subject<FormChange>()
     };
 
     this._cache[id] = state;
 
     return state;
+  }
+
+  createForm(formId: number, struct: string, block: string): FormGroup {
+    if (!this._cache[formId]) {
+      return;
+    }
+
+    const { fields, blocks } = this._cache[formId];
+    return this.formBuilder.group(struct, block, blocks, fields);
   }
 
   update(id: number, value: object) {
@@ -209,10 +199,6 @@ export class FormStateService {
     if (!this._cache[id]) {
       return;
     }
-
-    this._cache[id].navigationStack.reverse().forEach((child) => {
-      this.remove(child.id);
-    });
 
     delete this._cache[id];
   }
@@ -240,14 +226,10 @@ export class FormStateService {
       return;
     }
 
-    let state = this._cache[id];
+    const state = this._cache[id];
 
     if (event && state.options.changeNotificationType !== event) {
       return;
-    }
-
-    if (state.parentId) {
-      state = this._cache[state.parentId];
     }
 
     (<Subject<FormChange>>state.onValueChange).next({
@@ -257,21 +239,19 @@ export class FormStateService {
     });
   }
 
-  pushNavigation(id: number, childId: number) {
-    if (!this._cache[id] || !this._cache[childId]) {
+  pushNavigation(id: number, struct: string, block: string, path: string, parentPath: string) {
+    if (!this._cache[id]) {
       return;
     }
 
-    let parentId = id;
+    this._cache[id].navigationStack.push({
+      struct,
+      block,
+      path,
+      parentPath
+    });
 
-    while (this._cache[parentId].parentId) {
-      parentId = this._cache[parentId].parentId;
-    }
-
-    const state = this._cache[parentId];
-    state.navigationStack.push({ id: childId });
-
-    this.pushNavigationChange(parentId, childId);
+    this.pushNavigationChange(id);
   }
 
   popNavigation(id: number) {
@@ -279,8 +259,7 @@ export class FormStateService {
       return;
     }
 
-    const state = this._cache[id];
-    state.navigationStack.pop();
+    this._cache[id].navigationStack.pop();
 
     this.pushNavigationChange(id);
   }
