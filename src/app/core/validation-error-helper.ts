@@ -29,7 +29,7 @@ export class ValidationErrorHelper {
     const sortedErrors = [];
     const unsortedErrors = [];
 
-    if (formControl.errors) {
+    if (formControl.errors && formControl.touched) {
       for (const key of Object.keys(formControl.errors)) {
         const sort = this._errorSort[key];
         const metadata = formControl.errors[key];
