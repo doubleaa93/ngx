@@ -156,9 +156,22 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     this.fields = blockFields;
   }
 
-  getBlockFields(struct: string, block: string) {
+  getBlockFields(struct: string, blockName: string) {
     const { blocks, fields } = this.state;
-    const references = blocks[`${struct}-${block}`].fields;
+    if (!blocks || !fields) {
+       // TODO: Log error
+      return [];
+    }
+
+
+    const block = blocks[`${struct}-${blockName}`];
+
+    if (!block) {
+      // TODO: Log error
+      return [];
+    }
+
+    const references = block.fields;
 
     const blockFields = [];
 
