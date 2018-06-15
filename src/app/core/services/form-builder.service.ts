@@ -11,7 +11,6 @@ import {
   ITextField,
   ILinkedStructField,
   IBlock,
-  IForeignKeyField,
   IIntegerField,
   IFieldReference
 } from '../models/schema';
@@ -62,19 +61,6 @@ export class FormBuilderService {
         continue;
       }
 
-      if (field.type === 'foreignKey') {
-        const foreignKeyField = <IForeignKeyField>field;
-        const { reference } = foreignKeyField;
-        group[field.name] = this.group(
-          reference.struct,
-          reference.block,
-          blocks,
-          fields,
-          value[field.name]
-        );
-        continue;
-      }
-
       const validators = this.getValidators(fieldReference, field);
       const initialValue = value[field.name] || field.initialValue;
 
@@ -82,6 +68,7 @@ export class FormBuilderService {
     }
 
     const formGroup = this.fb.group(group);
+
     if (!formGroup.value) {
       formGroup.patchValue({});
     }

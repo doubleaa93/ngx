@@ -16,7 +16,6 @@ import { FormState } from '../models/form-state';
 import { FormStateService } from '../services/form-state.service';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import { ComponentHostDirective } from './component-host.directive';
-import { FormBuilderService } from '../services/form-builder.service';
 
 @Component({
   selector: 'de-re-crud-collection-field-host',
@@ -30,7 +29,6 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
 
   constructor(
     private stateService: FormStateService,
-    private formBuilder: FormBuilderService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private providerService: DeReCrudProviderService
   ) {}
@@ -125,35 +123,16 @@ export class CollectionFieldHostComponent implements OnInit, OnChanges, OnDestro
     e.stopPropagation();
     e.preventDefault();
 
-    const options = { ...this.state.options };
     const reference = (<IReferenceField>this.control.field).reference;
 
-    options.struct = reference.struct;
-    options.block = reference.block;
+    const form = this.stateService.createForm(this.control.formId, reference.struct, reference.block);
+    this.control.value.push(form);
+
+    const index = this.control.value.controls.indexOf(form);
+    const childPath = `${this.control.formPath}.${index}`;
 
     if (this.control.layout === 'table') {
-      options.submitButtonStyle = {
-        ...options.submitButtonStyle,
-        text: 'Add'
-      };
-
-      options.cancelButtonStyle = {
-        ...options.cancelButtonStyle,
-        text: 'Cancel'
-      };
-
-      const state = this.stateService.create(options, {}, null, {
-        id: this.control.formId,
-        path: this.control.formPath,
-        form: this.control.value
-      });
-
-      this.control.value.push(state.form);
-      this.stateService.pushNavigation(this.control.formId, state.id);
-    } else {
-      const { fields, blocks } = this.state;
-      const value = this.formBuilder.group(options.struct, options.block, blocks, fields, {});
-      this.control.value.push(value);
+      this.stateService.pushNavigation(this.control.formId, reference.struct, reference.block, childPath, this.control.formPath);
     }
 
     this.control.onChange(null);

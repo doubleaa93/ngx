@@ -8,7 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import 'rxjs/add/operator/do';
 import { Subscription } from 'rxjs/Subscription';
 import { FormStateService } from '../../core/services/form-state.service';
@@ -28,7 +28,6 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   private _formChangeSubscription: Subscription;
   private _cancelVisible: boolean;
 
-  
   @Input() options: DeReCrudOptions;
   @Input() value: object;
   @Input() errors: FormSubmissionErrors;
@@ -38,15 +37,12 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
   fields: IField[];
   state: FormState;
-  parentPath: string;
-  parentForm: FormGroup;
-  navigationState: FormState;
   submitting: boolean;
 
   constructor(private stateService: FormStateService) {}
 
   get cancelVisible() {
-    return this.navigationState.id !== this.state.id || this._cancelVisible;
+    return !!this.state.navigationStack.length || this._cancelVisible;
   }
 
   @Input()
@@ -55,15 +51,60 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get submitEnabled() {
-    return !this.submitting && this.navigationState.form.valid;
+    return !this.submitting && this.form.valid;
   }
 
   get cancelEnabled() {
     return !this.submitting;
   }
 
+  get struct() {
+    const { navigationStack } = this.state;
+    const navigationStackCount = navigationStack.length;
+
+    return navigationStackCount
+      ? navigationStack[navigationStackCount - 1].struct
+      : this.state.options.struct;
+  }
+
+  get block() {
+    const { navigationStack } = this.state;
+    const navigationStackCount = navigationStack.length;
+
+    return navigationStackCount
+      ? navigationStack[navigationStackCount - 1].block
+      : this.state.options.block;
+  }
+
+  get form() {
+    const { navigationStack } = this.state;
+    const navigationStackCount = navigationStack.length;
+
+    return navigationStackCount
+      ? this.state.form.get(navigationStack[navigationStackCount - 1].path)
+      : this.state.form;
+  }
+
+  get parentPath() {
+    const { navigationStack } = this.state;
+    const navigationStackCount = navigationStack.length;
+
+    return navigationStackCount
+      ? navigationStack[navigationStackCount - 1].parentPath
+      : null;
+  }
+
+  get parentForm(): (AbstractControl | null) {
+    const { navigationStack } = this.state;
+    const navigationStackCount = navigationStack.length;
+
+    return navigationStackCount
+      ? this.state.form.get(navigationStack[navigationStackCount - 1].parentPath)
+      : null;
+  }
+
   ngOnInit() {
-    this.state = this.stateService.create(this.options, this.value, this.errors);    
+    this.state = this.stateService.create(this.options, this.value, this.errors);
     this.update();
 
     this._navigationChangeSubscription = this.state.onNavigationChange.subscribe(() => {
@@ -79,7 +120,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.value && !changes.value.firstChange) {
       this.stateService.update(this.state.id, changes.value.currentValue);
     }
-    
+
     if (changes.errors && !changes.errors.firstChange) {
       this.stateService.setErrors(this.state.id, changes.errors.currentValue);
     }
@@ -98,24 +139,39 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   update() {
-    const { navigationStack } = this.state;
+    const { options, navigationStack } = this.state;
 
-    let state = this.state;
+    let struct;
+    let block;
 
-    if (navigationStack.length) {
-      state = this.stateService.get(navigationStack[navigationStack.length - 1].id);
+    const child = navigationStack[navigationStack.length - 1];
+    if (child) {
+      ({ struct, block } = child);
+    } else {
+      ({ struct, block } = options);
     }
 
-    const { options } = state;
-    const blockFields = this.getBlockFields(options.struct, options.block);
+    const blockFields = this.getBlockFields(struct, block);
 
-    this.navigationState = state;
     this.fields = blockFields;
   }
 
-  getBlockFields(struct: string, block: string) {
+  getBlockFields(struct: string, blockName: string) {
     const { blocks, fields } = this.state;
-    const references = blocks[`${struct}-${block}`].fields;
+    if (!blocks || !fields) {
+       // TODO: Log error
+      return [];
+    }
+
+
+    const block = blocks[`${struct}-${blockName}`];
+
+    if (!block) {
+      // TODO: Log error
+      return [];
+    }
+
+    const references = block.fields;
 
     const blockFields = [];
 
@@ -134,7 +190,7 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (this.navigationState.id !== this.state.id) {
+    if (this.state.navigationStack.length) {
       this.stateService.popNavigation(this.state.id);
       return;
     }
@@ -147,11 +203,11 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     e.stopPropagation();
     e.preventDefault();
 
-    if (!this.navigationState.form.valid || !this.submitEnabled) {
+    if (!this.submitEnabled) {
       return;
     }
 
-    if (this.navigationState.id !== this.state.id) {
+    if (this.state.navigationStack.length) {
       this.stateService.completeNavigation(this.state.id);
       return;
     }
