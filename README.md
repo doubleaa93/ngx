@@ -22,7 +22,7 @@ import {
 
 @NgModule({
   /* ... */
-  imports: [, /* ... */ DeReCrudModule, Bootstrap3DeReCrudProviderModule]
+  imports: [/* ... */, DeReCrudModule, Bootstrap3DeReCrudProviderModule]
 })
 export class AppModule {}
 ```
@@ -50,7 +50,7 @@ export class AppComponent {
 
 #### Inputs
 
-`options: [`DeReCrudOptions`](#options)` - (required) - Form instance options
+`options: DeReCrudOptions` - (required) - Form instance options
 
 ```typescript
 {
@@ -66,14 +66,18 @@ export class AppComponent {
   cancelButtonStyle?: {
     class?: string; // Class to use for all cancel buttons, replaces the default
     text?: string; // Text to use for all cancel buttons, replaces the default
-  }
+  },
+  changeNotificationType?: 'change' | 'blur'; // Determines when change notifications event are triggered
   extraButtonClasses?: [/* ... */]; // Additional classes to append to all buttons
+  headerSize?: 1|2|3|4|5|6; // Default header size to use for stamp fields
 }
 ```
 
 `value: any` - (optional) - Form value, will update entire form values on change
 
 `cancelVisible: boolean`: - (optional, default `false`) - Determines if cancel button is visible
+
+`errors: [formPath: string]: string[]`: (optional) - Initial errors shown when the form is rendered
 
 #### Outputs
 
