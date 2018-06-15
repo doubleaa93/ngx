@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@de-re-crud/ngx",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "Apache-2.0",
   "ngPackage": {
     "lib": {
@@ -20,7 +20,7 @@
     "@angular/common": ">= 4",
     "@angular/core": ">= 4",
     "@angular/forms": ">= 4",
-    "boostrap": ">= 3 < 4"
+    "bootstrap": ">= 3 < 4"
   },
   "dependencies": {
     "@angular/common": "^4.4.6",

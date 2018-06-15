@@ -2,13 +2,15 @@
   <de-re-crud-bootstrap3-label-renderer [control]="control"></de-re-crud-bootstrap3-label-renderer>
   <select class="form-control"
           [id]="control.htmlId"
-          [name]="control.key"
-          [formControlName]="control.key"
+          [name]="control.field.name"
+          [formControlName]="control.field.name"
+          (focus)="control.onFocus($event)"
           (blur)="control.onBlur($event)"
           (change)="control.onChange($event)">
-    <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
+    <option *ngFor="let option of control.options()" [value]="option.value">{{option.label}}</option>
   </select>
-  <de-re-crud-bootstrap3-validation-error-renderer [control]="control">
-
-  </de-re-crud-bootstrap3-validation-error-renderer>
+  <de-re-crud-bootstrap3-help-renderer [control]="control">
+  </de-re-crud-bootstrap3-help-renderer>
+  <de-re-crud-bootstrap3-validation-errors-renderer [control]="control">
+  </de-re-crud-bootstrap3-validation-errors-renderer>
 </ng-container>

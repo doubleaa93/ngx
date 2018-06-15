@@ -1,0 +1,22 @@
+<ng-container *ngFor="let field of fields">
+  <ng-container [ngSwitch]="field.type">
+    <de-re-crud-stamp-field-host
+      *ngSwitchCase="'stamp'"
+      [formId]="formId"
+      [form]="form"
+      [field]="field"
+      [struct]="struct"
+      [block]="block">
+    </de-re-crud-stamp-field-host>
+    <de-re-crud-input-field-host
+      *ngSwitchDefault
+      [formId]="formId"
+      [form]="form"
+      [parentPath]="parentPath"
+      [parentForm]="parentForm"
+      [field]="field"
+      [struct]="struct"
+      [block]="block">
+    </de-re-crud-input-field-host>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,26 @@
+<div>
+  <de-re-crud-stamp-renderer [stamp]="control.stamp">
+  </de-re-crud-stamp-renderer>
+  <de-re-crud-button-host
+    *ngIf="control.canAdd"
+    [formId]="control.formId"
+    extraClasses="btn-sm"
+    text="Add"
+    (click)="control.onAdd($event)">
+  </de-re-crud-button-host>
+</div>
+
+<div class="inline-control-container">
+  <span *ngIf="!control.nestedValues.length">None</span>
+  <div *ngFor="let value of control.nestedValues">
+    <de-re-crud-form-host
+      [formId]="control.formId"
+      [form]="value"
+      [parentPath]="control.formPath"
+      [parentForm]="control.value"
+      [fields]="control.nestedFields"
+      [struct]="control.field.reference.struct"
+      [block]="control.field.reference.block">
+    </de-re-crud-form-host>
+  </div>
+</div>

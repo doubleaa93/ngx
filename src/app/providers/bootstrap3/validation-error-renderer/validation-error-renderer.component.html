@@ -1,9 +1,0 @@
-<ng-template #error let-errors="errors">
-  <ng-container *ngIf="errors?.length">
-    <p *ngFor="let error of errors" class="help-block">
-      {{error}}
-    </p>
-  </ng-container>
-</ng-template>
-
-<ng-container [ngTemplateOutlet]="error" [ngTemplateOutletContext]="{ errors: getErrors() }"></ng-container>

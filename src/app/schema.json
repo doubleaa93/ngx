@@ -29,8 +29,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "field",
-          "labelField": "name",
+          "struct": "field",
           "block": "default"
         }
       },
@@ -40,8 +39,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "block",
-          "labelField": "name",
+          "struct": "block",
           "block": "default"
         }
       }
@@ -53,8 +51,19 @@
           "name",
           "label",
           "collectionLabel",
-          "fields",
-          "blocks"
+          {
+            "field": "fields",
+            "hints": {
+              "layout": "table",
+              "block": "table"
+            }
+          },
+          {
+            "field": "blocks",
+            "hints": {
+              "layout": "table"
+            }
+          }
         ]
       }
     ]
@@ -75,19 +84,19 @@
         "name": "label",
         "label": "Label",
         "type": "text",
-        "description": "Name is converted to sentence case and used if not specified."
+        "required": true
       },
       {
         "name": "placeholder",
         "label": "Placeholder",
         "type": "text",
-        "description": "Label is used if not specified."
+        "help": "Label is used if not specified."
       },
       {
-        "name": "description",
+        "name": "help",
         "label": "Description",
         "type": "text",
-        "description": "Shown under a control, like this!"
+        "help": "Shown under a control, like this!"
       },
       {
         "name": "required",
@@ -165,8 +174,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "option",
-          "labelField": "description",
+          "struct": "option",
           "block": "default"
         }
       },
@@ -200,7 +208,7 @@
         "label": "Reference",
         "type": "foreignKey",
         "reference": {
-          "name": "structReference",
+          "struct": "structReference",
           "labelField": "name",
           "block": "default"
         }
@@ -213,7 +221,7 @@
           "name",
           "label",
           "placeholder",
-          "description",
+          "help",
           "required",
           "unique",
           "keyField",
@@ -247,6 +255,14 @@
             "condition": "value.type === 'list'"
           }
         ]
+      },
+      {
+        "name": "table",
+        "fields": [
+          "name",
+          "label",
+          "type"
+        ]
       }
     ]
   },
@@ -268,8 +284,7 @@
         "type": "linkedStruct",
         "required": true,
         "reference": {
-          "name": "fieldReference",
-          "labelField": "field",
+          "struct": "fieldReference",
           "block": "default"
         }
       }
@@ -279,7 +294,12 @@
         "name": "default",
         "fields": [
           "name",
-          "fields"
+          {
+            "field": "fields",
+            "hints": {
+              "layout": "table"
+            }
+          }
         ]
       }
     ]
@@ -296,9 +316,9 @@
         "type": "foreignKey",
         "required": true,
         "reference": {
-          "name": "field",
-          "labelField": "name",
-          "block": "default"
+          "struct": "field",
+          "block": "default",
+          "labelField": "name"
         }
       },
       {
@@ -359,8 +379,8 @@
         "required": true
       },
       {
-        "name": "description",
-        "label": "Description",
+        "name": "label",
+        "label": "Label",
         "type": "text",
         "required": true
       }

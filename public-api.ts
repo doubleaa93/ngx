@@ -1,4 +1,4 @@
-export { DeReCrudOptions, DeReCrudStyleOptions } from './src/app/lib/options';
-export { DeReCrudModule } from './src/app/lib/lib.module';
+export { DeReCrudOptions, DeReCrudStyleOptions } from './src/app/core/models/options';
+export { FormSubmission, FormSubmissionErrors } from './src/app/core/models/form-submission';
+export { DeReCrudFormsModule } from './src/app/forms/forms.module';
 export { Bootstrap3DeReCrudProviderModule } from './src/app/providers/bootstrap3/bootstrap3.module';
-export { FormSubmission, FormSubmissionErrors } from './src/app/lib/form-submission';

@@ -1,14 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { ControlRenderer } from '../../../lib/renderers/control.renderer';
-import { IControl } from '../../../lib/renderers/control';
-import { ValidationErrorHelper } from '../../../lib/validation-error-helper';
+import { ControlRenderer, IControl } from '../../../core/renderers/control.renderer';
+import { ValidationErrorHelper } from '../../../core/validation-error-helper';
 
 @Component({
   selector: 'de-re-crud-bootstrap3-control-container-renderer',
   templateUrl: './control-container-renderer.component.html'
 })
-export class Bootstrap3ControlContainerRendererComponent
-  implements ControlRenderer {
+export class Bootstrap3ControlContainerRendererComponent implements ControlRenderer {
   @Input() control: IControl;
 
   getClasses() {

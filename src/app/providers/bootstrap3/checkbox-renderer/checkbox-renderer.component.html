@@ -1,0 +1,17 @@
+<ng-container [formGroup]="control.form">
+  <div class="checkbox">
+    <label [htmlFor]="control.htmlId">
+      <input type="checkbox"
+        [id]="control.htmlId"
+        [name]="control.field.name"
+        [formControlName]="control.field.name"
+        (focus)="control.onFocus($event)"
+        (blur)="control.onBlur($event)"
+        (input)="control.onChange($event)" /> {{control.field.label}}
+    </label>
+  </div>
+  <de-re-crud-bootstrap3-help-renderer [control]="control">
+  </de-re-crud-bootstrap3-help-renderer>
+  <de-re-crud-bootstrap3-validation-errors-renderer [control]="control">
+  </de-re-crud-bootstrap3-validation-errors-renderer>
+</ng-container>
