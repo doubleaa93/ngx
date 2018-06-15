@@ -7,7 +7,9 @@ node_js:
   - lts/*
 branches:
   only:
-  - master
+    tags:
+      - all
+    - master
 install: yarn install
 script: yarn test --single-run= true --watch=false && yarn package
 before_deploy: cd dist
