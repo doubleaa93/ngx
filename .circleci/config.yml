@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8.11.3
+      - image: circleci/node:8.11.3-browsers
 
     working_directory: ~/repo
 
@@ -24,7 +24,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: yarn lint
-      - run: yarn test
+      - run: yarn test --single-run= true --watch=false
 
       - run: yarn package
 
