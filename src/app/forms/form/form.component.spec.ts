@@ -21,7 +21,7 @@ describe('FormComponent', () => {
     }).compileComponents();
 
     stateService = TestBed.get(FormStateService);
-    spyOn(stateService, 'create').and.callFake((options) => ({
+    spyOn(stateService, 'create').and.callFake(options => ({
       options,
       navigationStack: [],
       onNavigationChange: jasmine.createSpyObj('onNavigationChange', ['subscribe']),
