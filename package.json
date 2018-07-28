@@ -3,19 +3,6 @@
   "name": "@de-re-crud/ngx",
   "version": "0.0.7",
   "license": "Apache-2.0",
-  "ngPackage": {
-    "lib": {
-      "entryFile": "public-api.ts"
-    }
-  },
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --prod",
-    "test": "ng test",
-    "lint": "ng lint",
-    "package": "ng-packagr -p package.json"
-  },
   "peerDependencies": {
     "@angular/core": ">= 6.0.0",
     "@angular/forms": ">= 6.0.0",
@@ -56,5 +43,18 @@
     "tslint-config-airbnb": "^5.8.0",
     "tslint-eslint-rules": "^5.1.0",
     "typescript": "^2.9.2"
+  },
+  "main": "bundles/de-re-crud-ngx.umd.js",
+  "module": "fesm5/de-re-crud-ngx.js",
+  "es2015": "fesm2015/de-re-crud-ngx.js",
+  "esm5": "esm5/de-re-crud-ngx.js",
+  "esm2015": "esm2015/de-re-crud-ngx.js",
+  "fesm5": "fesm5/de-re-crud-ngx.js",
+  "fesm2015": "fesm2015/de-re-crud-ngx.js",
+  "typings": "de-re-crud-ngx.d.ts",
+  "metadata": "de-re-crud-ngx.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
   }
 }
