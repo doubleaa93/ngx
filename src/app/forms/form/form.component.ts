@@ -9,8 +9,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import 'rxjs/add/operator/do';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { FormStateService } from '../../core/services/form-state.service';
 import { DeReCrudOptions } from '../../core/models/options';
 import { IField } from '../../core/models/schema';
@@ -162,7 +161,6 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
        // TODO: Log error
       return [];
     }
-
 
     const block = blocks[`${struct}-${blockName}`];
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { DeReCrudOptions } from '../models/options';
 import { IStruct, IField, IBlock } from '../models/schema';
 import { FormSubmissionErrors } from '../models/form-submission';
@@ -11,6 +11,7 @@ import { FormState } from '../models/form-state';
 export type GetKeyFunction<T> = (item: T) => string;
 
 @Injectable()
+// @dynamic
 export class FormStateService {
   // tslint:disable-next-line:no-function-constructor-with-string-args
   private static defaultConditionFunc = new Function('return true');

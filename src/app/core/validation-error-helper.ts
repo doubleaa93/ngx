@@ -1,5 +1,6 @@
 import { IControl } from './renderers/control.renderer';
 
+// @dynamic
 export class ValidationErrorHelper {
   private static _errorSort = ['required'];
 

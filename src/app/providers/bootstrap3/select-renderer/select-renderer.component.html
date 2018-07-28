@@ -7,7 +7,7 @@
           (focus)="control.onFocus($event)"
           (blur)="control.onBlur($event)"
           (change)="control.onChange($event)">
-    <option *ngFor="let option of control.options()" [value]="option.value">{{option.label}}</option>
+    <option *ngFor="let option of control.options" [value]="option.value">{{option.label}}</option>
   </select>
   <de-re-crud-bootstrap3-help-renderer [control]="control">
   </de-re-crud-bootstrap3-help-renderer>

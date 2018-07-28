@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IStruct, IField, IBlock } from './schema';
 import { FormSubmissionErrors } from './form-submission';
 import { FormChange } from './form-change';

@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   SimpleChange
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { DeReCrudProviderService } from '../../providers/provider/provider.service';
 import {
   IField,
@@ -223,9 +223,9 @@ export class InputFieldHostComponent implements OnInit, OnChanges, OnDestroy {
       field: this.field,
       formId: this.formId,
       submissionErrors:
-      (this.state.submissionErrors &&
-        this.state.submissionErrors[formPath]) ||
-      [],
+        (this.state.submissionErrors &&
+          this.state.submissionErrors[formPath]) ||
+        [],
       form: this.form,
       rendererType: this.mapType(this.field.type),
       htmlId: `${this.formId}-${formPath}`,
